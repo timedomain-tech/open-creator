@@ -1,0 +1,186 @@
+{
+    "name": "extract_formmated_skill",
+    "description": "a function that extracts a skill from a conversation history",
+    "parameters": {
+        "properties": {
+            "skill_name": {
+                "description": "Skill name in snake_case format, should match the function name",
+                "type": "string"
+            },
+            "skill_description": {
+                "description": "Description of the skill, summarized in no more than 6 sentences",
+                "type": "string"
+            },
+            "skill_tags": {
+                "description": "List of tags describing the skill",
+                "items": {
+                    "type": "string"
+                },
+                "type": "array"
+            },
+            "skill_parameters": {
+                "anyOf": [
+                    {
+                        "$ref": "#/$defs/CodeSkillParameter"
+                    },
+                    {
+                        "items": {
+                            "$ref": "#/$defs/CodeSkillParameter"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "null"
+                    }
+                ],
+                "default": null,
+                "description": "List of parameters the skill requires, defined using json schema"
+            },
+            "skill_return": {
+                "anyOf": [
+                    {
+                        "$ref": "#/$defs/CodeSkillParameter"
+                    },
+                    {
+                        "items": {
+                            "$ref": "#/$defs/CodeSkillParameter"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "null"
+                    }
+                ],
+                "default": null,
+                "description": "Return value(s) of the skill"
+            },
+            "skill_usage_example": {
+                "description": "Example of how to use the skill",
+                "type": "string"
+            },
+            "skill_dependencies": {
+                "anyOf": [
+                    {
+                        "items": {
+                            "$ref": "#/$defs/CodeSkillDependency"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "null"
+                    }
+                ],
+                "description": "List of dependencies the skill requires to run, typically packages but can also be other skill functions"
+            },
+            "skill_program_language": {
+                "description": "Programming language the skill is written in",
+                "enum": [
+                    "python",
+                    "R",
+                    "shell",
+                    "javascript",
+                    "applescript",
+                    "html"
+                ],
+                "type": "string"
+            },
+            "skill_code": {
+                "description": "Code of the skill, only one function is allowed",
+                "type": "string"
+            }
+        },
+        "required": [
+            "skill_name",
+            "skill_description",
+            "skill_tags",
+            "skill_usage_example",
+            "skill_dependencies",
+            "skill_program_language",
+            "skill_code"
+        ],
+        "type": "object",
+        "$defs": {
+            "CodeSkillDependency": {
+                "properties": {
+                    "dependency_name": {
+                        "type": "string"
+                    },
+                    "dependency_version": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "default": null,
+                        "description": "the version of the dependency only filled if context provided"
+                    },
+                    "dependency_type": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "default": "built-in",
+                        "enum": [
+                            "built-in",
+                            "package",
+                            "function"
+                        ]
+                    }
+                },
+                "required": [
+                    "dependency_name"
+                ],
+                "type": "object"
+            },
+            "CodeSkillParameter": {
+                "properties": {
+                    "param_name": {
+                        "type": "string"
+                    },
+                    "param_type": {
+                        "description": "the type, only support string, integer, float, boolean, array, object",
+                        "type": "string"
+                    },
+                    "param_description": {
+                        "description": "the description. If it is enum, describe the enum values. If it is format, describe the format",
+                        "type": "string"
+                    },
+                    "param_required": {
+                        "description": "whether it is required",
+                        "type": "boolean"
+                    },
+                    "param_default": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "items": {},
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "default": null,
+                        "description": "the default value, it depends on the type"
+                    }
+                },
+                "required": [
+                    "param_name",
+                    "param_type",
+                    "param_description",
+                    "param_required"
+                ],
+                "type": "object"
+            }
+        }
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "skill_name": "list_python_functions",
+    "skill_description": "A skill that lists all the Python functions and their docstrings in a directory.",
+    "skill_metadata": null,
+    "skill_tags": [
+        "Python",
+        "functions",
+        "docstrings",
+        "directory"
+    ],
+    "skill_parameters": [
+        {
+            "param_name": "directory",
+            "param_type": "string",
+            "param_description": "The directory path where the Python files are located.",
+            "param_required": true,
+            "param_default": ""
+        }
+    ],
+    "skill_return": {
+        "param_name": "function_docstrings",
+        "param_type": "list",
+        "param_description": "A list of dictionaries containing the function name and its docstring.",
+        "param_required": true,
+        "param_default": []
+    },
+    "skill_usage_example": "list_python_functions('/path/to/directory')",
+    "skill_dependencies": [
+        {
+            "dependency_name": "os",
+            "dependency_version": "",
+            "dependency_type": "built-in"
+        },
+        {
+            "dependency_name": "glob",
+            "dependency_version": "",
+            "dependency_type": "built-in"
+        },
+        {
+            "dependency_name": "ast",
+            "dependency_version": "",
+            "dependency_type": "built-in"
+        }
+    ],
+    "skill_program_language": "python",
+    "skill_code": "import os\\nimport glob\\nimport ast\\n\\ndef list_python_functions(directory):\\n    # Get a list of all Python files in the directory\\n    python_files = glob.glob(os.path.join(directory, '*.py'))\\n\\n    function_docstrings =[]\\n\\n    # Iterate over each Python file\\n    for file_path in python_files:\\n        with open(file_path, 'r') as file:\\n            # Parse the file into an abstract syntax tree (AST)\\n            tree = ast.parse(file.read())\\n\\n  # Iterate over each function definition in the AST\\n            for node in ast.walk(tree):\\n                if isinstance(node, ast.FunctionDef):\\n                    # Extract the function name and its docstring\\n  function_name = node.name\\n                    docstring = ast.get_docstring(node)\\n\\n                    # Add the function name and docstring to the list\\n                    function_docstrings.append({\\n  'function_name': function_name,\\n                        'docstring': docstring\\n    })\\n\\n    return function_docstrings",
+    "conversation_history": null,
+    "unit_tests": null
+}
