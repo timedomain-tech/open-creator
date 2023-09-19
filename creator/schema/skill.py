@@ -6,9 +6,9 @@ from datetime import datetime
 ########### pydantic models ###########
 
 class BaseSkillMetadata(BaseModel):
-    created_at: datetime = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"), description="Creation timestamp")
+    created_at: Union[datetime, str] = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"), description="Creation timestamp")
     author: str = Field(..., description="Author of the skill")
-    updated_at: datetime = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"), description="Last updated timestamp")
+    updated_at: Union[datetime, str] = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"), description="Last updated timestamp")
     usage_count: int = Field(0, description="Number of times the skill was used")
 
 
@@ -25,6 +25,15 @@ class CodeSkillParameter(BaseModel):
     param_description: str = Field(..., description="the description. If it is enum, describe the enum values. If it is format, describe the format")
     param_required: bool = Field(..., description="whether it is required")
     param_default: Optional[Union[str, List]] = Field(None, description="the default value, it depends on the type")
+
+    def to_json_schema(self):
+        json_schema = {
+            "type": self.param_type,
+            "description": self.param_description,
+        }
+        if self.param_default:
+            json_schema["default"] = self.param_default
+        return json_schema
 
 
 class CodeSkillDependency(BaseModel):
@@ -45,10 +54,25 @@ class CodeSkill(BaseSkill):
     unit_tests: Optional[Dict] = Field(None, description="Test cases for the skill")
 
     def to_function_call(self):
+        parameters = {
+            "type": "object",
+            "properties": {
+                "dummy_property": {
+                    "type": "null",
+                }
+            }
+        }
+        if self.skill_parameters:
+            if isinstance(self.skill_parameters, list):
+                parameters["properties"] = {param.param_name:param.to_json_schema() for param in self.skill_parameters}
+                parameters["required"] = [param.param_name for param in self.skill_parameters if param.param_required]
+            elif isinstance(self.skill_parameters, CodeSkillParameter):
+                parameters["properties"] = self.skill_parameters.to_json_schema()
+                parameters["required"] = [self.skill_parameters.param_name] if self.skill_parameters.param_required else []
         return {
             "name": self.skill_name,
-            "description": self.skill_description,
-            "arguments": self.skill_parameters
+            "description": self.skill_description + "\n\n" + self.skill_usage_example,
+            "parameters": parameters
         }
 
     @classmethod

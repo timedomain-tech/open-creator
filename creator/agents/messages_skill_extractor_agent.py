@@ -66,7 +66,7 @@ class SkillExtractorAgent(LLMChain):
         self.prompt = prompt
         response = self.generate([inputs], run_manager=run_manager)
         extracted_skill = self.create_outputs(response)[0]["extracted_skill"]
-        extracted_skill["skill_metadata"] = BaseSkillMetadata(author=inputs["username"]).model_dump_json()
+        extracted_skill["skill_metadata"] = BaseSkillMetadata(author=inputs["username"]).model_dump()
         extracted_skill["conversation_history"] = messages
         return {
             "extracted_skill": extracted_skill

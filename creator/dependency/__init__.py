@@ -3,17 +3,17 @@ from creator.schema.skill import CodeSkillDependency, CodeSkill
 
 
 def generate_skill_doc(skill: CodeSkill):
-    if skill.skill_language == "python":
+    if skill.skill_program_language == "python":
         return _generate_python_skill_doc(skill)
-    # elif skill.skill_language == "R":
+    # elif skill.skill_program_language == "R":
     #     return _generate_r_skill_doc(skill)
-    # elif skill.skill_language == "javascript":
+    # elif skill.skill_program_language == "javascript":
     #     return _generate_javascript_skill_doc(skill)
-    # elif skill.skill_language == "shell":
+    # elif skill.skill_program_language == "shell":
     #     return _generate_shell_skill_doc(skill)
-    # elif skill.skill_language == "applescript":
+    # elif skill.skill_program_language == "applescript":
     #     return _generate_applescript_skill_doc(skill)
-    # elif skill.skill_language == "html":
+    # elif skill.skill_program_language == "html":
     #     return _generate_html_skill_doc(skill)
     else:
         raise NotImplementedError
@@ -54,13 +54,17 @@ def generate_install_command(language: str, dependencies: List[CodeSkillDependen
     
 
 def _generate_python_install_command(dependencies: List[CodeSkillDependency]):
-    shell_command_str = "pip show {package_name} || pip install {package_name}"
+    shell_command_str = 'pip show {package_name} || pip install "{package_name}'
     commands = []
     for dep in dependencies:
         if dep.dependency_type == "package":
             shell_command = shell_command_str.format(package_name=dep.dependency_name)
             if dep.dependency_version:
-                shell_command += "==" + dep.dependency_version
+                if dep.dependency_version[:2] not in ("==", ">=", "<=", "!="):
+                    shell_command += "==" + dep.dependency_version
+                else:
+                    shell_command += dep.dependency_version
+            shell_command += '"'
             commands.append(shell_command)
     return "\n".join(commands)
 
