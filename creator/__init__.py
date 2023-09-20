@@ -1,19 +1,12 @@
-# from .creator import Creator
-# import sys
-import langchain
-from langchain.cache import SQLiteCache
-import os
-
-# support llm cache
-cache_path = os.path.expanduser('~') + "/.cache/open_creator/llm_cache"
-if not os.path.exists(cache_path):
-    os.makedirs(cache_path)
-
-langchain.llm_cache = SQLiteCache(database_path=f"{cache_path}/.langchain.db")
-
+import sys
+from .schema.library import config as _config
+from .creator import Creator
 
 # to save a step, we can directly `import creator` and use its interface
-# sys.modules["creator"] = Creator()
+create = Creator.create
+save = Creator.save
+
+config = _config
 
 #   ___                      ____                _             
 #  / _ \ _ __   ___ _ __    / ___|_ __ ___  __ _| |_ ___  _ __ 

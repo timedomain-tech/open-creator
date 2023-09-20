@@ -17,8 +17,8 @@
 `open-creator` is an innovative package designed to extract skills from existing conversations or a requirement, save them, and retrieve them when required. It offers a seamless way to consolidate and archive refined versions of codes, turning them into readily usable skill sets, thereby enhancing the power of the [open-interpreter](https://github.com/KillianLucas/open-interpreter).
 
 # Features
-- [ ] **Skill Library**: Efficiently save and retrieve structured function calls.
-- [ ] **Reflection Agent**: Automatically structures and categorizes your function calls.
+- [x] **Skill Library**: Efficiently save and retrieve structured function calls.
+- [x] **Reflection Agent**: Automatically structures and categorizes your function calls.
 - [x] **cache Chat LLM runs by using SQLite which is stored in `~/.cache/open_creator/llm_cache/.langchain.db`**: Save time and money by reusing previous runs.
 - [x] **Sreaming**: Stream your function calls
 - [ ] **Community Hub**: Share and utilize skills from the wider community. Support `huggingface_hub` & `langchain_hub`

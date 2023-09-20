@@ -136,6 +136,9 @@ def _generate_python_skill_doc(skill: CodeSkill):
 
 {skill.skill_description}
 
+# Version
+{skill.skill_metadata.version}
+
 # Usage:
 {skill.skill_usage_example}
 

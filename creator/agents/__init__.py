@@ -1,3 +1,0 @@
-from .messages_skill_extractor_agent import skill_extractor_agent as messages_skill_extractor_agent
-
-messages_skill_extractor_agent = messages_skill_extractor_agent

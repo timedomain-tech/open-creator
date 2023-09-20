@@ -1,14 +1,15 @@
 import sys 
 sys.path.append("../")
 
-from creator.agents import messages_skill_extractor_agent
+from creator.agents.extractors import messages2skill_agent, file2skill_agent
 import getpass
 import os
 import platform
 import time
+import json
 
 
-if __name__ == "__main__":
+def test_messages2skill_agent():
     messages = [
         {
             "role": "user",
@@ -25,7 +26,7 @@ if __name__ == "__main__":
     ]
     begin = time.time()
 
-    extracted_skill = messages_skill_extractor_agent.run({
+    extracted_skill = messages2skill_agent.run({
         "messages": messages,
         "username": getpass.getuser(),
         "current_working_directory": os.getcwd(),
@@ -36,4 +37,27 @@ if __name__ == "__main__":
     print("first run it costs {} seconds".format(time.time() - begin))
 
     print(extracted_skill)
+
+
+def test_file2skill_agent():
+
+    with open("../creator/callbacks/display.py") as f:
+        file_content = f.read()
+
+    begin = time.time()
+
+    extracted_skill = file2skill_agent.run({
+        "file_content": file_content,
+        "username": getpass.getuser(),
+        "current_working_directory": os.getcwd(),
+        "operating_system": platform.system(),
+        "verbose": True,
+    })
+
+    print("first run it costs {} seconds".format(time.time() - begin))
+
+    print(json.dumps(extracted_skill, indent=4, ensure_ascii=False))
+
+if __name__ == "__main__":
+    test_file2skill_agent()
 
