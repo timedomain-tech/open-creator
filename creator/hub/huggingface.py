@@ -24,9 +24,13 @@ def hf_update_app_file(local_dir):
     repo_id = config.official_skill_library_path
     return_path = hf_hub_download(repo_id=repo_id, filename="app.py")
     os.system(command=f"cp {return_path} {local_dir}")
+    return_path = hf_hub_download(repo_id=repo_id, filename="requirements.txt")
+    os.system(command=f"cp {return_path} {local_dir}")
+    return_path = hf_hub_download(repo_id=repo_id, filename="README.md")
+    os.system(command=f"cp {return_path} {local_dir}")
     logger.success(f"Successfully updated repo {repo_id}.")
-    subprocess.run(['git', 'add', 'app.py'], cwd=local_dir, check=True, capture_output=True)
-    subprocess.run(['git', 'commit', '-m', 'Add application file'], cwd=local_dir, check=True, capture_output=True)
+    subprocess.run(['git', 'add', 'app.py', 'requirements.txt', 'README.md'], cwd=local_dir, check=True, capture_output=True)
+    subprocess.run(['git', 'commit', '-am', 'Add application file'], cwd=local_dir, check=True, capture_output=True)
     subprocess.run(['git', 'push'], cwd=local_dir, check=True, capture_output=True)
 
 

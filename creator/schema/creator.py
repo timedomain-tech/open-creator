@@ -1,4 +1,5 @@
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, field_validator
+from pydantic.v1 import root_validator
 from typing import List, Optional
 import os
 
@@ -20,8 +21,9 @@ class CreateParams(BaseModel):
             raise ValueError(f"The path {value} does not exist.")
         return value
 
-    @model_validator(mode="before")
-    def validate_only_one_param(cls, values):
+    @root_validator(pre=True)
+    def validate_only_one_param(cls, values) -> None:
+        print(values)
         params = ["messages", "request", "skill_path", "messages_json_path", "file_content", "file_path"]
         valid_count = sum(1 for param in params if values.get(param))
         
@@ -30,12 +32,11 @@ class CreateParams(BaseModel):
         
         if valid_count == 0:
             raise ValueError("Please provide one of the following parameters: messages, request, skill_path, or messages_json_path.")
-        
-        return values
     
-    @model_validator(mode="before")
+    @root_validator(pre=True)
     def validate_huggingface_param(cls, values) -> None:
         params = ["huggingface_repo_id", "huggingface_skill_path"]
+        print(values)
         valid_count = sum(1 for param in params if values.get(param))
         if valid_count == 1:
             raise ValueError("Please provide both parameters: huggingface_repo_id and huggingface_skill_path.")
@@ -47,7 +48,7 @@ class SaveParams(BaseModel):
     huggingface_repo_id: Optional[str] = ""
     langchain_hub_path: Optional[str] = ""
 
-    @model_validator(mode="before")
+    @root_validator(pre=True)
     def validate_only_one_param(cls, values):
         params = ["skill_path", "huggingface_repo_id", "langchain_hub_path"]
         valid_count = sum(1 for param in params if values.get(param))

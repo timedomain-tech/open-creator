@@ -39,8 +39,8 @@ class CodeSkillParameter(BaseModel):
 
 
 class CodeSkillDependency(BaseModel):
-    dependency_name: str = Field(...)
-    dependency_version: Optional[str] = Field(None, description="the version of the dependency only filled if context provided")
+    dependency_name: str = Field("")
+    dependency_version: Optional[str] = Field("", description="the version of the dependency only filled if context provided")
     dependency_type: Optional[str] = Field(enum=["built-in", "package", "function"], default="built-in")
 
 
