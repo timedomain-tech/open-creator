@@ -6,6 +6,8 @@ import creator
 
 
 if __name__ == "__main__":
+    print(config)
+    
     config.build_in_skill_config = {
         "test": "A"
     }

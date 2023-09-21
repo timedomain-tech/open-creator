@@ -1,6 +1,6 @@
 import os
-from typing import Union
-from creator.agents.extractors import messages2skill_agent, file2skill_agent
+from typing import Union, List
+from creator.agents import skill_extractor_agent
 from creator.schema.skill import CodeSkill, BaseSkill
 from creator.schema.creator import CreateParams, SaveParams
 from creator.schema.library import config
@@ -28,7 +28,7 @@ class Creator:
     @classmethod
     def _create_from_messages(self, messages) -> CodeSkill:
         """Generate skill from messages."""
-        skill_json = messages2skill_agent.run({
+        skill_json = skill_extractor_agent.run({
             "messages": messages,
             "username": getpass.getuser(),
             "current_working_directory": os.getcwd(),
@@ -41,8 +41,11 @@ class Creator:
     @classmethod
     def _create_from_file_content(self, file_content) -> CodeSkill:
         """Generate skill from messages."""
-        skill_json = file2skill_agent.run({
-            "file_content": file_content,
+        skill_json = skill_extractor_agent.run({
+            "messages": {
+                "role": "user",
+                "content": file_content
+            },
             "username": getpass.getuser(),
             "current_working_directory": os.getcwd(),
             "operating_system": platform.system(),
@@ -57,9 +60,9 @@ class Creator:
         raise NotImplementedError
     
     @classmethod
-    def _create_from_skill_path(self, skill_path) -> CodeSkill:
+    def _create_from_skill_json_path(self, skill_json_path) -> CodeSkill:
         """Load skill from a given path."""
-        with open(os.join(skill_path, "skill.json"), "r") as f:
+        with open(skill_json_path, mode="r") as f:
             skill = CodeSkill.model_validate_json(f.read())
         return skill
 
@@ -75,7 +78,10 @@ class Creator:
             return self._create_from_request(params.request)
         
         if params.skill_path:
-            return self._create_from_skill_path(params.skill_path)
+            params.skill_json_path = os.path.join(params.skill_path, "skill.json")
+        
+        if params.skill_json_path:
+            return self._create_from_skill_json_path(params.skill_json_path)
         
         if params.messages_json_path:
             with open(params.messages_json_path) as f:
@@ -151,7 +157,7 @@ class Creator:
                 f.write(doc)
 
             # embedding_text
-            embedding_text = "{skill.skill_name}\n{skill.skill_description}\n{skill.skill_usage_example}".format(skill=skill)
+            embedding_text = "{skill.skill_name}\n{skill.skill_description}\n{skill.skill_usage_example}\n{skill.skill_tags}".format(skill=skill)
             with open(os.path.join(params.skill_path, "embedding_text.txt"), "w") as f:
                 f.write(embedding_text)
             
@@ -165,6 +171,6 @@ class Creator:
 
         print(Markdown(f"> saved to {params.skill_path}"))
 
-    def search(self, **kwargs):
+    def search(self, **kwargs) -> List[CodeSkill]:
         """Placeholder for search functionality."""
         raise NotImplementedError

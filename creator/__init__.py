@@ -1,10 +1,10 @@
-import sys
 from .schema.library import config as _config
 from .creator import Creator
 
 # to save a step, we can directly `import creator` and use its interface
 create = Creator.create
 save = Creator.save
+search = Creator.search
 
 config = _config
 

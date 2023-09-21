@@ -6,7 +6,7 @@ import json
 
 if __name__ == "__main__":
     with open("skill_schema_example.json") as f:
-        skill = CodeSkill.model_validate_json(f.read())
+        skill = CodeSkill.model_validate_json(json_data=f.read())
 
     with open("skill_schema_example.json") as f:
         skill_json = json.load(f)

@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Union
 from datetime import datetime
 
-
 ########### pydantic models ###########
 
 class BaseSkillMetadata(BaseModel):
@@ -16,9 +15,12 @@ class BaseSkillMetadata(BaseModel):
 
 class BaseSkill(BaseModel):
     skill_name: str = Field(..., description="Skill name in snake_case format, should match the function name")
-    skill_description: str = Field(..., description="Description of the skill, summarized in no more than 6 sentences")
+    skill_description: str = Field("", description=(
+        "Please provide a description for this skill. Ensure your description is clear, concise, and specific, limited to no more than 6 sentences." 
+        "Explain the primary functionality of the skill and offer specific applications or use cases." 
+    ))
     skill_metadata: Optional[BaseSkillMetadata] = Field(None, description="Metadata of the skill")
-    skill_tags: List[str] = Field(..., description="List of tags describing the skill")
+    skill_tags: List[str] = Field(..., description="Write 3-5 keywords describing the skill, avoid terms that might lead to confusion, and ensure consistency in style and language")
 
 
 class CodeSkillParameter(BaseModel):

@@ -8,6 +8,7 @@ class CreateParams(BaseModel):
     messages: Optional[List[str]] = []
     request: Optional[str] = ""
     skill_path: Optional[str] = ""
+    skill_json_path: Optional[str] = ""
     messages_json_path: Optional[str] = ""
     huggingface_repo_id: Optional[str] = ""
     huggingface_skill_path: Optional[str] = ""
@@ -15,7 +16,7 @@ class CreateParams(BaseModel):
     file_content: Optional[str] = ""
     file_path: Optional[str] = ""
 
-    @field_validator("skill_path", "messages_json_path", "file_path", mode="before")
+    @field_validator("skill_path", "skill_json_path", "messages_json_path", "file_path", mode="before")
     def validate_path_exists(cls, value):
         if value and not os.path.exists(value):
             raise ValueError(f"The path {value} does not exist.")
@@ -24,7 +25,7 @@ class CreateParams(BaseModel):
     @root_validator(pre=True)
     def validate_only_one_param(cls, values) -> None:
         print(values)
-        params = ["messages", "request", "skill_path", "messages_json_path", "file_content", "file_path"]
+        params = ["messages", "request", "skill_path", "skill_json_path", "messages_json_path", "file_content", "file_path"]
         valid_count = sum(1 for param in params if values.get(param))
         
         if valid_count > 1:
