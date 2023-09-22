@@ -1,5 +1,4 @@
-from pydantic import BaseModel, field_validator, model_validator
-from typing import List, Optional
+from pydantic import BaseModel
 from dotenv import load_dotenv, find_dotenv
 import os
 

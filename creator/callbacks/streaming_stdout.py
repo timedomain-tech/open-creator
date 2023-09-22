@@ -1,6 +1,6 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict
+
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.schema import LLMResult
 from creator.callbacks.display import MessageBox
 import traceback
 
