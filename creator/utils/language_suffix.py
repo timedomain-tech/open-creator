@@ -1,7 +1,6 @@
-from typing import List, Literal
 
 
-def generate_language_suffix(language: str) -> Literal['.py', '.R', '.js', '.sh', '.applescript', '.html']:
+def generate_language_suffix(language: str):
     if language == "python":
         return ".py"
     elif language == "R":

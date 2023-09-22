@@ -20,12 +20,11 @@ class BaseInterpreter:
     name: str = "base_interpreter"
     description: str = (
         "A base shell command tool. Use this to execute bash commands. "
-        "It can also be used to execute any language with interactive mode"
+        "It can also be used to execute any languages with interactive mode"
     )
 
     def __init__(self):
         self.process = None
-        self.done = None
 
     def run(self, query: str, is_start: bool = False) -> dict:
         if is_start or self.process is None:

@@ -1,14 +1,15 @@
 import os
 from typing import Union, List
-from creator.agents import skill_extractor_agent
+from creator.agents import skill_extractor_agent, code_interpreter_agent
 from creator.schema.skill import CodeSkill, BaseSkill
 from creator.schema.creator import CreateParams, SaveParams
 from creator.schema.library import config
-from creator.dependency import (
+from creator.utils import (
     generate_install_command,
     generate_language_suffix,
     generate_skill_doc
 )
+
 from creator.hub.huggingface import hf_pull, hf_repo_update, hf_push
 
 from rich import print
@@ -57,7 +58,17 @@ class Creator:
     @classmethod
     def _create_from_request(self, request):
         """Placeholder for generating skill from a request."""
-        raise NotImplementedError
+        messages = code_interpreter_agent.run({
+            "messages": [{
+                "role": "user",
+                "content": request
+            }],
+            "username": getpass.getuser(),
+            "current_working_directory": os.getcwd(),
+            "operating_system": platform.system(),
+            "verbose": True,
+        })
+        return self._create_from_messages(messages)
     
     @classmethod
     def _create_from_skill_json_path(self, skill_json_path) -> CodeSkill:

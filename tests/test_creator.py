@@ -22,16 +22,23 @@ def test_create_from_messages():
     skill = creator.create(messages=messages)
     creator.save(skill=skill)
 
+
 def test_create_from_messages_json_path():
     skill = creator.create(messages_json_path="./messages_example.json")
     creator.save(skill=skill)
+
 
 def test_create_from_file_content():
     skill = creator.create(file_path="../creator/callbacks/display.py")
     creator.save(skill=skill)
 
 
+def test_create_from_user_request():
+    skill = creator.create(request="filter how many prime numbers are in 201")
+    creator.save(skill=skill)
+
+
 if __name__ == "__main__":
-    test_create_from_messages()
-    test_create_from_messages_json_path()
-    test_create_from_file_content()
+    test_create_from_user_request()
+    # test_create_from_messages_json_path()
+    # test_create_from_file_content()

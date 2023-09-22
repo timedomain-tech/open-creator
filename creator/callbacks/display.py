@@ -5,7 +5,10 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.markdown import Markdown
 from rich.box import MINIMAL
+from rich import print_json
 import re
+import time
+import json
 
 from creator.utils import stream_partial_json_to_dict
 
@@ -34,8 +37,10 @@ class MessageBox:
         self.arguments = ""
         self.name = ""
 
-        self.live = Live(auto_refresh=False, console=Console(), vertical_overflow="visible")
-        self.live.start()
+        self.code_live = Live(auto_refresh=False, console=Console(), vertical_overflow="visible")
+        self.text_live = Live(auto_refresh=False, console=Console())
+        self.text_live.start()
+        self.code_live.start()
 
     def end(self) -> None:
         """Ends the live display."""
@@ -43,28 +48,28 @@ class MessageBox:
             self.refresh(cursor=False, is_code=False)
         if self.code and self.language:
             self.refresh(cursor=False, is_code=True)
-        self.live.stop()
+        self.text_live.stop()
+        self.code_live.stop()
 
     def refresh_text(self, cursor: bool = True) -> None:
         """Refreshes the content display."""
         text = self.content
-        replacement = "```text"
         lines = text.split('\n')
         inside_code_block = False
-
-        for i in range(len(lines)):
-            if re.match(r'^```(\w*)$', lines[i].strip()):
+        for line in lines:
+            # find the start of the code block
+            if line.startswith("```"):
                 inside_code_block = not inside_code_block
-            if inside_code_block:
-                lines[i] = replacement
 
         content = '\n'.join(lines)
         if cursor:
             content += "█"
+        if inside_code_block:
+            content += "\n```"
         markdown = Markdown(content.strip())
         panel = Panel(markdown, box=MINIMAL)
-        self.live.update(panel)
-        self.live.refresh()
+        self.text_live.update(panel)
+        self.text_live.refresh()
 
     def refresh_code(self, cursor: bool = True) -> None:
         """Refreshes the code display."""
@@ -72,8 +77,8 @@ class MessageBox:
         output_panel = self._create_output_panel()
 
         group = Group(code_table, output_panel)
-        self.live.update(group)
-        self.live.refresh()
+        self.code_live.update(group)
+        self.code_live.refresh()
 
     def refresh(self, cursor: bool = True, is_code: bool = True) -> None:
         """General refresh method."""
@@ -83,8 +88,9 @@ class MessageBox:
             self.refresh_text(cursor=cursor)
 
     def update_from_chunk(self, chunk) -> None:
+        # print(chunk)
         """Updates message box from a given chunk."""
-        content = chunk.content
+        content = "" if chunk.content is None else chunk.content
         function_call = chunk.additional_kwargs.get('function_call', {})
         name = function_call.get("name", "")
         arguments = function_call.get("arguments", "")
@@ -92,25 +98,26 @@ class MessageBox:
         if not name and not arguments and not content:
             return
 
-        self.name += name
-        self.arguments += arguments
-        self.content += content
+        self.name = self.name + name
+        self.arguments = self.arguments + arguments
+        self.content = self.content + content
 
         if content:
             self.refresh(cursor=True, is_code=False)
 
-        if not name and arguments:
-            if self.name == "extract_formmated_skill":
-                self.language = "json"
-                self.code = self.arguments
-            elif not self.language and self.name == "run_code":
+        if len(self.name) > 0:
+            if self.name == "run_code":
                 arguments_dict = stream_partial_json_to_dict(self.arguments)
-                language = arguments_dict.get("language", "")
+                if arguments_dict is None:
+                    return
+                language = arguments_dict.get("language", "python")
+                code = arguments_dict.get("code", "")
                 if language:
                     self.language = language
-                    self.code = arguments_dict.get("code", "")
-
-        if self.language:
+                    self.code = code
+            else:
+                self.language = "json"
+                self.code = self.arguments
             self.refresh(cursor=True, is_code=True)
 
     def _create_code_table(self, cursor: bool) -> Panel:

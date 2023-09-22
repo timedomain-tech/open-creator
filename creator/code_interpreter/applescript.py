@@ -1,5 +1,5 @@
 
-from base import BaseInterpreter
+from .base import BaseInterpreter
 import re
 
 

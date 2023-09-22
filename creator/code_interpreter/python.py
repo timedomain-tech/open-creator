@@ -1,11 +1,16 @@
-from pydantic.v1 import root_validator
-from contextlib import redirect_stdout
-from typing import Dict, Optional, Field
-import sys
-import ast
-import io
+from .base import BaseInterpreter
 import re
-import traceback
+
+
+def clean_interactive_mode_lines(response):
+    def clean_string(s):
+        return '\n'.join([line for line in s.split('\n') if not re.match(r'^(\s*>>>\s*|\s*\.\.\.\s*)', line)])
+    
+    # clean up stdout and stderr
+    response['stdout'] = clean_string(response.get('stdout', ''))
+    response['stderr'] = clean_string(response.get('stderr', ''))
+    
+    return response
 
 
 def sanitize_input(query: str) -> str:
@@ -27,48 +32,14 @@ def sanitize_input(query: str) -> str:
 
 
 class PythonInterpreter:
-    """A tool for running python code in a REPL."""
+    def __init__(self):
+        self.bash_interpreter = None
 
-    name: str = "python_interpreter"
-    description: str = (
-        "A Python shell. Use this to execute python commands. "
-        "Input should be a valid python command. "
-        "When using this tool, sometimes output is abbreviated - "
-        "make sure it does not look abbreviated before using it in your answer."
-    )
-    globals: Optional[Dict] = Field(default_factory=dict)
-    locals: Optional[Dict] = Field(default_factory=dict)
-
-    @root_validator(pre=True)
-    def validate_python_version(cls, values: Dict) -> Dict:
-        """Validate valid python version."""
-        if sys.version_info < (3, 9):
-            raise ValueError(
-                "This tool relies on Python 3.9 or higher "
-                "(as it uses new functionality in the `ast` module, "
-                f"you have Python version: {sys.version}"
-            )
-        return values
-
-    def run(self, query: str) -> dict:
-        try:
-            query = sanitize_input(query)
-            tree = ast.parse(query)
-            module = ast.Module(tree.body[:-1], type_ignores=[])
-            exec(ast.unparse(module), self.globals, self.locals)
-            
-            module_end = ast.Module(tree.body[-1:], type_ignores=[])
-            module_end_str = ast.unparse(module_end)
-            io_buffer = io.StringIO()
-            try:
-                with redirect_stdout(io_buffer):
-                    ret = eval(module_end_str, self.globals, self.locals)
-                    stdout = io_buffer.getvalue() if ret is None else ret
-                    return {"status": "success", "stdout": stdout, "stderr": ""}
-            except Exception:
-                stderr = traceback.format_exc()
-                with redirect_stdout(io_buffer):
-                    exec(module_end_str, self.globals, self.locals)
-                    return {"status": "success", "stdout": io_buffer.getvalue(), "stderr": stderr}
-        except Exception:
-            return {"status": "error", "stdout": "", "stderr": traceback.format_exc()}
+    def run(self, query:str) -> dict:
+        if self.bash_interpreter is None:
+            self.bash_interpreter = BaseInterpreter()
+            resp = self.bash_interpreter.run("python -i -q -u")
+            if resp["status"] != "success":
+                return clean_interactive_mode_lines(resp)
+        resp = self.bash_interpreter.run(query)
+        return clean_interactive_mode_lines(resp)

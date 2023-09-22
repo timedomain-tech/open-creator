@@ -1,8 +1,6 @@
-from typing import List
-from creator.schema.skill import CodeSkillDependency
 
 
-def generate_install_command(language: str, dependencies: List[CodeSkillDependency]):
+def generate_install_command(language: str, dependencies):
     if language == "python":
         return _generate_python_install_command(dependencies)
     elif language == "R":
@@ -19,7 +17,7 @@ def generate_install_command(language: str, dependencies: List[CodeSkillDependen
         raise NotImplementedError
     
 
-def _generate_python_install_command(dependencies: List[CodeSkillDependency]):
+def _generate_python_install_command(dependencies):
     shell_command_str = 'pip show {package_name} || pip install "{package_name}'
     commands = []
     for dep in dependencies:
@@ -35,7 +33,7 @@ def _generate_python_install_command(dependencies: List[CodeSkillDependency]):
     return "\n".join(commands)
 
 
-def _generate_r_install_command(dependencies: List[CodeSkillDependency]):
+def _generate_r_install_command(dependencies):
     shell_command_str = "Rscript -e 'if (!requireNamespace(\"{package_name}\", quietly = TRUE)) install.packages(\"{package_name}\")'"
     commands = []
     for dep in dependencies:
@@ -47,7 +45,7 @@ def _generate_r_install_command(dependencies: List[CodeSkillDependency]):
     return "\n".join(commands)
 
 
-def _generate_javascript_install_command(dependencies: List[CodeSkillDependency]):
+def _generate_javascript_install_command(dependencies):
     shell_command_str = "npm install {package_name}"
     commands = []
     for dep in dependencies:
@@ -59,7 +57,7 @@ def _generate_javascript_install_command(dependencies: List[CodeSkillDependency]
     return "\n".join(commands)
 
 
-def _generate_shell_install_command(dependencies: List[CodeSkillDependency]):
+def _generate_shell_install_command(dependencies):
     shell_command_str = "apt-get install {package_name}"
     commands = []
     for dep in dependencies:
@@ -71,7 +69,7 @@ def _generate_shell_install_command(dependencies: List[CodeSkillDependency]):
     return "\n".join(commands)
 
 
-def _generate_applescript_install_command(dependencies: List[CodeSkillDependency]):
+def _generate_applescript_install_command(dependencies):
     shell_command_str = "osascript -e 'tell application \"Terminal\" to do script \"brew install {package_name}\"'"
     commands = []
     for dep in dependencies:
@@ -83,7 +81,7 @@ def _generate_applescript_install_command(dependencies: List[CodeSkillDependency
     return "\n".join(commands)
 
 
-def _generate_html_install_command(dependencies: List[CodeSkillDependency]):
+def _generate_html_install_command(dependencies):
     shell_command_str = "apt-get install {package_name}"
     commands = []
     for dep in dependencies:

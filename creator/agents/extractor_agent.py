@@ -7,7 +7,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.schema import AIMessage, HumanMessage, SystemMessage, FunctionMessage
+from langchain.adapters.openai import convert_openai_messages
 
 from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
@@ -27,31 +27,6 @@ OS: {operating_system}
 """
 
 
-def convert_messages2langchain_format(messages):
-    chat_messages = []
-    for message in messages:
-        if message["role"] == "system":
-            chat_messages.append(SystemMessage(content=message["content"]))
-        elif message["role"] == "assistant":
-            if message["content"] is None:
-                message["content"] = ""
-            function_call = message.pop("function_call", None)
-            if function_call is not None:
-                function_call = {"name": function_call["name"], "arguments": function_call["arguments"]}
-                additional_kwargs = {"function_call": function_call}
-            else:
-                additional_kwargs = {}
-            chat_messages.append(AIMessage(content=message["content"], additional_kwargs=additional_kwargs))
-        elif message["role"] == "function":
-            chat_messages.append(FunctionMessage(name=message["name"], content=message["content"]))
-        else:
-            chat_messages.append(HumanMessage(content=message["content"]))
-    # add system message
-    chat_messages.append(("system", _SYSTEM_TEMPLATE))
-    prompt = ChatPromptTemplate.from_messages(chat_messages)
-    return prompt
-
-
 class SkillExtractorAgent(LLMChain):
     @property
     def _chain_type(self):
@@ -66,13 +41,20 @@ class SkillExtractorAgent(LLMChain):
         inputs: Dict[str, Any],
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
+        callback = self.llm.callbacks.handlers[0]
+        callback.on_chain_start()
         messages = inputs.pop("messages")
-        prompt = convert_messages2langchain_format(messages)
+        chat_messages = convert_openai_messages(messages)
+        chat_messages.append(("system", _SYSTEM_TEMPLATE))
+        prompt = ChatPromptTemplate.from_messages(chat_messages)
         self.prompt = prompt
+
         response = self.generate([inputs], run_manager=run_manager)
+
         extracted_skill = self.create_outputs(response)[0]["extracted_skill"]
         extracted_skill["skill_metadata"] = BaseSkillMetadata(author=inputs["username"]).model_dump()
         extracted_skill["conversation_history"] = messages
+        callback.on_chain_end()
         return {
             "extracted_skill": extracted_skill
         }

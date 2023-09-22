@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
+from creator.utils import remove_title
+
 
 ########### pydantic models ###########
 
@@ -24,11 +26,11 @@ class BaseSkill(BaseModel):
 
 
 class CodeSkillParameter(BaseModel):
-    param_name: str = Field(...)
-    param_type: str = Field(..., description="the type, only support string, integer, float, boolean, array, object")
-    param_description: str = Field(..., description="the description. If it is enum, describe the enum values. If it is format, describe the format")
-    param_required: bool = Field(..., description="whether it is required")
-    param_default: Optional[Union[str, List]] = Field(None, description="the default value, it depends on the type")
+    param_name: str = Field(default="")
+    param_type: str = Field(default="string", description="the type, only support string, integer, float, boolean, array, object", enum=["string", "integer", "float", "boolean", "array", "object"])
+    param_description: str = Field(default="", description="the description. If it is enum, describe the enum values. If it is format, describe the format")
+    param_required: bool = Field(default=True, description="whether it is required")
+    param_default: Optional[Any] = Field(default=None, description="the default value, it depends on the type")
 
     def to_json_schema(self):
         json_schema = {
@@ -94,21 +96,7 @@ When writing code, it's imperative to follow industry standards and best practic
 
     @classmethod
     def to_skill_function_schema(self):
-        # remove all title and its properties's title
-        # recursively remove all titles including `$defs`
-        def _remove_title(schema):
-            if "title" in schema:
-                schema.pop("title")
-            if "properties" in schema:
-                for prop in schema["properties"]:
-                    _remove_title(schema["properties"][prop])
-            if "$defs" in schema:
-                for prop in schema["$defs"]:
-                    _remove_title(schema["$defs"][prop])
-            return schema
-        
-        code_skill_json_schema = _remove_title(self.model_json_schema())
-
+        code_skill_json_schema = remove_title(self.model_json_schema())
         defs = code_skill_json_schema.pop("$defs")
         defs_to_remove = ["BaseSkillMetadata"]
         for prop in defs_to_remove:

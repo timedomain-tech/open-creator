@@ -1,7 +1,6 @@
-from creator.schema.skill import CodeSkill
 
 
-def generate_skill_doc(skill: CodeSkill):
+def generate_skill_doc(skill):
     doc = f"""
 # {skill.skill_name}
 {'-' * len(skill.skill_name)}
@@ -21,14 +20,14 @@ def generate_skill_doc(skill: CodeSkill):
         for param in skill.skill_parameters:
             doc += f"    {param.param_name} ({param.param_type}): {param.param_description}\n"
             if param.param_required:
-                doc += f"        Required: True\n"
+                doc += "        Required: True\n"
             if param.param_default:
                 doc += f"        Default: {param.param_default}\n"
     elif skill.skill_parameters:  # If it's a single CodeSkillParameter
         param = skill.skill_parameters
         doc += f"    {param.param_name} ({param.param_type}): {param.param_description}\n"
         if param.param_required:
-            doc += f"        Required: True\n"
+            doc += "        Required: True\n"
         if param.param_default:
             doc += f"        Default: {param.param_default}\n"
 

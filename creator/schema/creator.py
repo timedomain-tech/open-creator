@@ -5,7 +5,7 @@ import os
 
 
 class CreateParams(BaseModel):
-    messages: Optional[List[str]] = []
+    messages: Optional[List[dict]] = []
     request: Optional[str] = ""
     skill_path: Optional[str] = ""
     skill_json_path: Optional[str] = ""
@@ -41,7 +41,6 @@ class CreateParams(BaseModel):
         valid_count = sum(1 for param in params if values.get(param))
         if valid_count == 1:
             raise ValueError("Please provide both parameters: huggingface_repo_id and huggingface_skill_path.")
-
 
 
 class SaveParams(BaseModel):
