@@ -48,6 +48,27 @@ class CodeSkillDependency(BaseModel):
     dependency_type: Optional[str] = Field(enum=["built-in", "package", "function"], default="built-in")
 
 
+class TestCase(BaseModel):
+    test_input: str = Field(description="The input data or conditions used for the test.")
+    run_command: str = Field(description="The command or function that was executed for the test.")
+    expected_result: str = Field(description="The expected outcome or result of the test.")
+    actual_result: str = Field(description="The actual outcome or result observed after the test was executed.")
+    is_passed: bool = Field(description="A boolean indicating whether the test passed or failed.")
+
+
+class TestSummary(BaseModel):
+    test_cases: List[TestCase] = Field(description="Extract a list of test cases that were run.")
+
+    @classmethod
+    def to_test_function_schema(self):
+        test_function_schema = remove_title(self.model_json_schema())
+        return {
+            "name": "test_summary",
+            "description": "A method to be invoked once all test cases have been successfully completed. This function provides a comprehensive summary of each test case, detailing their input, execution command, expected results, actual results, and pass status.",
+            "parameters": test_function_schema
+        }
+
+
 class CodeSkill(BaseSkill):
     skill_parameters: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="List of parameters the skill requires, defined using json schema")
     skill_return: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="Return value(s) of the skill")
@@ -70,7 +91,7 @@ When writing code, it's imperative to follow industry standards and best practic
 """)
 
     conversation_history: Optional[List[Dict]] = Field(None, description="Conversation history that the skill was extracted from")
-    unit_tests: Optional[Dict] = Field(None, description="Test cases for the skill")
+    test_summary: Optional[TestSummary] = Field(None, description="Test cases for the skill")
 
     def to_function_call(self):
         parameters = {
@@ -103,7 +124,7 @@ When writing code, it's imperative to follow industry standards and best practic
             defs.pop(prop)
         code_skill_json_schema["$defs"] = defs
 
-        properties_to_remove = ["skill_metadata", "conversation_history", "unit_tests"]
+        properties_to_remove = ["skill_metadata", "conversation_history", "test_summary"]
         for prop in properties_to_remove:
             code_skill_json_schema["properties"].pop(prop)
 

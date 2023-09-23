@@ -86,5 +86,5 @@ def create_skill_extractor_agent(llm):
     return chain
 
 
-skill_extractor_agent = create_skill_extractor_agent(ChatOpenAI(temperature=0, model=config.skill_extract_agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
+skill_extractor_agent = create_skill_extractor_agent(ChatOpenAI(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
 

@@ -123,7 +123,7 @@ def create_code_interpreter_agent(llm):
     return chain
 
 
-llm = ChatOpenAI(temperature=0, model=config.skill_extract_agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
+llm = ChatOpenAI(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
 
 
 code_interpreter_agent = create_code_interpreter_agent(llm=llm)

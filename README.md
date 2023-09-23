@@ -33,11 +33,11 @@ pip install -U open-creator
 import creator
 ```
 ## 1. Create a Skill
-- [ ] 1.1 from a request
+- [x] 1.1 from a request
 - [x] 1.2 from a conversation history (openai messages format)
-- [ ] 1.3 from a skill json file
-- [ ] 1.4 from a messages_json_path
-- [ ] 1.5 from code file
+- [x] 1.3 from a skill json file
+- [x] 1.4 from a messages_json_path
+- [x] 1.5 from code file
 
 1.1 Create a skill from a request
 ```python

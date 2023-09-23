@@ -4,6 +4,8 @@ from .language_suffix import generate_language_suffix
 from .title_remover import remove_title
 from .partial_json_parse import stream_partial_json_to_dict
 from .output_truncate import truncate_output
+from .score_function import cosine_similarity
+
 
 __all__ = [
     "generate_install_command",
@@ -12,4 +14,5 @@ __all__ = [
     "remove_title",
     "stream_partial_json_to_dict",
     "truncate_output"
+    "cosine_similarity"
 ]
