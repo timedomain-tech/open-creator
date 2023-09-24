@@ -37,5 +37,12 @@ def test_python_interpreter2():
     print(output)
 
 
+def test_python_interpreter3():
+    code = 'input("do you want to run the code? Y or n")'
+    code_interpreter = PythonInterpreter()
+    output = code_interpreter.run(code)
+    print(output)
+
+
 if __name__ == "__main__":
-    test_python_interpreter2()
+    test_python_interpreter3()

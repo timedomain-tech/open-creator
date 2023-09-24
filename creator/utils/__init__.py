@@ -5,6 +5,8 @@ from .title_remover import remove_title
 from .partial_json_parse import stream_partial_json_to_dict
 from .output_truncate import truncate_output
 from .score_function import cosine_similarity
+from .ask_human import ask_run_code_confirm
+from .multiline_input import multiline_prompt
 
 
 __all__ = [
@@ -13,6 +15,8 @@ __all__ = [
     "generate_language_suffix",
     "remove_title",
     "stream_partial_json_to_dict",
-    "truncate_output"
-    "cosine_similarity"
+    "truncate_output",
+    "cosine_similarity",
+    "ask_run_code_confirm",
+    "multiline_prompt",
 ]

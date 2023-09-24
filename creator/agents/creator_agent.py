@@ -31,4 +31,5 @@ use a creator agent that can select following actions:
     - resest
     - undo
     - help
+tester, interpreter, extractor, and refactor agents are using differnt emoji
 """

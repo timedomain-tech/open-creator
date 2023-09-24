@@ -16,7 +16,7 @@ from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.schema.skill import TestSummary
-from creator.utils import truncate_output
+from creator.utils import truncate_output, ask_run_code_confirm, stream_partial_json_to_dict
 
 
 langchain.llm_cache = SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db")
@@ -64,6 +64,7 @@ class CodeTesterAgent(LLMChain):
     ) -> Dict[str, Any]:
 
         messages = inputs.pop("messages")
+        allow_user_confirm = inputs.pop("allow_user_confirm", False)
         langchain_messages = convert_openai_messages(messages)
 
         total_tries = self.total_tries
@@ -83,20 +84,27 @@ class CodeTesterAgent(LLMChain):
             llm_chain = prompt | llm_with_functions
             message = llm_chain.invoke(inputs)
             langchain_messages.append(message)
-            function_call = message.additional_kwargs.get("function_call", {})
-            if not function_call:
+            function_call = message.additional_kwargs.get("function_call", None)
+            if function_call is None:
                 break
-            
+
+            can_run_code = True
+            if allow_user_confirm:
+                can_run_code = ask_run_code_confirm()
+            if not can_run_code:
+                break
+
             function_name = function_call.get("name", "")
+            arguments = json.loads(function_call.get("arguments", "{}"))
             if function_name == "test_summary":
-                arguments = json.loads(function_call.get("arguments", "{}"))
                 test_summary = arguments.get("test_summary", [])
                 break
-            tool_agent = llm_chain | self.output_parser | self.tool.run
-            tool_result = tool_agent.invoke(inputs)
+            arguments = stream_partial_json_to_dict(arguments)
+            tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
             callback.on_tool_end(output)
+            
             function_message = FunctionMessage(name="run_code", content=json.dumps(tool_result, ensure_ascii=False))
             langchain_messages.append(function_message)
             current_try += 1
