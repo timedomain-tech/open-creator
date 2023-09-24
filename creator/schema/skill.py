@@ -3,6 +3,7 @@ from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
 from creator.schema.library import config
+from creator.schema.refactor import Refactorable
 
 
 ########### pydantic models ###########
@@ -70,7 +71,7 @@ class TestSummary(BaseModel):
         }
 
 
-class CodeSkill(BaseSkill):
+class CodeSkill(BaseSkill, Refactorable):
     skill_parameters: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="List of parameters the skill requires, defined using json schema")
     skill_return: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="Return value(s) of the skill")
     skill_usage_example: str = Field(..., description="Example of how to use the skill")
@@ -137,4 +138,3 @@ When writing code, it's imperative to follow industry standards and best practic
             "code": self.skill_code
         })
         return result
-

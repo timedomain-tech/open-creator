@@ -1,10 +1,8 @@
 from typing import List, Dict, Any, Optional
 import json
 
-import langchain
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
-from langchain.cache import SQLiteCache
 from langchain.schema.messages import FunctionMessage
 from langchain.prompts import ChatPromptTemplate
 from langchain.adapters.openai import convert_message_to_dict, convert_openai_messages
@@ -16,9 +14,6 @@ from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.utils import truncate_output, stream_partial_json_to_dict, ask_run_code_confirm
-
-
-langchain.llm_cache = SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db")
 
 
 _SYSTEM_TEMPLATE = """You are Code Interpreter, a world-class programmer that can complete any goal by executing code.

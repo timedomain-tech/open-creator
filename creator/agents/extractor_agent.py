@@ -1,6 +1,4 @@
 from typing import Any, Dict, List, Optional
-import langchain
-from langchain.cache import SQLiteCache
 from langchain.chains.llm import LLMChain
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.prompts import ChatPromptTemplate
@@ -12,9 +10,6 @@ from langchain.adapters.openai import convert_openai_messages
 from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
 from creator.schema.library import config
-
-
-langchain.llm_cache = SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db")
 
 
 _SYSTEM_TEMPLATE = """Extract one skill object from above conversation history, which is a list of messages.
