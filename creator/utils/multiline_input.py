@@ -5,15 +5,16 @@ from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import NestedCompleter
-from creator.schema.library import config
 from prompt_toolkit.styles import Style
 from pygments.lexers.markup import MarkdownLexer
 from rich.markdown import Markdown
 from rich import print
 import time
+import os
 
 
 class MultilineInput:
+    prompt_cache_history_path = os.environ.get("PROMPT_CACHE_HISTORY_PATH", os.path.expanduser("~") + "/.cache/open_creator/prompt_cache/history.txt")
     completer = NestedCompleter.from_nested_dict({
         'create': {
             '--save': None,
@@ -65,8 +66,8 @@ class MultilineInput:
 
         # Create an instance of PromptSession
         self.session = PromptSession(
-            key_bindings=self.kb, 
-            history=FileHistory(config.prompt_cache_history_path),
+            key_bindings=self.kb,
+            history=FileHistory(self.prompt_cache_history_path),
             lexer=PygmentsLexer(MarkdownLexer),
             style=self.style,
         )

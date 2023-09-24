@@ -1,10 +1,8 @@
 from typing import List, Dict, Any, Optional
 import json
 
-import langchain
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
-from langchain.cache import SQLiteCache
 from langchain.schema.messages import FunctionMessage
 from langchain.prompts import ChatPromptTemplate
 from langchain.adapters.openai import convert_message_to_dict, convert_openai_messages
@@ -17,9 +15,6 @@ from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.schema.skill import TestSummary
 from creator.utils import truncate_output, ask_run_code_confirm, stream_partial_json_to_dict
-
-
-langchain.llm_cache = SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db")
 
 
 _SYSTEM_TEMPLATE = """You are Test Engineer, a world-class tester skilled at crafting test cases, writing test code, debugging, and evaluating test outcomes.
@@ -104,7 +99,7 @@ class CodeTesterAgent(LLMChain):
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
             callback.on_tool_end(output)
-            
+
             function_message = FunctionMessage(name="run_code", content=json.dumps(tool_result, ensure_ascii=False))
             langchain_messages.append(function_message)
             current_try += 1
