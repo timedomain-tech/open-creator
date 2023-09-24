@@ -3,7 +3,8 @@ from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
 from creator.schema.library import config
-from creator.schema.refactor import Refactorable
+from creator.utils.skill_doc import generate_skill_doc
+
 
 
 ########### pydantic models ###########
@@ -71,7 +72,7 @@ class TestSummary(BaseModel):
         }
 
 
-class CodeSkill(BaseSkill, Refactorable):
+class CodeSkill(BaseSkill):
     skill_parameters: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="List of parameters the skill requires, defined using json schema")
     skill_return: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="Return value(s) of the skill")
     skill_usage_example: str = Field(..., description="Example of how to use the skill")
@@ -94,6 +95,12 @@ When writing code, it's imperative to follow industry standards and best practic
 
     conversation_history: Optional[List[Dict]] = Field(None, description="Conversation history that the skill was extracted from")
     test_summary: Optional[TestSummary] = Field(None, description="Test cases for the skill")
+
+    class Config:
+        # Properties from Refactorable
+        skills_to_combine = []
+        user_request = "please help me refine the skill object"
+        refactor_type = "refine"
 
     def to_function_call(self):
         parameters = {
@@ -138,3 +145,76 @@ When writing code, it's imperative to follow industry standards and best practic
             "code": self.skill_code
         })
         return result
+
+    def __add__(self, other_skill):
+        assert isinstance(other_skill, type(self)), f"Cannot combine {type(self)} with {type(other_skill)}"
+        # If the list is empty, add the current object to it
+        if not self.Config.skills_to_combine:
+            self.Config.skills_to_combine.append(self)
+        
+        # Add the other_skill to the list
+        self.Config.skills_to_combine.append(other_skill)
+        
+        return self  # Return the current object to support continuous addition
+    
+    def __radd__(self, other_skill):
+        self.__add__(other_skill)
+
+    def __lt__(self, user_request:str):
+        self.Config.user_request = user_request
+        self.Config.refactor_type = "decompose"
+
+    def __gt__(self, user_request:str):
+        self.Config.user_request = user_request
+        self.Config.refactor_type = "combine"
+
+    def refactor(self, code_refactor_agent):
+        refactor_skills = []
+        if len(self.skills_to_combine) == 0:
+            refactor_skills.append(self)
+        else:
+            refactor_skills = self.Config.skills_to_combine
+
+        num_output_skills = "one" if self.Config.refactor_type != "decompose" else "appropriate number of"
+        messages = [{
+            "role": "system",
+            "content": f"Your refactor type is: {self.Config.refactor_type} and output {num_output_skills} skill object(s)"
+        }]
+        for refactor_skill in refactor_skills:
+            messages.append(
+                {
+                    "role": "function",
+                    "name": "get_skill",
+                    "content": refactor_skill.model_dump_json()
+                }
+            )
+        messages.append({
+            "role": "user",
+            "content": self.Config.user_request
+        })
+        refactored_skill_jsons = code_refactor_agent.run(
+            {
+                "messages": messages,
+                "verbose": True,
+            }
+        )
+        parent_class = refactor_skills[0].__class__.__bases__[0]
+        refactored_skills = []
+        for refactored_skill_json in refactored_skill_jsons:
+            refactored_skills.append(parent_class(**refactored_skill_json))
+
+        return refactored_skills
+    
+    def __repr__(self):
+        if len(self.Config.skills_to_combine) == 0:
+            self.Config.skills_to_combine.append(self)
+        skill_docs = []
+        for skill in self.Config.skills_to_combine:
+            skill_docs.append(generate_skill_doc(skill))
+        refactor_config_str = f"""
+## Refactorable Config
+- **Refactor Way**: {self.Config.refactor_type}
+- **User Request**: {self.Config.user_request}
+"""
+        return "\n---\n".join(skill_docs) + refactor_config_str
+

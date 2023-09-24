@@ -1,6 +1,8 @@
 import sys
 sys.path.append("..")
 import creator
+from rich.markdown import Markdown
+from rich import print
 import json
 
 
@@ -35,7 +37,8 @@ def test_create_from_file_content():
 
 def test_create_from_user_request():
     skill = creator.create(request="filter how many prime numbers are in 201")
-    creator.save(skill=skill)
+    # creator.save(skill=skill)
+    print(Markdown(repr(skill)))
 
 
 if __name__ == "__main__":
