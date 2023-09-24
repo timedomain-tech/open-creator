@@ -17,7 +17,7 @@ class BaseSkillMetadata(BaseModel):
 
 
 class BaseSkill(BaseModel):
-    skill_name: str = Field(..., description="Skill name in snake_case format, should match the function name")
+    skill_name: str = Field(..., description="Skill name in snake_case format or camelCase format, should match the function name or class name")
     skill_description: str = Field("", description=(
         "Please provide a description for this skill. Ensure your description is clear, concise, and specific, limited to no more than 6 sentences." 
         "Explain the primary functionality of the skill and offer specific applications or use cases." 
@@ -88,7 +88,7 @@ When writing code, it's imperative to follow industry standards and best practic
 8. **Compatibility**: Ensure adaptability across platforms or frameworks, like PyTorch and TensorFlow.
 9. **Externally Callable**: Design functions and classes to be callable externally. Their public interfaces should be well-defined and intuitive.
 10. **Comments**: Provide context for complex segments. Keep them concise and meaningful.
-11. **Consistent Interfaces**: Uniformity in function and method interfaces ensures easier integration and usage.
+11. **Consistent Interfaces**: Uniformity in function and method interfaces ensures easier integration and usage. Normally the same with the skill name.
 """)
 
     conversation_history: Optional[List[Dict]] = Field(None, description="Conversation history that the skill was extracted from")
