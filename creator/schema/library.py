@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from dotenv import load_dotenv, find_dotenv
+from creator.code_interpreter import CodeInterpreter
 import os
 
 
@@ -42,6 +43,7 @@ class LibraryConfig(BaseModel):
     agent_model: str = _agent_model
     official_skill_library_path: str = _official_skill_library_path
     build_in_skill_config: dict = build_in_skill_config
+    code_interpreter: CodeInterpreter = CodeInterpreter()
 
 
 config = LibraryConfig()

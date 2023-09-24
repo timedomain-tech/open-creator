@@ -37,7 +37,11 @@ class BaseInterpreter:
         
         stdout, stderr = "", ""
         try:
-            stdout, stderr = self.process.communicate(input=query)
+            try:
+                stdout, stderr = self.process.communicate(input=query, timeout=60)
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+                stdout, stderr = self.process.communicate()
         except BrokenPipeError:
             stderr = traceback.format_exc()
 

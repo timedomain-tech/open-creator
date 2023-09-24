@@ -49,9 +49,11 @@ class CodeInterpreter(StructuredTool):
     description: str = "Executes code on the user's machine and returns the output"
     args_schema: Type[BaseModel] = CodeInterpreterSchema
     interpreters: dict[str, Any] = {}
+    run_history: dict[str, Any] = {}
 
     def add_interpreter(self, language:str):
         self.interpreters[language] = language_map[language]()
+        self.run_history[language] = []
 
     # use re to remove ``` and ` from start and end of code
     def clean_code(self, code: str) -> str:
@@ -70,7 +72,12 @@ class CodeInterpreter(StructuredTool):
             return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported"}
         if language not in self.interpreters:
             self.add_interpreter(language=language)
-        return self.interpreters[language].run(code)
+        result = self.interpreters[language].run(code)
+        self.run_history[language].append({
+            "code": code,
+            "result": result
+        })
+        return result
 
     def to_function_schema(self):
         function_schema = format_tool_to_openai_function(self)

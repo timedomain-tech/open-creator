@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
+from creator.schema.library import config
 
 
 ########### pydantic models ###########
@@ -129,4 +130,11 @@ When writing code, it's imperative to follow industry standards and best practic
             code_skill_json_schema["properties"].pop(prop)
 
         return code_skill_json_schema
+
+    def run(self, inputs: dict[str, Any]):
+        result = config.code_interpreter.run({
+            "language": self.skill_program_language,
+            "code": self.skill_code
+        })
+        return result
 
