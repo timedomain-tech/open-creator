@@ -39,23 +39,24 @@ def validate_create_params(func):
             if kwargs.get(path) and not os.path.exists(kwargs.get(path)):
                 print(f"[red]Warning:[/red] [yellow]The path {kwargs.get(path)} does not exist.[/yellow]")
                 return None
-        
+
+        # List of parameters to check for huggingface
+        params = ["huggingface_repo_id", "huggingface_skill_path"]
+        # Check if both huggingface parameters are provided
+        huggingface_provided_params = [param for param in params if kwargs.get(param)]
+        if len(huggingface_provided_params) == 1:
+            print("[red]Warning[/red]: [yellow]Please provide both parameters: huggingface_repo_id and huggingface_skill_path.[/yellow]")
+            return None
+
         # List of parameters to check
         params = ["messages", "request", "skill_path", "skill_json_path", "messages_json_path", "file_content", "file_path"]
         # Check if only one parameter is provided
         provided_params = [param for param in params if kwargs.get(param)]
-        if len(provided_params) != 1:
+
+        if len(provided_params) != 1 and len(huggingface_provided_params) ==0:
             print(f"[red]Warning[/red]: [yellow]Only one parameter can be provided. You provided: {provided_params}[/yellow]")
             return None
         
-        # List of parameters to check for huggingface
-        params = ["huggingface_repo_id", "huggingface_skill_path"]
-        # Check if both huggingface parameters are provided
-        provided_params = [param for param in params if kwargs.get(param)]
-        if len(provided_params) == 1:
-            print("[red]Warning[/red]: [yellow]Please provide both parameters: huggingface_repo_id and huggingface_skill_path.[/yellow]")
-            return None
-
         # Return the original function with the validated parameters
         return func(cls, *args, **kwargs)
     return wrapper
@@ -89,7 +90,7 @@ def validate_save_params(func):
 
 class Creator:
     """
-    A class responsible for creating and saving skills. 
+    A class responsible for creating, saving and searching skills. 
     Provides functionalities for generating skills from various sources.
     """
     vectordb = BaseVectorStore()
@@ -111,10 +112,10 @@ class Creator:
     def _create_from_file_content(cls, file_content) -> CodeSkill:
         """Generate skill from messages."""
         skill_json = skill_extractor_agent.run({
-            "messages": {
+            "messages": [{
                 "role": "user",
                 "content": file_content
-            },
+            }],
             "username": getpass.getuser(),
             "current_working_directory": os.getcwd(),
             "operating_system": platform.system(),
@@ -263,6 +264,8 @@ class Creator:
         print(Markdown(f"> saved to {skill_path}"))
 
     @classmethod
-    def search(self, query: str, top_k: int = 3, threshold=0.8) -> List[Union[BaseSkill, CodeSkill]]:
+    def search(self, query: str, top_k: int = 3, threshold=0.8, remote=False) -> List[Union[BaseSkill, CodeSkill]]:
+        if remote:
+            raise NotImplementedError
         skills = self.vectordb.search(query, top_k=top_k, threshold=threshold)
         return [CodeSkill(**skill) if skill.get("skill_program_language", None) else BaseSkill(**skill) for skill in skills]

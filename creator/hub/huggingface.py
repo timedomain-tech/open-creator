@@ -8,7 +8,7 @@ import subprocess
 
 
 def hf_pull(repo_id, huggingface_skill_path, save_path) -> CodeSkill:
-    return_path = hf_hub_download(repo_id=repo_id, subfolder=huggingface_skill_path, filename="skill.json")
+    return_path = hf_hub_download(repo_id=repo_id, subfolder=huggingface_skill_path, filename="skill.json", repo_type="space")
     with open(return_path) as f:
         skill_json = json.load(f)
     # copy to local skill library
@@ -22,7 +22,7 @@ def hf_pull(repo_id, huggingface_skill_path, save_path) -> CodeSkill:
 def hf_update_app_file(local_dir):
     # download app.py
     repo_id = config.official_skill_library_path
-    return_path = hf_hub_download(repo_id=repo_id, filename="app.py")
+    return_path = hf_hub_download(repo_id=repo_id, filename="app.py", repo_type="space")
     os.system(command=f"cp {return_path} {local_dir}")
     return_path = hf_hub_download(repo_id=repo_id, filename="requirements.txt")
     os.system(command=f"cp {return_path} {local_dir}")
@@ -49,7 +49,7 @@ def hf_repo_update(repo_id, local_dir):
         Repository(local_dir=local_dir, clone_from=repo_url).git_pull()
         logger.success(f"Successfully cloned repo {repo_id} to {local_dir}.")
         if is_new:
-            hf_update_app_file(repo_id=repo_id, local_dir=local_dir)
+            hf_update_app_file(local_dir=local_dir)
     else:
         Repository(local_dir=local_dir).git_pull()
 

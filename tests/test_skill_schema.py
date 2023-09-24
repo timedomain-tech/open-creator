@@ -14,4 +14,3 @@ if __name__ == "__main__":
     # print(skill.model_dump_json())
     skill_json_schema = CodeSkill.to_skill_function_schema()
     print(json.dumps(skill_json_schema, ensure_ascii=False))
-          

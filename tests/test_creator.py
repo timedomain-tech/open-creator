@@ -6,6 +6,12 @@ from rich import print
 import json
 
 
+def test_create_from_user_request():
+    skill = creator.create(request="filter how many prime numbers are in 201")
+    # creator.save(skill=skill)
+    print(Markdown(repr(skill)))
+
+
 def test_create_from_messages():
     messages = [
         {
@@ -30,18 +36,73 @@ def test_create_from_messages_json_path():
     creator.save(skill=skill)
 
 
-def test_create_from_file_content():
-    skill = creator.create(file_path="../creator/callbacks/display.py")
+def test_create_from_code_file_content():
+    code_file_content = """
+from rich import print as rich_print
+from rich.markdown import Markdown
+from rich.rule import Rule
+
+def display_markdown_message(message):
+    '''Display markdown message. Works with multiline strings with lots of indentation.
+    Will automatically make single line > tags beautiful.
+    '''
+
+    for line in message.split("\n"):
+        line = line.strip()
+        if line == "":
+            print("")
+        elif line == "---":
+            rich_print(Rule(style="white"))
+        else:
+            rich_print(Markdown(line))
+
+    if "\n" not in message and message.startswith(">"):
+        # Aesthetic choice. For these tags, they need a space below them
+        print("")
+"""
+    skill = creator.create(file_content=code_file_content)
     creator.save(skill=skill)
 
+def test_create_from_doc_file_content():
+    api_doc_file_content = """
+# Installation
+```bash
+pip install -U open-creator
+```
 
-def test_create_from_user_request():
-    skill = creator.create(request="filter how many prime numbers are in 201")
-    # creator.save(skill=skill)
-    print(Markdown(repr(skill)))
+# Usage
+```python
+import creator
+```
+## 1. Create a Skill
+- [x] 1.1 from a request
+- [x] 1.2 from a conversation history (openai messages format)
+- [x] 1.3 from a skill json file
+- [x] 1.4 from a messages_json_path
+- [x] 1.5 from code file
+
+1.1 Create a skill from a request
+```python
+request = "help me write a script that can extracts a specified section from a PDF file and saves it as a new PDF"
+skill = creator.create(request=request)
+```
+"""
+    skill = creator.create(file_content=api_doc_file_content)
+    creator.save(skill=skill)
+
+def test_create_from_file_path():
+    skill = creator.create(file_path="../creator/utils/ask_human.py")
+    creator.save(skill=skill)
+
+def test_create_from_huggingface():
+    skill = creator.create(
+        huggingface_repo_id="Sayoyo/skill-library", huggingface_skill_path="extract_pdf_section"
+    )
+    if skill is not None:
+        creator.save(skill=skill)
 
 
 if __name__ == "__main__":
-    test_create_from_user_request()
+    test_create_from_huggingface()
     # test_create_from_messages_json_path()
     # test_create_from_file_content()

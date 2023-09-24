@@ -20,6 +20,8 @@ def generate_install_command(language: str, dependencies):
 def _generate_python_install_command(dependencies):
     shell_command_str = 'pip show {package_name} || pip install "{package_name}'
     commands = []
+    if not isinstance(dependencies, list):
+        dependencies = [dependencies]
     for dep in dependencies:
         if dep.dependency_type == "package":
             shell_command = shell_command_str.format(package_name=dep.dependency_name)
