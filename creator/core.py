@@ -275,4 +275,5 @@ class Creator:
             print(Markdown("> loading vector database..."))
             self.vectordb = BaseVectorStore()
         skills = self.vectordb.search(query, top_k=top_k, threshold=threshold)
+
         return [CodeSkill(**skill) if skill.get("skill_program_language", None) else BaseSkill(**skill) for skill in skills]

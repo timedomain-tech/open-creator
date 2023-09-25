@@ -121,8 +121,13 @@ def test_save_to_hub():
     print(Markdown(repr(skill)))
     creator.save(skill=skill, huggingface_repo_id="ChuxiJ/skill_library")
 
+def test_local_search():
+    skills = creator.search("extract pdf section")
+    for skill in skills:
+        print(Markdown(repr(skill)))
+
 if __name__ == "__main__":
-    test_save_to_hub()
+    test_local_search()
     # test_create_from_messages_json_path()
     # test_create_from_file_content()
     

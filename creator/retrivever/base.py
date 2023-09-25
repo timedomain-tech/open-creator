@@ -23,7 +23,11 @@ class BaseVectorStore:
             self.skill_library_path = skill_library_path
 
         if os.path.isdir(self.skill_library_path):
+            self.query_cache_path = self.vectordb_path + "/query_cache.json"
             self.vectordb_path = self.vectordb_path + "/vector_db.json"
+            if os.path.exists(self.query_cache_path):
+                with open(self.query_cache_path, "r") as f:
+                    self.query_cache = json.load(f)
 
         if os.path.exists(self.vectordb_path):
             # load vectordb
@@ -67,9 +71,16 @@ class BaseVectorStore:
         for key in self.sorted_keys:
             embeddings.append(self.vector_store[key]["embedding"])
         self.embeddings = np.array(embeddings)
+        # save to vectordb
+        with open(self.vectordb_path, "w") as f:
+            json.dump(self.vector_store, f)
+
+    def save_query_cache(self):
+        with open(self.query_cache_path, "w") as f:
+            json.dump(self.query_cache, f)
         
     def search(self, query: str, top_k: int = 3, threshold=0.8) -> List[dict]:
-        key = (query, top_k, threshold)
+        key = str((query, top_k, threshold))
         if key in self.query_cache:
             return self.query_cache[key]
 
@@ -83,8 +94,11 @@ class BaseVectorStore:
             if scores[i] < threshold:
                 break
             result = self.vector_store[self.sorted_keys[index]]
+            result = result.copy()
+            result.pop("embedding")
             result["score"] = scores[i]
             results.append(result)
         self.query_cache[key] = results
-        return result
+        self.save_query_cache()
+        return results
 
