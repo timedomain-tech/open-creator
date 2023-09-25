@@ -65,11 +65,14 @@ class CodeTesterAgent(LLMChain):
         current_try = 0
 
         llm_with_functions = self.llm.bind(functions=[self.tool.to_function_schema(), TestSummary.to_test_function_schema()])
-        
-        callback = self.llm.callbacks.handlers[0]
+        callback = None
+        if self.llm.callbacks:
+            callback = self.llm.callbacks.handlers[0]
+
         test_summary = []
         while current_try < total_tries:
-            callback.on_chain_start()
+            if callback:
+                callback.on_chain_start()
 
             prompt = ChatPromptTemplate.from_messages(messages=[
                 ("system", _SYSTEM_TEMPLATE),
@@ -97,16 +100,16 @@ class CodeTesterAgent(LLMChain):
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
-            callback.on_tool_end(output)
+            if callback:
+                callback.on_tool_end(output)
 
             function_message = FunctionMessage(name="run_code", content=json.dumps(tool_result, ensure_ascii=False))
             langchain_messages.append(function_message)
             current_try += 1
-
-            callback.on_chain_end()
+            if callback:
+                callback.on_chain_end()
 
         openai_message = list(map(convert_message_to_dict, langchain_messages))
-        callback.message_box.end()
         return {
             "output": {
                 "messages": openai_message,

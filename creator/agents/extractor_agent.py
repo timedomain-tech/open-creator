@@ -47,7 +47,7 @@ class SkillExtractorAgent(LLMChain):
         chat_messages.append(("system", _SYSTEM_TEMPLATE))
         prompt = ChatPromptTemplate.from_messages(chat_messages)
         self.prompt = prompt
-        print(self.prompt.format_messages(**inputs))
+
         response = self.generate([inputs], run_manager=run_manager)
 
         extracted_skill = self.create_outputs(response)[0]["extracted_skill"]

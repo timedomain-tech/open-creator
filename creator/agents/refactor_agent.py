@@ -2,11 +2,9 @@ from typing import Any, Dict, List, Optional
 from langchain.chains.llm import LLMChain
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.prompts import ChatPromptTemplate
-from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
 
-from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
 from creator.schema.library import config
 from creator.utils.dict2list import convert_to_values_list
@@ -44,8 +42,11 @@ class CodeRefactorAgent(LLMChain):
         inputs: Dict[str, Any],
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
-        callback = self.llm.callbacks.handlers[0]
-        callback.on_chain_start()
+        callback = None
+        if self.llm.callbacks is not None:
+            callback = self.llm.callbacks.handlers[0]
+            callback.on_chain_start()
+        
         messages = inputs.pop("messages")
         chat_messages = convert_openai_messages(messages)
         chat_messages.append(("system", _SYSTEM_TEMPLATE))
@@ -60,7 +61,8 @@ class CodeRefactorAgent(LLMChain):
             extracted_skill["conversation_history"] = messages
             extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
             extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
-        callback.on_chain_end()
+        if callback:
+            callback.on_chain_end()
         return {
             "refacted_skills": refacted_skills
         }
