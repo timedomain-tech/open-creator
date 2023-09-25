@@ -4,6 +4,7 @@ import creator
 from rich.markdown import Markdown
 from rich import print
 import json
+import os
 
 
 def test_create_from_user_request():
@@ -101,8 +102,27 @@ def test_create_from_huggingface():
     if skill is not None:
         creator.save(skill=skill)
 
+def test_create_from_skill_json_path():
+    skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/create/skill.json"
+    skill = creator.create(skill_json_path=skill_json_path)
+    print(Markdown(repr(skill)))
+
+def test_save_to_skill_path():
+    skill_json_path = skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json"
+    skill = creator.create(skill_json_path=skill_json_path)
+    print(Markdown(repr(skill)))
+    skill_path = "../build-in-skill_library/ask_run_code_confirm"
+    print(skill.skill_metadata)
+    creator.save(skill=skill, skill_path=skill_path)
+
+def test_save_to_hub():
+    skill_json_path = skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json"
+    skill = creator.create(skill_json_path=skill_json_path)
+    print(Markdown(repr(skill)))
+    creator.save(skill=skill, huggingface_repo_id="ChuxiJ/skill_library")
 
 if __name__ == "__main__":
-    test_create_from_huggingface()
+    test_save_to_hub()
     # test_create_from_messages_json_path()
     # test_create_from_file_content()
+    

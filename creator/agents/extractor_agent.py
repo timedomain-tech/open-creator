@@ -10,6 +10,7 @@ from langchain.adapters.openai import convert_openai_messages
 from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
 from creator.schema.library import config
+from creator.utils import convert_to_values_list
 
 
 _SYSTEM_TEMPLATE = """Extract one skill object from above conversation history, which is a list of messages.
@@ -49,6 +50,8 @@ class SkillExtractorAgent(LLMChain):
         extracted_skill = self.create_outputs(response)[0]["extracted_skill"]
         extracted_skill["skill_metadata"] = BaseSkillMetadata(author=inputs["username"]).model_dump()
         extracted_skill["conversation_history"] = messages
+        extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
+        extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
         callback.on_chain_end()
         return {
             "extracted_skill": extracted_skill

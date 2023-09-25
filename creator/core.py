@@ -93,7 +93,7 @@ class Creator:
     A class responsible for creating, saving and searching skills. 
     Provides functionalities for generating skills from various sources.
     """
-    vectordb = BaseVectorStore()
+    vectordb = None
 
     @classmethod
     def _create_from_messages(cls, messages) -> CodeSkill:
@@ -144,6 +144,8 @@ class Creator:
         """Load skill from a given path."""
         with open(skill_json_path, mode="r") as f:
             skill = CodeSkill.model_validate_json(f.read())
+            skill.skill_metadata.created_at = skill.skill_metadata.created_at.strftime("%Y-%m-%d %H:%M:%S")
+            skill.skill_metadata.updated_at = skill.skill_metadata.updated_at.strftime("%Y-%m-%d %H:%M:%S")
         return skill
 
     @classmethod
@@ -208,12 +210,12 @@ class Creator:
         """Save the skill in various formats."""
         if skill_path is not None and not os.path.exists(skill_path):
             os.makedirs(skill_path, exist_ok=True)
-
+        remote_skill_path = None
         if huggingface_repo_id:
             local_dir = os.path.join(config.remote_skill_library_path, huggingface_repo_id)
             hf_repo_update(huggingface_repo_id, local_dir)
-            skill_path = os.path.join(local_dir, skill.skill_name)
-            skill_path = skill_path
+            remote_skill_path = os.path.join(local_dir, skill.skill_name)
+            skill_path = os.path.join(config.local_skill_library_path, skill.skill_name)
         
         if skill_path:
             os.makedirs(os.path.dirname(skill_path), exist_ok=True)
@@ -259,7 +261,9 @@ class Creator:
                     json.dump(skill.test_summary, f, ensure_ascii=False, indent=4)
 
             if huggingface_repo_id:
-                hf_push(skill_path)
+                # cp to local path
+                os.system(command=f"cp -r {skill_path} {remote_skill_path}")
+                hf_push(remote_skill_path)
 
         print(Markdown(f"> saved to {skill_path}"))
 
@@ -267,5 +271,8 @@ class Creator:
     def search(self, query: str, top_k: int = 3, threshold=0.8, remote=False) -> List[Union[BaseSkill, CodeSkill]]:
         if remote:
             raise NotImplementedError
+        if self.vectordb is None:
+            print(Markdown("> loading vector database..."))
+            self.vectordb = BaseVectorStore()
         skills = self.vectordb.search(query, top_k=top_k, threshold=threshold)
         return [CodeSkill(**skill) if skill.get("skill_program_language", None) else BaseSkill(**skill) for skill in skills]

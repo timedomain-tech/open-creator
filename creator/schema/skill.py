@@ -26,9 +26,9 @@ class BaseSkill(BaseModel):
 
 
 class CodeSkillParameter(BaseModel):
-    param_name: str = Field(default="")
+    param_name: str = Field(default="query", description="the name of the parameter")
     param_type: str = Field(default="string", description="the type, only support string, integer, float, boolean, array, object", enum=["string", "integer", "float", "boolean", "array", "object"])
-    param_description: str = Field(default="", description="the description. If it is enum, describe the enum values. If it is format, describe the format")
+    param_description: str = Field(default="the input query", description="the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format")
     param_required: bool = Field(default=True, description="whether it is required")
     param_default: Optional[Any] = Field(default=None, description="the default value, it depends on the type")
 
