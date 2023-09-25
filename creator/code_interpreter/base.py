@@ -24,7 +24,7 @@ class BaseInterpreter:
 
     def get_persistent_process(self):
         self.process = subprocess.Popen(
-            args=self.start_cmd.split(),
+            args=self.start_command.split(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -81,7 +81,7 @@ class BaseInterpreter:
         query = self.preprocess(query)
         if is_start or self.process is None:
             try:
-                self.get_persistent_process(self.start_command)
+                self.get_persistent_process()
                 return {"status": "success", "stdout": "", "stderr": ""}
             except Exception:
                 traceback_string = traceback.format_exc()
