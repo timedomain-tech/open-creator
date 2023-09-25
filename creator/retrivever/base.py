@@ -53,7 +53,7 @@ class BaseVectorStore:
                     skill_json["skill_id"] = root
                     skill_json["embedding_text"] = embedding_text
                     self.vector_store[root] = skill_json
-        
+
         # index embedding_texts
         no_embedding_obj = {key:value for key, value in self.vector_store.items() if "embedding" not in value}
         if len(no_embedding_obj) > 0:

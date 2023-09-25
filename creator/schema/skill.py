@@ -3,7 +3,7 @@ from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
 from creator.schema.library import config
-from creator.utils.skill_doc import generate_skill_doc
+from creator.utils import generate_skill_doc, generate_install_command
 
 
 class BaseSkillMetadata(BaseModel):
@@ -136,7 +136,19 @@ When writing code, it's imperative to follow industry standards and best practic
 
         return code_skill_json_schema
 
+    def check_and_install_dependencies(self):
+        if self.skill_dependencies is None:
+            return
+        install_script = generate_install_command(self.skill_program_language, self.skill_dependencies)
+        result = config.code_interpreter.run({
+            "language": "shell",
+            "code": install_script,
+        })
+        print(result)
+        return
+
     def run(self, inputs: dict[str, Any]):
+        self.check_and_install_dependencies()
         result = config.code_interpreter.run({
             "language": self.skill_program_language,
             "code": self.skill_code

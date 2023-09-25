@@ -125,8 +125,20 @@ def test_local_search():
     for skill in skills:
         print(Markdown(repr(skill)))
 
+def test_run_skill():
+    skill = creator.search("extract pdf section")[0]
+    input_args = {
+        "pdf_path": "creator.pdf",
+        "start_page": 3,
+        "end_page": 8,
+        "output_path": "creator3-8.pdf"
+    }
+    print(Markdown(repr(skill)))
+    resp = skill.run(input_args)
+    print(resp)
+
+
 if __name__ == "__main__":
-    # test_local_search()
     # test_create_from_messages_json_path()
     # test_create_from_file_path()
     test_create_from_user_request()

@@ -59,6 +59,9 @@ class CodeInterpreter(StructuredTool):
     def clean_code(self, code: str) -> str:
         code = re.sub(r'^(```|`)', '', code)
         code = re.sub(r'(```|`)$', '', code)
+        code = code.strip()
+        code += "\n\n"
+        # replace tab to 4 
         return code
 
     def _run(
@@ -72,6 +75,7 @@ class CodeInterpreter(StructuredTool):
             return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported"}
         if language not in self.interpreters:
             self.add_interpreter(language=language)
+        code = self.clean_code(code)
         result = self.interpreters[language].run(code)
         self.run_history[language].append({
             "code": code,

@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="https://discord.gg/mMszyg2j">
-        <img alt="Discord" src="https://img.shields.io/discord/1146610656779440188?logo=discord&style=flat&logoColor=white"/>
+        <img alt="Discord" src="https://img.shields.io/discord/1153640284530417684?logo=discord&style=flat&logoColor=white"/>
     </a>
     <a href="README_JA.md"><img src="https://img.shields.io/badge/ドキュメント-日本語-white.svg" alt="JA doc"/></a>
     <a href="README_ZH.md"><img src="https://img.shields.io/badge/文档-中文版-white.svg" alt="ZH doc"/></a>
@@ -37,7 +37,10 @@ import creator
 - [x] 1.2 from a conversation history (openai messages format)
 - [x] 1.3 from a skill json file
 - [x] 1.4 from a messages_json_path
-- [x] 1.5 from code file
+- [x] 1.5 from code file content
+- [x] 1.6 from doc file content
+- [x] 1.7 from file path
+- [x] 1.8 from huggingface
 
 1.1 Create a skill from a request
 ```python
@@ -45,74 +48,83 @@ request = "help me write a script that can extracts a specified section from a P
 skill = creator.create(request=request)
 ```
 
-1.2 Create a skill from a conversation history
+1.5 Create a skill from code file content
 ```python
-# you can use open-interpreter to save messages to a path
-import json
-messages = [
-    {
-      "role": "user",
-      "content": "write a program to list all the python functions and their docstrings in a directory"
-    },
-    {
-      "role": "assistant",
-      "content": "Sure, I can help with that. Here's the plan:\n\n1. First, we need to get a list of all Python files in the specified directory. We can do this by using the `os` and `glob` modules in Python.\n2. Then, for each Python file, we will parse the file to find all function definitions. We can do this by using the `ast` module in Python, which can parse Python source code into an abstract syntax tree (AST).\n3. For each function definition, we will extract the function's name and its docstring. The `ast` module can also help us with this.\n4. Finally, we will print out the function names and their docstrings.\n\nLet's start with step 1: getting a list of all Python files in the specified directory.",
-      "function_call": {
-        "name": "run_code",
-        "arguments": "{\n  \"language\": \"python\",\n  \"code\": \"import os\\nimport glob\\n\\n# Get the current working directory\\ncwd = os.getcwd()\\n\\n# Get a list of all Python files in the directory\\npython_files = glob.glob(os.path.join(cwd, '*.py'))\\n\\npython_files\"\n}",
-        "parsed_arguments": {
-          "language": "python",
-          "code": "import os\nimport glob\n\n# Get the current working directory\ncwd = os.getcwd()\n\n# Get a list of all Python files in the directory\npython_files = glob.glob(os.path.join(cwd, '*.py'))\n\npython_files"
-        }
-      }
-    }
-  ]
-skill = creator.create(messages=messages)
+code_content = """
+def hello():
+    print("Hello, world!")
+"""
+skill = creator.create(file_content=code_content)
 ```
 
-1.3 Create a skill from a skill json file
+1.6 Create a skill from doc file content
 ```python
-skill = creator.create(skill_json_path="my_skill.json")
+doc_content = """
+# Installation
+pip install mypackage
+"""
+skill = creator.create(file_content=doc_content)
 ```
 
-1.4 Create a skill from a messages_json_path
+1.7 Create a skill from file path
 ```python
-skill = creator.create(messages_json_path="example_messages/example1.json")
+skill = creator.create(file_path="path/to/your/file.py")
 ```
 
-1.5* Create a skill from code file
+1.8 Create a skill from huggingface
 ```python
-skill = creator.create(code_file_path="example_code/example1.py")
+skill = creator.create(huggingface_repo_id="YourRepoID", huggingface_skill_path="your_skill_path")
 ```
 
 ## 2. Save a Skill
+- [x] 2.1 Save to default path
+- [x] 2.2 Save to specific skill path
+- [x] 2.3 Save to huggingface
+
+2.1 Save to default path
 ```python
-# creator.save(skill, save_path="my_skill.json") or you can use the default path, ~/.cache/open_creator/skill_library/{skill_name}
 creator.save(skill)
 ```
 
-## 3. Search skills
+2.2 Save to specific skill path
 ```python
-user_request = "Extract pages 3-8 from `example.pdf` and save to `example_page3-8.pdf`"
-skills = creator.search(q=user_request, top_k=3)
+creator.save(skill, skill_path="path/to/your/skill/directory")
+```
+
+2.3 Save to huggingface
+```python
+creator.save(skill, huggingface_repo_id="YourRepoID")
+```
+
+## 3. Search skills
+- [x] 3.1 Local Search
+
+3.1 Local Search
+```python
+skills = creator.search("your_search_query")
+for skill in skills:
+    print(skill)
 ```
 
 ## 4. Use a skill
+- [x] 4.1 Use a skill
 ```python
+from rich.markdown import Markdown
+from rich import print
+skill = creator.search("extract pdf section")[0]
 input_args = {
-    "pdf_file_path": "example.pdf",
-    "begin_page": 3,
+    "pdf_path": "creator.pdf",
+    "start_page": 3,
     "end_page": 8,
-    "output_file_path": "example_page3-8.pdf"
+    "output_path": "creator3-8.pdf"
 }
-skill.run(**input_args)
+print(Markdown(repr(skill)))
+resp = skill.run(input_args)
+print(resp)
 ```
 
----
-
-
 # Contributing
-We welcome contributions from the community! Whether it's a bug fix, new feature, or a skill to add to the library, your contributions are valued. Please check our [Contributing Guidelines](./CONTRIBUTING.md) for guidelines.
+We welcome contributions from the community! Whether it's a bug fix, new feature, or a skill to add to the library, your contributions are valued. Please check our [Contributing Guidelines](CONTRIBUTING.md) for guidelines.
 
 ## License
 
