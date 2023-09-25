@@ -126,7 +126,8 @@ def test_local_search():
         print(Markdown(repr(skill)))
 
 if __name__ == "__main__":
-    test_local_search()
+    # test_local_search()
     # test_create_from_messages_json_path()
-    # test_create_from_file_content()
+    # test_create_from_file_path()
+    test_create_from_user_request()
     
