@@ -3,15 +3,15 @@ import os
 import platform
 
 
-class ShellInterpreter:
+class ShellInterpreter(BaseInterpreter):
     
     def __init__(self):
         self.bash_interpreter = None
 
-    def interpret(self, query):
+    def run(self, query):
         if self.bash_interpreter is None:
             self.bash_interpreter = BaseInterpreter()
-            start_cmd = 'cmd.exe' if platform.system() == 'Windows' else os.environ.get('SHELL', 'bash'),
+            start_cmd = 'cmd.exe' if platform.system() == 'Windows' else os.environ.get('SHELL', 'bash')
             resp = self.bash_interpreter.run(start_cmd)
             if resp["status"] != "success":
                 return resp
