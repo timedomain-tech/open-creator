@@ -11,7 +11,7 @@ from creator.utils import (
 
 from creator.hub.huggingface import hf_pull, hf_repo_update, hf_push
 from creator.retrivever.base import BaseVectorStore
-
+from creator.client import cmd_client
 
 from rich import print
 from rich.markdown import Markdown
@@ -277,3 +277,7 @@ class Creator:
         skills = self.vectordb.search(query, top_k=top_k, threshold=threshold)
 
         return [CodeSkill(**skill) if skill.get("skill_program_language", None) else BaseSkill(**skill) for skill in skills]
+
+    def cli(self):
+        cmd_client(self)
+    

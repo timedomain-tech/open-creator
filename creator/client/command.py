@@ -1,6 +1,5 @@
 import argparse
-from creator.core import Creator
-from rich import print
+from rich import print as rich_print
 from rich.markdown import Markdown
 from rich.rule import Rule
 import json
@@ -134,7 +133,7 @@ arguments = [
     {
         "name": "quiet",
         "nickname": "q",
-        "help_text": "Quiet mode to enter interactive mode and not print LOGO and help", 
+        "help_text": "Quiet mode to enter interactive mode and not rich_print LOGO and help", 
         "command": False,
         "type": bool,
     },
@@ -148,28 +147,40 @@ arguments = [
 ]
 
 
-def cmd_client():
+def cmd_client(creator):
     parser = argparse.ArgumentParser(description='Open Creator CLI')
+    subparsers = parser.add_subparsers(dest='command')
+    subcommand_help_texts = []
     # Add arguments
     for arg in arguments:
         if arg["command"]:
-            subparsers = parser.add_subparsers(dest='command')
+            subparser = subparsers.add_parser(arg["name"], help=arg["help_text"])
             for sub_arg in arg["sub_arguments"]:
-                subparser = subparsers.add_parser(arg["name"], help=arg["help_text"])
                 if sub_arg["type"] == bool:
                     subparser.add_argument(f'-{sub_arg["nickname"]}', f'--{sub_arg["name"]}', dest=sub_arg["name"], help=sub_arg["help_text"], action='store_true')
                 else:
                     subparser.add_argument(f'-{sub_arg["nickname"]}', f'--{sub_arg["name"]}', dest=sub_arg["name"], help=sub_arg["help_text"], type=sub_arg["type"], default=sub_arg.get("default", None))
+            subcommand_help_texts.append(subparser.format_help())
         else:
             if arg["type"] == bool:
                 parser.add_argument(f'-{arg["nickname"]}', f'--{arg["name"]}', dest=arg["name"], help=arg["help_text"], action='store_true')
             else:
                 parser.add_argument(f'-{arg["nickname"]}', f'--{arg["name"]}', dest=arg["name"], help=arg["help_text"], type=arg["type"], default=arg.get("default", None))
 
-    args = parser.parse_args()
+    main_help = parser.format_help()
+    custom_help_text = main_help + "\n".join(subcommand_help_texts)
+
+    try:
+        args = parser.parse_args()
+    except Exception:
+        print(custom_help_text)
+        return
+
+    if not args.command:
+        print(custom_help_text)
 
     if args.command == "create":
-        skill = Creator.create(
+        skill = creator.create(
             request=args.request,
             messages=args.messages,
             skill_json_path=args.skill_json_path,
@@ -178,30 +189,30 @@ def cmd_client():
             huggingface_repo_id=args.huggingface_repo_id,
             huggingface_skill_path=args.huggingface_skill_path,
         )
-        print(Markdown(repr(skill)))
+        rich_print(Markdown(repr(skill)))
         if args.save:
-            Creator.save(skill=skill)
+            creator.save(skill=skill)
     
     if args.command == "save":
         skill = None
         skill = json.loads(args.skill)
-        Creator.save(
+        creator.save(
             skill=skill,
             skill_json_path=args.skill_json_path,
             huggingface_repo_id=args.huggingface_repo_id,
         )
 
     if args.command == "search":
-        skills = Creator.search(
+        skills = creator.search(
             query=args.query,
             top_k=args.top_k,
             threshold=args.threshold,
             remote=args.remote,
         )
-        print(Rule(style="white"))
+        rich_print(Rule(style="white"))
         for skill in skills:
-            print(Markdown(repr(skill)))
-            print(Rule(style="white"))
+            rich_print(Markdown(repr(skill)))
+            rich_print(Rule(style="white"))
 
 
 if __name__ == "__main__":
