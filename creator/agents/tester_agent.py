@@ -15,6 +15,7 @@ from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.schema.skill import TestSummary
 from creator.utils import truncate_output, ask_run_code_confirm, stream_partial_json_to_dict
+from creator.utils.llm_creator import create_llm
 
 
 _SYSTEM_TEMPLATE = """You are Test Engineer, a world-class tester skilled at crafting test cases, writing test code, debugging, and evaluating test outcomes.
@@ -138,7 +139,7 @@ def create_code_tester_agent(llm):
     return chain
 
 
-llm = ChatOpenAI(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
+llm = create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
 
 
 code_tester_agent = create_code_tester_agent(llm=llm)
