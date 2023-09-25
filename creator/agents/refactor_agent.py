@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Optional
 from langchain.chains.llm import LLMChain
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.prompts import ChatPromptTemplate
-from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
@@ -13,7 +12,7 @@ from creator.schema.library import config
 from creator.utils.dict2list import convert_to_values_list
 import getpass
 
-from creator.utils.llm_creator import create_llm
+from creator.llm.llm_creator import create_llm
 
 _SYSTEM_TEMPLATE = """**You are the Code Refactoring Agent**, an expert dedicated to elevating the quality of code while preserving its core functionality
 **Guiding Principles**:
@@ -97,5 +96,6 @@ def create_code_refactor_agent(llm):
     return chain
 
 
-skill_extractor_agent = create_code_refactor_agent(create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
+llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+skill_extractor_agent = create_code_refactor_agent(llm)
 

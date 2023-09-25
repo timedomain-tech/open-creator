@@ -1,0 +1,32 @@
+LOCAL_SKILL_LIBRARY_PATH: .cache/open_creator/skill_library
+REMOTE_SKILL_LIBRARY_PATH: .cache/open_creator/remote
+LOCAL_SKILL_LIBRARY_VECTORD_PATH: .cache/open_creator/vectordb/
+PROMPT_CACHE_HISTORY_PATH: .cache/open_creator/prompt_cache/history.txt
+SKILL_EXTRACT_AGENT_CACHE_PATH: .cache/open_creator/llm_cache
+OFFICIAL_SKILL_LIBRARY_PATH: timedomain/skill-library
+OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH: timedomain/skill-library-template
+
+# for AZURE, it is your_deployment_id
+# for ANTHROPIC, it is claude-2
+# for VertexAI, it is chat-bison
+# for huggingface, it is huggingface/WizardLM/WizardCoder-Python-34B-V1.0 model path
+# for ollama, it is like ollama/llama2
+# the default is openai/gpt-3.5
+MODEL_NAME: gpt-3.5-turbo-16k-0613
+
+USE_AZURE: false
+RUN_HUMAN_CONFIRM: false
+USE_STREAM_CALLBACK: true
+
+ANTHROPIC_API_KEY: ""
+
+AZURE_API_KEY: ""
+AZURE_API_BASE: ""
+AZURE_API_VERSION: ""
+
+VERTEX_PROJECT: ""
+VERTEX_LOCATION: ""
+
+HUGGINGFACE_API_KEY: ""
+HUGGINGFACE_API_BASE: ""
+

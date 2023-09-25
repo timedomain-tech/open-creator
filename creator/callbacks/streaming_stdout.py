@@ -17,6 +17,8 @@ class FunctionCallStreamingStdOut(StreamingStdOutCallbackHandler):
     def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         """Run on new LLM token. Only available when streaming is enabled."""
         chunk = kwargs.get("chunk", None)
+        if chunk is None:
+            return
         try:
             self.message_box.update_from_chunk(chunk)
         except Exception:

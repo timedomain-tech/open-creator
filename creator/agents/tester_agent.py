@@ -1,7 +1,6 @@
 from typing import List, Dict, Any, Optional
 import json
 
-from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.schema.messages import FunctionMessage
 from langchain.prompts import ChatPromptTemplate
@@ -10,12 +9,11 @@ from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
 
-from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.schema.skill import TestSummary
 from creator.utils import truncate_output, ask_run_code_confirm, stream_partial_json_to_dict
-from creator.utils.llm_creator import create_llm
+from creator.llm.llm_creator import create_llm
 
 
 _SYSTEM_TEMPLATE = """You are Test Engineer, a world-class tester skilled at crafting test cases, writing test code, debugging, and evaluating test outcomes.
@@ -60,7 +58,7 @@ class CodeTesterAgent(LLMChain):
     ) -> Dict[str, Any]:
 
         messages = inputs.pop("messages")
-        allow_user_confirm = inputs.pop("allow_user_confirm", False)
+        allow_user_confirm = config.run_human_confirm
         langchain_messages = convert_openai_messages(messages)
 
         total_tries = self.total_tries
@@ -139,7 +137,5 @@ def create_code_tester_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
-
-
+llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
 code_tester_agent = create_code_tester_agent(llm=llm)

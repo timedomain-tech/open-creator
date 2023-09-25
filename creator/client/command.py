@@ -182,8 +182,8 @@ def cmd_client(creator):
 
     if args.config:
         # this source code from https://github.com/KillianLucas/open-interpreter/blob/be38ef8ed6ce9d0b7768e2ec3f542337f3444f54/interpreter/cli/cli.py#L101
-        config_path = os.path.join(appdirs.user_config_dir(), 'Open Creator', 'config.yaml')
-        config_path = os.path.join(appdirs.user_config_dir(), 'Open Creator', 'config.yaml')
+        config_path = os.path.join(appdirs.user_config_dir(), 'Open-Creator', 'config.yaml')
+        config_path = os.path.join(appdirs.user_config_dir(), 'Open-Creator', 'config.yaml')
         print(f"Opening `{config_path}`...")
         # Use the default system editor to open the file
         if platform.system() == 'Windows':

@@ -1,7 +1,6 @@
 from typing import List, Dict, Any, Optional
 import json
 
-from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.schema.messages import FunctionMessage
 from langchain.prompts import ChatPromptTemplate
@@ -10,12 +9,11 @@ from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
 
-from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.utils import truncate_output, stream_partial_json_to_dict, ask_run_code_confirm
 
-from creator.utils.llm_creator import create_llm
+from creator.llm.llm_creator import create_llm
 
 
 _SYSTEM_TEMPLATE = """You are Code Interpreter, a world-class programmer that can complete any goal by executing code.
@@ -60,7 +58,7 @@ class CodeInterpreterAgent(LLMChain):
     ) -> Dict[str, Any]:
 
         messages = inputs.pop("messages")
-        allow_user_confirm = inputs.pop("allow_user_confirm", False)
+        allow_user_confirm = config.run_human_confirm
         langchain_messages = convert_openai_messages(messages)
 
         total_tries = self.total_tries
@@ -68,9 +66,13 @@ class CodeInterpreterAgent(LLMChain):
 
         llm_with_functions = self.llm.bind(functions=[self.tool.to_function_schema()])
         
-        callback = self.llm.callbacks.handlers[0]
+        callback = None
+        if self.llm.callbacks is not None:
+            callback = self.llm.callbacks.handlers[0]
+
         while current_try < total_tries:
-            callback.on_chain_start()
+            if callback:
+                callback.on_chain_start()
 
             prompt = ChatPromptTemplate.from_messages(messages=[
                 ("system", _SYSTEM_TEMPLATE),
@@ -93,16 +95,18 @@ class CodeInterpreterAgent(LLMChain):
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
-            callback.on_tool_end(output)
+            if callback:
+                callback.on_tool_end(output)
             
             function_message = FunctionMessage(name="run_code", content=json.dumps(tool_result, ensure_ascii=False))
             langchain_messages.append(function_message)
             current_try += 1
-
-            callback.on_chain_end()
+            if callback:
+                callback.on_chain_end()
 
         openai_message = list(map(convert_message_to_dict, langchain_messages))
-        callback.message_box.end()
+        if callback:
+            callback.message_box.end()
         return {
             "messages": openai_message
         }
@@ -129,7 +133,5 @@ def create_code_interpreter_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
-
-
+llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
 code_interpreter_agent = create_code_interpreter_agent(llm=llm)

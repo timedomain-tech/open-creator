@@ -8,7 +8,7 @@ import os
 
 def test_create_from_user_request():
     skill = creator.create(request="filter how many prime numbers are in 201")
-    # creator.save(skill=skill)
+    creator.save(skill=skill)
     print(Markdown(repr(skill)))
 
 
@@ -134,12 +134,10 @@ def test_run_skill():
         "output_path": "creator3-8.pdf"
     }
     print(Markdown(repr(skill)))
-    resp = skill.run(input_args)
+    resp = skill.run(**input_args)
     print(resp)
 
 
 if __name__ == "__main__":
-    # test_create_from_messages_json_path()
-    # test_create_from_file_path()
-    test_create_from_user_request()
-    
+    test_create_from_messages()
+
