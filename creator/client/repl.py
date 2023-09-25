@@ -1,5 +1,5 @@
 import argparse
-from creator.core import Creator
+from creator.core.core import Creator
 from creator.agents import code_interpreter_agent
 from creator.schema.library import config
 from creator.schema.skill import BaseSkill, CodeSkill
@@ -13,7 +13,6 @@ import getpass
 import platform
 from rich.console import Console
 
-
 _LOGO_STR = """
   ___                      ____                _             
  / _ \ _ __   ___ _ __    / ___|_ __ ___  __ _| |_ ___  _ __ 
@@ -22,7 +21,6 @@ _LOGO_STR = """
  \___/| .__/ \___|_| |_|  \____|_|  \___|\__,_|\__\___/|_|   
       |_|                                                   
 """
-
 
 _HELP_STR = """
 # Entering Help Commands
@@ -44,6 +42,7 @@ _HELP_STR = """
 - `%undo`: undo the last request
 - `%help`: Print this help message
 """
+
 
 
 def load_skill_in_console(skill):
@@ -173,63 +172,3 @@ def interactive():
                 "verbose": True,
             }
         )
-
-
-def cli():
-    parser = argparse.ArgumentParser(description='Open Creator CLI')
-
-    # interactive command
-    parser.add_argument('-i', '--interactive', action='store_true', help='Enter interactive mode', default=True)
-    parser.add_argument('-q', '--quiet', action='store_true', help='Do not print the logo')
-
-    subparsers = parser.add_subparsers(dest='command')
-    # create command
-    create_parser = subparsers.add_parser('create', help='Create a new skill')
-    create_parser.add_argument('-r', '--request', help='Request string')
-    create_parser.add_argument('-m', '--messages', help='Path to messages JSON file')
-    create_parser.add_argument('-sp', '--skill_path', help='Path to skill JSON file')
-    create_parser.add_argument('-f', '--file', help='Path to file')
-    create_parser.add_argument('-c', '--content', help='File content')
-    create_parser.add_argument('-hf', '--huggingface', help='Huggingface repo ID')
-    create_parser.add_argument('-hp', '--huggingface_path', help='Huggingface skill path')
-    create_parser.add_argument('-s', '--save', action='store_true', help='Save skill after creation')
-
-    # search command
-    search_parser = subparsers.add_parser('search', help='Search for a skill')
-    search_parser.add_argument('-q', '--query', help='Search query')
-
-    args = parser.parse_args()
-
-    if args.command == 'create':
-        if args.interactive:
-            while True:
-                request = input("Enter your request: ")
-                Creator.interpreter(request=request)
-        else:
-            Creator.create(
-                request=args.request,
-                messages=args.messages,
-                skill_path=args.skill_path,
-                file_content=args.content,
-                file_path=args.file,
-                huggingface_repo_id=args.huggingface,
-                huggingface_skill_path=args.huggingface_path,
-            )
-            if args.save:
-                Creator.save(
-                    skill=args.skill_path,
-                    huggingface_repo_id=args.huggingface,
-                )
-    elif args.command == 'search':
-        # TODO: Implement search functionality
-        pass
-
-    elif args.interactive:
-        if not args.quiet:
-            print(_LOGO_STR)
-        interactive()
-
-
-if __name__ == "__main__":
-    cli()
-

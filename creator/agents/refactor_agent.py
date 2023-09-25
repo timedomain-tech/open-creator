@@ -10,6 +10,7 @@ from langchain.adapters.openai import convert_openai_messages
 from creator.callbacks.streaming_stdout import FunctionCallStreamingStdOut
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
 from creator.schema.library import config
+from creator.utils.dict2list import convert_to_values_list
 import getpass
 
 
@@ -57,6 +58,8 @@ class CodeRefactorAgent(LLMChain):
         for extracted_skill in refacted_skills:
             extracted_skill["skill_metadata"] = BaseSkillMetadata(author=getpass.getuser()).model_dump()
             extracted_skill["conversation_history"] = messages
+            extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
+            extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
         callback.on_chain_end()
         return {
             "refacted_skills": refacted_skills
