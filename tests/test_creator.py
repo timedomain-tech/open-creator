@@ -3,7 +3,6 @@ sys.path.append("..")
 import creator
 from rich.markdown import Markdown
 from rich import print
-import json
 import os
 
 

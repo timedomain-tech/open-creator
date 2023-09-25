@@ -17,6 +17,7 @@ _skill_extract_agent_cache_path = os.environ.get("SKILL_EXTRACT_AGENT_CACHE_PATH
 _official_skill_library_path = os.environ.get("OFFICIAL_SKILL_LIBRARY_PATH", "timedomain/skill-library")
 _official_skill_library_template_path = os.environ.get("OFFICIAL_SKILL_LIBRARY_PATH", "timedomain/skill-library-template")
 _agent_model = os.environ.get("AGENT_MODEL", "gpt-3.5-turbo-16k-0613")
+_run_human_confirm = os.environ.get("RUN_HUMAN_CONFIRM", False)
 
 if not os.path.exists(_skill_extract_agent_cache_path):
     os.makedirs(_skill_extract_agent_cache_path)
@@ -47,6 +48,7 @@ class LibraryConfig(BaseModel):
     official_skill_library_path: str = _official_skill_library_path
     official_skill_library_template_path: str = _official_skill_library_template_path
     build_in_skill_config: dict = build_in_skill_config
+    run_human_confirm: bool = _run_human_confirm
     code_interpreter: CodeInterpreter = CodeInterpreter()
 
 

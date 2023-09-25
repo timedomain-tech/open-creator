@@ -21,10 +21,10 @@
 - [x] **Reflection Agent**: Automatically structures and categorizes your function calls.
 - [x] **cache Chat LLM runs by using SQLite which is stored in `~/.cache/open_creator/llm_cache/.langchain.db`**: Save time and money by reusing previous runs.
 - [x] **Sreaming**: Stream your function calls
-- [ ] **Community Hub**: Share and utilize skills from the wider community. Support `huggingface_hub` & `langchain_hub`
+- [x] **Community Hub**: Share and utilize skills from the wider community. Support `huggingface_hub`. `langchain_hub` not yet
 
 # Installation
-```bash
+```shell
 pip install -U open-creator
 ```
 
@@ -87,8 +87,8 @@ skill = creator.create(code_file_path="example_code/example1.py")
 
 ## 2. Save a Skill
 ```python
-# creator.save(skill, save_path="my_skill.json") or you can use the default path
-creator.save(skill) # default path is ~/Library/
+# creator.save(skill, save_path="my_skill.json") or you can use the default path, ~/.cache/open_creator/skill_library/{skill_name}
+creator.save(skill)
 ```
 
 ## 3. Search skills
@@ -105,27 +105,11 @@ input_args = {
     "end_page": 8,
     "output_file_path": "example_page3-8.pdf"
 }
-skill(**input_args)
+skill.run(**input_args)
 ```
 
-## 5. Push to hub
-stay tuned
-```python
-creator.push(skill, hub="my_hub")
-```
-
-## 6. Pull a skill from hub
-stay tuned
-```python
-skill = creator.pull(hub="my_hub")
-```
 ---
 
-# Configurations
-Customize open_creator based on your needs:
-
-- Local Repository Path `open_creator.config.skill_library_path = 'path/to/your/local/repo'`
-- Hub Repository Token: `open_creator.config.user_access_token = 'xxxx'`
 
 # Contributing
 We welcome contributions from the community! Whether it's a bug fix, new feature, or a skill to add to the library, your contributions are valued. Please check our [Contributing Guidelines](./CONTRIBUTING.md) for guidelines.

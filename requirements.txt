@@ -8,3 +8,5 @@ openai
 tiktoken
 inquirer
 prompt_toolkit
+pyyaml
+appdirs
