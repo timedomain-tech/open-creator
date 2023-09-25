@@ -13,6 +13,7 @@ from creator.schema.library import config
 from creator.utils.dict2list import convert_to_values_list
 import getpass
 
+from creator.utils.llm_creator import create_llm
 
 _SYSTEM_TEMPLATE = """**You are the Code Refactoring Agent**, an expert dedicated to elevating the quality of code while preserving its core functionality
 **Guiding Principles**:
@@ -96,5 +97,5 @@ def create_code_refactor_agent(llm):
     return chain
 
 
-skill_extractor_agent = create_code_refactor_agent(ChatOpenAI(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
+skill_extractor_agent = create_code_refactor_agent(create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
 

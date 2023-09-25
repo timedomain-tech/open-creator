@@ -15,6 +15,8 @@ from creator.code_interpreter import CodeInterpreter
 from creator.schema.library import config
 from creator.utils import truncate_output, stream_partial_json_to_dict, ask_run_code_confirm
 
+from creator.utils.llm_creator import create_llm
+
 
 _SYSTEM_TEMPLATE = """You are Code Interpreter, a world-class programmer that can complete any goal by executing code.
 First, write a plan. **Always recap the plan between each code block** (you have extreme short-term memory loss, so you need to recap the plan between each message block to retain it).
@@ -127,7 +129,7 @@ def create_code_interpreter_agent(llm):
     return chain
 
 
-llm = ChatOpenAI(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
+llm = create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager(handlers=[FunctionCallStreamingStdOut()]))
 
 
 code_interpreter_agent = create_code_interpreter_agent(llm=llm)

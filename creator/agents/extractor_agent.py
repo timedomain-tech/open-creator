@@ -12,6 +12,8 @@ from creator.schema.skill import CodeSkill, BaseSkillMetadata
 from creator.schema.library import config
 from creator.utils import convert_to_values_list
 
+from creator.utils.llm_creator import create_llm
+
 
 _SYSTEM_TEMPLATE = """Extract one skill object from above conversation history, which is a list of messages.
 Follow the guidelines below:
@@ -84,5 +86,5 @@ def create_skill_extractor_agent(llm):
     return chain
 
 
-skill_extractor_agent = create_skill_extractor_agent(ChatOpenAI(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
+skill_extractor_agent = create_skill_extractor_agent(create_llm(temperature=0, model=config.agent_model, streaming=True, verbose=True, callback_manager=CallbackManager([FunctionCallStreamingStdOut()])))
 
