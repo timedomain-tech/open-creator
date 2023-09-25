@@ -3,6 +3,8 @@ import re
 
 
 class PythonInterpreter(BaseInterpreter):
+    name: str = "python_interpreter"
+    description: str = "A python interpreter"
     start_command: str = "python -i -q -u"
     print_command: str = "print('{}')"
 
