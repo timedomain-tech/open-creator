@@ -121,12 +121,12 @@ def test_save_to_hub():
     creator.save(skill=skill, huggingface_repo_id="ChuxiJ/skill_library")
 
 def test_local_search():
-    skills = creator.search("extract pdf section")
+    skills = creator.search("I want to extract some pages from a pdf")
     for skill in skills:
         print(Markdown(repr(skill)))
 
 def test_run_skill():
-    skill = creator.search("extract pdf section")[0]
+    skill = creator.search("pdf extract section")[0]
     input_args = {
         "pdf_path": "creator.pdf",
         "start_page": 3,
@@ -134,10 +134,10 @@ def test_run_skill():
         "output_path": "creator3-8.pdf"
     }
     print(Markdown(repr(skill)))
-    resp = skill.run(**input_args)
+    resp = skill.run(input_args)
     print(resp)
 
 
 if __name__ == "__main__":
-    test_create_from_messages()
+    test_run_skill()
 

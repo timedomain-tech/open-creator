@@ -17,7 +17,7 @@ def load_yaml_config():
     current_file_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Construct the project config path using a relative path from the current file's directory
-    project_config_path = os.path.join(current_file_dir, '../..', 'config.yaml')
+    project_config_path = os.path.join(current_file_dir, '..', 'config.yaml')
     project_config_path = os.path.normpath(project_config_path)
 
     # Determine user data directory
