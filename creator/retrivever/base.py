@@ -1,5 +1,5 @@
 import numpy as np
-from langchain.embeddings import OpenAIEmbeddings
+from creator.llm import create_embedding
 from typing import List
 from creator.schema.library import config
 from creator.utils import cosine_similarity
@@ -15,7 +15,7 @@ class BaseVectorStore:
         self.skill_library_path = config.local_skill_library_path
         self.vector_store = {}
         self.embeddings = None
-        self.embedding_model = OpenAIEmbeddings()
+        self.embedding_model = create_embedding()
         self.sorted_keys = []
         self.query_cache = {}
 
