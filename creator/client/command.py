@@ -7,7 +7,6 @@ import subprocess
 import appdirs
 import json
 import platform
-import sys
 
 
 arguments = [
@@ -113,12 +112,14 @@ arguments = [
                 "nickname": "k",
                 "help_text": "Number of results to return, default 3",
                 "type": int,
+                "default": 3
             },
             {
                 "name": "threshold",
                 "nickname": "t",
                 "help_text": "Threshold for search, default 0.8",
                 "type": float,
+                "default": 0.8
             },
             {
                 "name": "remote",
