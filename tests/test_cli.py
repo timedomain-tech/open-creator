@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
+from creator.core import Creator
 
-from creator import cli
 
-cli()
+Creator().cli()

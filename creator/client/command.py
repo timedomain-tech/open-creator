@@ -7,6 +7,7 @@ import subprocess
 import appdirs
 import json
 import platform
+import sys
 
 
 arguments = [
@@ -170,10 +171,9 @@ def cmd_client(creator):
                 parser.add_argument(f'-{arg["nickname"]}', f'--{arg["name"]}', dest=arg["name"], help=arg["help_text"], action='store_true')
             else:
                 parser.add_argument(f'-{arg["nickname"]}', f'--{arg["name"]}', dest=arg["name"], help=arg["help_text"], type=arg["type"], default=arg.get("default", None))
-
-    main_help = parser.format_help()
-    custom_help_text = main_help + "\n".join(subcommand_help_texts)
-
+    
+    custom_help_text = "\n".join(subcommand_help_texts)
+    parser.usage = custom_help_text
     try:
         args = parser.parse_args()
     except Exception:
