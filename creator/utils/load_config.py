@@ -2,6 +2,10 @@ import os
 import shutil
 import appdirs
 import yaml
+from dotenv import load_dotenv, find_dotenv
+
+
+load_dotenv(find_dotenv())
 
 
 def load_yaml_config():
