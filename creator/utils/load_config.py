@@ -21,7 +21,7 @@ def load_yaml_config():
     project_config_path = os.path.normpath(project_config_path)
 
     # Determine user data directory
-    user_config_dir = appdirs.user_config_dir('Open-Creator')
+    user_config_dir = appdirs.user_config_dir('Open-Creator', appauthor=False)
     if not os.path.exists(user_config_dir):
         os.makedirs(user_config_dir)
 
