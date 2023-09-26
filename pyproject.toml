@@ -7,6 +7,7 @@ version = "0.1.0"
 description = "Build your costomized skill library"
 authors = ["JunminGONG <junmingong@qq.com>"]
 readme = "README.md"
+include = ["creator/config.yaml"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
