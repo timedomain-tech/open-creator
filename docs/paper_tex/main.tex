@@ -1,0 +1,78 @@
+\documentclass{article}
+
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{fancyhdr}       % header
+\usepackage{graphicx}       % graphics
+\graphicspath{{media/}}     % organize your images and other figures under media/ folder
+\usepackage{tikz}
+\usepackage{tabularx}
+\usepackage{array}
+
+
+\newcommand{\halfcircle}{
+  \begin{tikzpicture}[baseline=-0.7ex]
+    \fill[black] (0,0) -- (0.3,0) arc (0:180:0.3) -- cycle; % Fill the upper half
+    \draw (0,0) -- (-0.3,0) arc (0:180:-0.3); % Draw the border for the lower half
+  \end{tikzpicture}
+}
+
+%Header
+\pagestyle{fancy}
+\thispagestyle{empty}
+\rhead{ \textit{ }} 
+
+%% Title
+\title{\halfcircle{} Open-Creator: Bridging Code Interpreter and Skill Library}
+
+\author{
+Junmin Gong\(^{*}\) \\
+\texttt{gongjunmin@timedomain.ai} \\
+Timedomain \\
+\and
+Sen Wang \(\dagger\) \\
+\texttt{sayo@timedomain.ai} \\
+Timedomain \\
+\and
+Wenxiao Zhao \(\dagger\) \\
+\texttt{sean.z@timedomain.ai} \\
+Timedomain \\
+\and
+Jing Guo\(\ddagger\) \\
+\texttt{guojing@timedomain.ai} \\
+Timedomain \\
+}
+
+% keywords can be removed
+% \keywords{AI Agents \and Code Interpreters \and Skill Library \and Tool Creation}
+
+\begin{document}
+\maketitle
+
+\input{sections/0_abstract}
+\input{sections/1_introduction}
+\input{tables/learning_approaches}
+\input{sections/2_related_work}
+\input{figures/framework}
+\input{sections/3_method}
+\input{sections/4_experiments}
+\input{sections/5_discussions}
+\input{sections/6_conclusion}
+\input{sections/7-acknowledgement}
+
+%Bibliography
+\bibliographystyle{unsrt}  
+\bibliography{references}  
+
+
+\end{document}
