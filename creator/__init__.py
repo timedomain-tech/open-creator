@@ -1,4 +1,4 @@
-from .schema.library import config as _config
+from .config.library import config as _config
 from .core import Creator
 import sys
 

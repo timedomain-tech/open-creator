@@ -10,7 +10,7 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
 
 from creator.code_interpreter import CodeInterpreter
-from creator.schema.library import config
+from creator.config.library import config
 from creator.utils import truncate_output, stream_partial_json_to_dict, ask_run_code_confirm
 
 from creator.llm.llm_creator import create_llm

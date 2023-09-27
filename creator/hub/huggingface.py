@@ -1,6 +1,6 @@
 import json
 from creator.schema.skill import CodeSkill
-from creator.schema.library import config
+from creator.config.library import config
 from huggingface_hub import hf_hub_download, duplicate_space, Repository
 import os
 from loguru import logger

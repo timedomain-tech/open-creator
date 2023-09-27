@@ -2,7 +2,7 @@ import os
 from typing import Union, List, Optional
 from creator.agents import skill_extractor_agent, code_interpreter_agent
 from creator.schema.skill import CodeSkill, BaseSkill
-from creator.schema.library import config
+from creator.config.library import config
 from creator.utils import (
     generate_install_command,
     generate_language_suffix,

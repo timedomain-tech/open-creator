@@ -2,13 +2,15 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
-from creator.schema.library import config
+from creator.config.library import config
 from creator.utils import generate_skill_doc, generate_install_command
+from creator.agents import code_interpreter_agent, code_tester_agent
+import getpass
 
 
 class BaseSkillMetadata(BaseModel):
     created_at: Union[datetime, str] = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"), description="Creation timestamp")
-    author: str = Field(..., description="Author of the skill")
+    author: str = Field(default_factory=lambda:getpass.getuser(), description="Author of the skill")
     updated_at: Union[datetime, str] = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"), description="Last updated timestamp")
     usage_count: int = Field(0, description="Number of times the skill was used")
     version: str = Field("1.0.0", description="Version of the skill")
@@ -148,14 +150,6 @@ When writing code, it's imperative to follow industry standards and best practic
         print(result)
         return
 
-    def run(self, inputs: dict[str, Any]):
-        self.check_and_install_dependencies()
-        result = config.code_interpreter.run({
-            "language": self.skill_program_language,
-            "code": self.skill_code
-        })
-        return result
-
     def __add__(self, other_skill):
         assert isinstance(other_skill, type(self)), f"Cannot combine {type(self)} with {type(other_skill)}"
         # If the list is empty, add the current object to it
@@ -177,6 +171,17 @@ When writing code, it's imperative to follow industry standards and best practic
     def __gt__(self, user_request:str):
         self.Config.user_request = user_request
         self.Config.refactor_type = "combine"
+
+    def run(self, inputs: dict[str, Any]):
+        self.check_and_install_dependencies()
+        result = config.code_interpreter.run({
+            "language": self.skill_program_language,
+            "code": self.skill_code
+        })
+        return result
+    
+    def test(self):
+        pass
 
     def refactor(self, code_refactor_agent):
         refactor_skills = []

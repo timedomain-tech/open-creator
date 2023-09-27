@@ -8,7 +8,7 @@ from .score_function import cosine_similarity
 from .ask_human import ask_run_code_confirm
 from .multiline_input import multiline_prompt
 from .dict2list import convert_to_values_list
-from .load_config import load_yaml_config
+from ..config.load_config import load_yaml_config
 
 
 __all__ = [

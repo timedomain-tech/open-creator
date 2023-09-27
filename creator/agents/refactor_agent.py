@@ -5,10 +5,10 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
 
-from creator.schema.skill import CodeSkill, BaseSkillMetadata
-from creator.schema.library import config
+from creator.config.library import config
 from creator.utils.dict2list import convert_to_values_list
-import getpass
+import json
+import os
 
 from creator.llm.llm_creator import create_llm
 
@@ -57,7 +57,6 @@ class CodeRefactorAgent(LLMChain):
 
         refacted_skills = self.create_outputs(response)[0]["refacted_skills"]
         for extracted_skill in refacted_skills:
-            extracted_skill["skill_metadata"] = BaseSkillMetadata(author=getpass.getuser()).model_dump()
             extracted_skill["conversation_history"] = messages
             extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
             extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
@@ -69,7 +68,9 @@ class CodeRefactorAgent(LLMChain):
 
 
 def create_code_refactor_agent(llm):
-    code_skill_json_schema = CodeSkill.to_skill_function_schema()
+    path = os.join(os.path.dirname(__file__), "..", "codeskill_function_schema.json")
+    with open(path) as f:
+        code_skill_json_schema = json.load(f)
     function_schema = {
         "name": "refacted_code_skill",
         "description": "a function that constructs a list of skill objects",
@@ -99,5 +100,5 @@ def create_code_refactor_agent(llm):
 
 
 llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
-skill_extractor_agent = create_code_refactor_agent(llm)
+code_refactor_agent = create_code_refactor_agent(llm)
 

@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from creator.schema.library import config
+from creator.config.library import config
 import creator
 
 

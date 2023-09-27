@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Optional
 import json
+import os
 
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.schema.messages import FunctionMessage
@@ -10,8 +11,7 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
 
 from creator.code_interpreter import CodeInterpreter
-from creator.schema.library import config
-from creator.schema.skill import TestSummary
+from creator.config.library import config
 from creator.utils import truncate_output, ask_run_code_confirm, stream_partial_json_to_dict
 from creator.llm.llm_creator import create_llm
 
@@ -126,7 +126,10 @@ def create_code_tester_agent(llm):
     )
     tool = CodeInterpreter()
     code_interpreter_function_schema = tool.to_function_schema()
-    test_summary_function_schema = TestSummary.to_test_function_schema()
+    path = os.join(os.path.dirname(__file__), "..", "testsummary_function_schema.json")
+    with open(path) as f:
+        test_summary_function_schema = json.load(f)
+
     llm_kwargs = {"functions": [code_interpreter_function_schema, test_summary_function_schema]}
     chain = CodeTesterAgent(
         llm=llm,

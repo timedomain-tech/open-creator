@@ -1,7 +1,7 @@
 import argparse
 from creator.core.core import Creator
 from creator.agents import code_interpreter_agent
-from creator.schema.library import config
+from creator.config.library import config
 from creator.schema.skill import BaseSkill, CodeSkill
 from creator.utils import generate_skill_doc
 

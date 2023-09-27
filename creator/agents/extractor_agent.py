@@ -4,9 +4,10 @@ from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.prompts import ChatPromptTemplate
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
-from creator.schema.skill import CodeSkill, BaseSkillMetadata
-from creator.schema.library import config
+from creator.config.library import config
 from creator.utils import convert_to_values_list
+import os
+import json
 
 from creator.llm import create_llm
 
@@ -51,7 +52,6 @@ class SkillExtractorAgent(LLMChain):
         response = self.generate([inputs], run_manager=run_manager)
 
         extracted_skill = self.create_outputs(response)[0]["extracted_skill"]
-        extracted_skill["skill_metadata"] = BaseSkillMetadata(author=inputs["username"]).model_dump()
         extracted_skill["conversation_history"] = messages
         extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
         extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
@@ -63,7 +63,10 @@ class SkillExtractorAgent(LLMChain):
 
 
 def create_skill_extractor_agent(llm):
-    code_skill_json_schema = CodeSkill.to_skill_function_schema()
+    # current file's parent as dir
+    path = os.join(os.path.dirname(__file__), "..", "codeskill_function_schema.json")
+    with open(path) as f:
+        code_skill_json_schema = json.load(f)
     function_schema = {
         "name": "extract_formmated_skill",
         "description": "a function that extracts a skill from a conversation history",

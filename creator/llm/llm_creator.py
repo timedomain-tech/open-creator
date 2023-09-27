@@ -5,6 +5,7 @@ from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 from langchain.embeddings import OpenAIEmbeddings
 import os
 
+
 def create_llm(**kwargs):
     # use_azure = kwargs.pop("use_azure", True)
     use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
@@ -29,8 +30,6 @@ def create_llm(**kwargs):
 def create_embedding(**kwargs):
     
     use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
-
-    print(use_azure)
 
     if use_azure:
         azure_model = os.getenv("EMBEDDING_DEPLOYMENT_NAME", None)

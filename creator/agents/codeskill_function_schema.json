@@ -1,0 +1,216 @@
+{
+    "properties": {
+        "skill_name": {
+            "description": "Skill name in snake_case format or camelCase format, should match the function name or class name",
+            "type": "string"
+        },
+        "skill_description": {
+            "default": "",
+            "description": "Please provide a description for this skill. Ensure your description is clear, concise, and specific, limited to no more than 6 sentences.Explain the primary functionality of the skill and offer specific applications or use cases.",
+            "type": "string"
+        },
+        "skill_tags": {
+            "description": "Write 3-5 keywords describing the skill, avoid terms that might lead to confusion, and ensure consistency in style and language",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "skill_usage_example": {
+            "description": "Example of how to use the skill",
+            "type": "string"
+        },
+        "skill_program_language": {
+            "description": "Programming language the skill is written in",
+            "enum": [
+                "python",
+                "R",
+                "shell",
+                "javascript",
+                "applescript",
+                "html"
+            ],
+            "type": "string"
+        },
+        "skill_code": {
+            "description": "Code of the skill, written in the programming language specified above.\nWhen writing code, it's imperative to follow industry standards and best practices to ensure readability, maintainability, and efficiency. Here are some guidelines to consider:\n1. **Module Imports**: Place at the file's top. Organize by standard, third-party, then local modules.\n2. **Class and Function Definitions**: Use CamelCase for classes and snake_case for functions. Every class and function should have a descriptive docstring detailing its purpose, parameters, and returns.\n3. **Class Attributes**: Clearly annotate and describe attributes. Ensure their relevance and purpose are evident.\n4. **Function Parameters**: Annotate parameter types. Indicate optional parameters and their default behavior.\n5. **Examples and Tips**: Embed short examples for complex functionalities. Highlight essential information.\n6. **Code Readability**: Structure for clarity. Aim for 80-100 characters per line. Use comments judiciously to explain non-obvious behaviors.\n7. **Error Handling**: Anticipate potential errors. Implement exception handling mechanisms.\n8. **Compatibility**: Ensure adaptability across platforms or frameworks, like PyTorch and TensorFlow.\n9. **Externally Callable**: Design functions and classes to be callable externally. Their public interfaces should be well-defined and intuitive.\n10. **Comments**: Provide context for complex segments. Keep them concise and meaningful.\n11. **Consistent Interfaces**: Uniformity in function and method interfaces ensures easier integration and usage. Normally the same with the skill name.\n",
+            "type": "string"
+        },
+        "skill_parameters": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/CodeSkillParameter"
+                },
+                {
+                    "items": {
+                        "$ref": "#/$defs/CodeSkillParameter"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "List of parameters the skill requires, defined using json schema"
+        },
+        "skill_return": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/CodeSkillParameter"
+                },
+                {
+                    "items": {
+                        "$ref": "#/$defs/CodeSkillParameter"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "Return value(s) of the skill"
+        },
+        "skill_dependencies": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/CodeSkillDependency"
+                },
+                {
+                    "items": {
+                        "$ref": "#/$defs/CodeSkillDependency"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "List of dependencies the skill requires to run, typically packages but can also be other skill functions"
+        }
+    },
+    "required": [
+        "skill_name",
+        "skill_tags",
+        "skill_usage_example",
+        "skill_program_language",
+        "skill_code"
+    ],
+    "type": "object",
+    "$defs": {
+        "CodeSkillDependency": {
+            "properties": {
+                "dependency_name": {
+                    "default": "",
+                    "type": "string"
+                },
+                "dependency_version": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": "",
+                    "description": "the version of the dependency only filled if context provided"
+                },
+                "dependency_type": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": "built-in",
+                    "enum": [
+                        "built-in",
+                        "package",
+                        "function"
+                    ]
+                }
+            },
+            "type": "object"
+        },
+        "CodeSkillParameter": {
+            "properties": {
+                "param_name": {
+                    "default": "query",
+                    "description": "the name of the parameter",
+                    "type": "string"
+                },
+                "param_type": {
+                    "default": "string",
+                    "description": "the type, only support string, integer, float, boolean, array, object",
+                    "enum": [
+                        "string",
+                        "integer",
+                        "float",
+                        "boolean",
+                        "array",
+                        "object"
+                    ],
+                    "type": "string"
+                },
+                "param_description": {
+                    "default": "the input query",
+                    "description": "the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format",
+                    "type": "string"
+                },
+                "param_required": {
+                    "default": true,
+                    "description": "whether it is required",
+                    "type": "boolean"
+                },
+                "param_default": {
+                    "anyOf": [
+                        {},
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "the default value, it depends on the type"
+                }
+            },
+            "type": "object"
+        },
+        "TestCase": {
+            "properties": {
+                "test_input": {
+                    "description": "The input data or conditions used for the test.",
+                    "type": "string"
+                },
+                "run_command": {
+                    "description": "The command or function that was executed for the test.",
+                    "type": "string"
+                },
+                "expected_result": {
+                    "description": "The expected outcome or result of the test.",
+                    "type": "string"
+                },
+                "actual_result": {
+                    "description": "The actual outcome or result observed after the test was executed.",
+                    "type": "string"
+                },
+                "is_passed": {
+                    "description": "A boolean indicating whether the test passed or failed.",
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "test_input",
+                "run_command",
+                "expected_result",
+                "actual_result",
+                "is_passed"
+            ],
+            "type": "object"
+        }
+    }
+}
