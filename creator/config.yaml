@@ -1,7 +1,8 @@
 LOCAL_SKILL_LIBRARY_PATH: .cache/open_creator/skill_library
 REMOTE_SKILL_LIBRARY_PATH: .cache/open_creator/remote
 LOCAL_SKILL_LIBRARY_VECTORD_PATH: .cache/open_creator/vectordb/
-PROMPT_CACHE_HISTORY_PATH: .cache/open_creator/prompt_cache/history.txt
+PROMPT_CACHE_HISTORY_PATH: .cache/open_creator/prompt_cache/
+PROMPT_CACHE_HISTORY_FILE: history.txt
 SKILL_EXTRACT_AGENT_CACHE_PATH: .cache/open_creator/llm_cache
 OFFICIAL_SKILL_LIBRARY_PATH: timedomain/skill-library
 OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH: timedomain/skill-library-template
