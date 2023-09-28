@@ -156,7 +156,7 @@ When writing code, it's imperative to follow industry standards and best practic
 
     def __add__(self, other_skill):
         assert isinstance(other_skill, type(self)), f"Cannot combine {type(self)} with {type(other_skill)}"
-        self.refactorable = True
+        self.Config.refactorable = True
         # If the list is empty, add the current object to it
         if not self.Config.skills_to_combine:
             self.Config.skills_to_combine.append(self)
@@ -167,17 +167,17 @@ When writing code, it's imperative to follow industry standards and best practic
         return self  # Return the current object to support continuous addition
     
     def __radd__(self, other_skill):
-        self.refactorable = True
+        self.Config.refactorable = True
         self.__add__(other_skill)
 
     def __lt__(self, user_request:str):
-        self.refactorable = True
+        self.Config.refactorable = True
         self.Config.user_request = user_request
         self.Config.refactor_type = "decompose"
         return self.refactor()
 
     def __gt__(self, user_request:str):
-        self.refactorable = True
+        self.Config.refactorable = True
         self.Config.user_request = user_request
         self.Config.refactor_type = "combine"
         return self.refactor()
@@ -240,7 +240,7 @@ When writing code, it's imperative to follow industry standards and best practic
         return self.test_summary
 
     def refactor(self):
-        if not self.refactorable:
+        if not self.Config.refactorable:
             print("This skill is not refactorable since it is not combined with other skills or add any user request")
             return
         
@@ -269,7 +269,7 @@ When writing code, it's imperative to follow industry standards and best practic
     
     def __repr__(self):
 
-        if self.refactorable:
+        if self.Config.refactorable:
             if len(self.Config.skills_to_combine) == 0:
                 self.Config.skills_to_combine.append(self)
             skill_docs = []
