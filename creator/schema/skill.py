@@ -4,8 +4,11 @@ from datetime import datetime
 from creator.utils import remove_title
 from creator.config.library import config
 from creator.utils import generate_skill_doc, generate_install_command
-from creator.agents import code_interpreter_agent, code_tester_agent
+from creator.agents import code_interpreter_agent, code_tester_agent, code_refactor_agent
 import getpass
+import json
+import os
+import platform
 
 
 class BaseSkillMetadata(BaseModel):
@@ -98,6 +101,7 @@ When writing code, it's imperative to follow industry standards and best practic
 
     class Config:
         # Properties from Refactorable
+        refactorable = False
         skills_to_combine = []
         user_request = "please help me refine the skill object"
         refactor_type = "refine"
@@ -152,6 +156,7 @@ When writing code, it's imperative to follow industry standards and best practic
 
     def __add__(self, other_skill):
         assert isinstance(other_skill, type(self)), f"Cannot combine {type(self)} with {type(other_skill)}"
+        self.refactorable = True
         # If the list is empty, add the current object to it
         if not self.Config.skills_to_combine:
             self.Config.skills_to_combine.append(self)
@@ -162,47 +167,88 @@ When writing code, it's imperative to follow industry standards and best practic
         return self  # Return the current object to support continuous addition
     
     def __radd__(self, other_skill):
+        self.refactorable = True
         self.__add__(other_skill)
 
     def __lt__(self, user_request:str):
+        self.refactorable = True
         self.Config.user_request = user_request
         self.Config.refactor_type = "decompose"
+        return self.refactor()
 
     def __gt__(self, user_request:str):
+        self.refactorable = True
         self.Config.user_request = user_request
         self.Config.refactor_type = "combine"
+        return self.refactor()
 
-    def run(self, inputs: dict[str, Any]):
+    def run(self, inputs: Union[str, dict[str, Any]]):
         self.check_and_install_dependencies()
-        result = config.code_interpreter.run({
+        messages = [
+            {"role": "assistant", "content": "ok I will run your code", "function_call": {
+                "name": self.skill_name,
+                "arguments": json.dumps({"language": self.skill_program_language, "code": self.skill_code})
+            }}
+        ]
+        tool_result = config.code_interpreter.run({
             "language": self.skill_program_language,
             "code": self.skill_code
         })
-        return result
+        params = json.dumps(inputs) if isinstance(inputs, dict) else inputs
+        messages.append({"role": "function", "name": "run_code", "content": json.dumps(tool_result)})
+        messages.append({"role": "user", "content": params})
+        messages = code_interpreter_agent.run(
+            {
+                "messages": messages,
+                "username": getpass.getuser(),
+                "current_working_directory": os.getcwd(),
+                "operating_system": platform.system(),
+                "verbose": True,
+            }
+        )
+        return messages
     
     def test(self):
-        pass
+        if self.conversation_history is None or len(self.conversation_history) == 0:
+            print("No conversation history provided, cannot test")
+            return
+        if not self.skill_code:
+            print("No code provided, cannot test")
+            return
+        
+        self.check_and_install_dependencies()
+        tool_result = config.code_interpreter.run({
+            "language": self.skill_program_language,
+            "code": self.skill_code
+        })
+        messages = [
+            {"role": "user", "content": repr(self)},
+            {"role": "function", "name": "run_code", "content": json.dumps(tool_result)}
+        ]
+        test_result = code_tester_agent.run(
+            {
+                "messages": messages,
+                "username": getpass.getuser(),
+                "current_working_directory": os.getcwd(),
+                "operating_system": platform.system(),
+                "verbose": True,
+            }
+        )
+        if "test_summary" in test_result:
+            self.test_summary = TestSummary(**test_result["test_summary"])
+        self.conversation_history = self.conversation_history + test_result["messages"]
+        return self.test_summary
 
-    def refactor(self, code_refactor_agent):
-        refactor_skills = []
-        if len(self.skills_to_combine) == 0:
-            refactor_skills.append(self)
-        else:
-            refactor_skills = self.Config.skills_to_combine
-
+    def refactor(self):
+        if not self.refactorable:
+            print("This skill is not refactorable since it is not combined with other skills or add any user request")
+            return
+        
         num_output_skills = "one" if self.Config.refactor_type != "decompose" else "appropriate number of"
-        messages = [{
-            "role": "system",
-            "content": f"Your refactor type is: {self.Config.refactor_type} and output {num_output_skills} skill object(s)"
-        }]
-        for refactor_skill in refactor_skills:
-            messages.append(
-                {
-                    "role": "function",
-                    "name": "get_skill",
-                    "content": refactor_skill.model_dump_json()
-                }
-            )
+        messages = [
+            {"role": "system", "content": f"Your refactor type is: {self.Config.refactor_type} and output {num_output_skills} skill object(s)"},
+            {"role": "function", "name": "show_skill", "content": repr(self)}
+        ]
         messages.append({
             "role": "user",
             "content": self.Config.user_request
@@ -213,23 +259,27 @@ When writing code, it's imperative to follow industry standards and best practic
                 "verbose": True,
             }
         )
-        parent_class = refactor_skills[0].__class__.__bases__[0]
         refactored_skills = []
         for refactored_skill_json in refactored_skill_jsons:
-            refactored_skills.append(parent_class(**refactored_skill_json))
+            refactored_skill = self.__class__(refactored_skill_json)
+            refactored_skill.skill_metadata = BaseSkillMetadata()
+            refactored_skills.append(refactored_skill)
 
         return refactored_skills
     
     def __repr__(self):
-        if len(self.Config.skills_to_combine) == 0:
-            self.Config.skills_to_combine.append(self)
-        skill_docs = []
-        for skill in self.Config.skills_to_combine:
-            skill_docs.append(generate_skill_doc(skill))
-        refactor_config_str = f"""
-## Refactorable Config
-- **Refactor Way**: {self.Config.refactor_type}
-- **User Request**: {self.Config.user_request}
-"""
-        return "\n---\n".join(skill_docs) + refactor_config_str
 
+        if self.refactorable:
+            if len(self.Config.skills_to_combine) == 0:
+                self.Config.skills_to_combine.append(self)
+            skill_docs = []
+            for skill in self.Config.skills_to_combine:
+                skill_docs.append(generate_skill_doc(skill))
+            refactor_config_str = f"""
+    ## Refactorable Config
+    - **Refactor Way**: {self.Config.refactor_type}
+    - **User Request**: {self.Config.user_request}
+    """
+            return "\n---\n".join(skill_docs) + refactor_config_str
+        else:
+            return generate_skill_doc(self)

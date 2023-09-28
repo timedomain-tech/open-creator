@@ -1,7 +1,7 @@
 import os
 from typing import Union, List, Optional
 from creator.agents import skill_extractor_agent, code_interpreter_agent
-from creator.schema.skill import CodeSkill, BaseSkill
+from creator.schema.skill import CodeSkill, BaseSkill, BaseSkillMetadata
 from creator.config.library import config
 from creator.utils import (
     generate_install_command,
@@ -106,39 +106,10 @@ class Creator:
             "verbose": True,
         })
         skill = CodeSkill(**skill_json)
+        if skill.skill_metadata is None:
+            skill.skill_metadata = BaseSkillMetadata()
         return skill
 
-    @classmethod
-    def _create_from_file_content(cls, file_content) -> CodeSkill:
-        """Generate skill from messages."""
-        skill_json = skill_extractor_agent.run({
-            "messages": [{
-                "role": "user",
-                "content": file_content
-            }],
-            "username": getpass.getuser(),
-            "current_working_directory": os.getcwd(),
-            "operating_system": platform.system(),
-            "verbose": True,
-        })
-        skill = CodeSkill(**skill_json)
-        return skill
-    
-    @classmethod
-    def _create_from_request(cls, request):
-        """Placeholder for generating skill from a request."""
-        messages = code_interpreter_agent.run({
-            "messages": [{
-                "role": "user",
-                "content": request
-            }],
-            "username": getpass.getuser(),
-            "current_working_directory": os.getcwd(),
-            "operating_system": platform.system(),
-            "verbose": True,
-        })
-        return cls._create_from_messages(messages)
-    
     @classmethod
     def _create_from_skill_json_path(cls, skill_json_path) -> CodeSkill:
         """Load skill from a given path."""
@@ -163,31 +134,43 @@ class Creator:
         huggingface_skill_path: Optional[str] = None,
     ) -> CodeSkill:
         """Main method to create a new skill."""
-
-        if messages:
-            return cls._create_from_messages(messages)
-        
-        if request:
-            return cls._create_from_request(request)
         
         if skill_path:
             skill_json_path = os.path.join(skill_path, "skill.json")
-        
+            return cls._create_from_skill_json_path(skill_json_path)
+
         if skill_json_path:
             return cls._create_from_skill_json_path(skill_json_path)
+        
+        if request:
+            messages = code_interpreter_agent.run({
+                "messages": [{
+                    "role": "user",
+                    "content": request
+                }],
+                "username": getpass.getuser(),
+                "current_working_directory": os.getcwd(),
+                "operating_system": platform.system(),
+                "verbose": True,
+            })
         
         if messages_json_path:
             with open(messages_json_path) as f:
                 messages = json.load(f)
-            return cls._create_from_messages(messages)
-        
-        if file_content:
-            return cls._create_from_file_content(file_content)
         
         if file_path:
             with open(file_path) as f:
                 file_content = "# file name: " + os.path.basename(file_path) + "\n" + f.read()
-            return cls._create_from_file_content(file_content)
+            return cls._create_from_messages(messages)
+
+        if file_content:
+            messages = [{
+                "role": "user",
+                "content": file_content
+            }]
+
+        if messages:
+            return cls._create_from_messages(messages)
         
         if huggingface_repo_id and huggingface_skill_path:
             # huggingface_skill_path pattern username/skill_name_{version}, the version is optional and default to 1.0.0
@@ -280,4 +263,3 @@ class Creator:
 
     def cli(self):
         cmd_client(self)
-    
