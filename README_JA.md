@@ -7,6 +7,7 @@
     <a href="README_JA.md"><img src="https://img.shields.io/badge/ドキュメント-日本語-white.svg" alt="JA doc"/></a>
     <a href="README_ZH.md"><img src="https://img.shields.io/badge/文档-中文版-white.svg" alt="ZH doc"/></a>
     <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=white&style=flat" alt="License"/>
+    <a href="docs/tech_report/open-creator.pdf"><img src="https://img.shields.io/badge/arXiv-Paper-blue.svg" alt="paper"></a>
     <br><br>
     <b>カスタマイズされたスキルライブラリを構築</b><br>
     ツールを作成するためのオープンソースのLLMツール<br>
@@ -198,3 +199,17 @@ Open Creatorは [MIT](./LICENSE) ライセンスの下でライセンスされ�
 > [2] Qian, C., Han, C., Fung, Y. R., Qin, Y., Liu, Z., & Ji, H. (2023). CREATOR: Disentangling Abstract and Concrete Reasonings of Large Language Models through Tool Creation. arXiv preprint arXiv:2305.14318.
 
 > [3] Wang, G., Xie, Y., Jiang, Y., Mandlekar, A., Xiao, C., Zhu, Y., Fan, L., & Anandkumar, A. (2023). Voyager: An Open-Ended Embodied Agent with Large Language Models. arXiv preprint arXiv:2305.16291.
+
+# 論文と引用
+
+もし私たちの研究が役立つと思われる場合、引用を検討してください！
+
+```bibtex
+@techreport{gong2023opencreator,
+  title = {Open-Creator: Bridging Code Interpreter and Skill Library},
+  author = {Gong, Junmin and Wang, Sen and Zhao, Wenxiao and Guo, Jing},
+  year = {2023},
+  month = {9},
+  url = {https://github.com/timedomain-tech/open-creator/blob/main/docs/tech_report/open-creator.pdf},
+}
+```

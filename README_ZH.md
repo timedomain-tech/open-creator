@@ -197,3 +197,17 @@ Open Creator 根据 [MIT](./LICENSE) 许可证获得许可。您被允许使用�
 > [2] Qian, C., Han, C., Fung, Y. R., Qin, Y., Liu, Z., & Ji, H. (2023). CREATOR: 通过工具创建来区分大型语言模型的抽象和具体推理。arXiv 预印本 arXiv:2305.14318.
 
 > [3] Wang, G., Xie, Y., Jiang, Y., Mandlekar, A., Xiao, C., Zhu, Y., Fan, L., & Anandkumar, A. (2023). Voyager: 一个使用大型语言模型的开放式实体代理。arXiv 预印本 arXiv:2305.16291.
+
+# 论文与引用
+
+如果您觉得我们的工作有用，请考虑引用我们！
+
+```bibtex
+@techreport{gong2023opencreator,
+  title = {Open-Creator: Bridging Code Interpreter and Skill Library},
+  author = {Gong, Junmin and Wang, Sen and Zhao, Wenxiao and Guo, Jing},
+  year = {2023},
+  month = {9},
+  url = {https://github.com/timedomain-tech/open-creator/blob/main/docs/tech_report/open-creator.pdf},
+}
+```

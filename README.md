@@ -209,3 +209,16 @@ Open Creator is licensed under the [MIT](./LICENSE) License. You are permitted t
 
 > [3] Wang, G., Xie, Y., Jiang, Y., Mandlekar, A., Xiao, C., Zhu, Y., Fan, L., & Anandkumar, A. (2023). Voyager: An Open-Ended Embodied Agent with Large Language Models. arXiv preprint arXiv:2305.16291.
 
+# Paper and Citation
+
+If you find our work useful, please consider citing us! 
+
+```bibtex
+@techreport{gong2023opencreator,
+  title = {Open-Creator: Bridging Code Interpreter and Skill Library},
+  author = {Gong, Junmin and Wang, Sen and Zhao, Wenxiao and Guo, Jing},
+  year = {2023},
+  month = {9},
+  url = {https://github.com/timedomain-tech/open-creator/blob/main/docs/tech_report/open-creator.pdf},
+}
+```
