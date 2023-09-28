@@ -8,47 +8,41 @@
     <a href="README_ZH.md"><img src="https://img.shields.io/badge/文档-中文版-white.svg" alt="ZH doc"/></a>
     <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=white&style=flat" alt="License"/>
     <br><br>
-    <b>Build your costomized skill library</b><br>
-    An open-source LLM tool helps create your tools<br>
+    <b>カスタマイズされたスキルライブラリを構築</b><br>
+    ツールを作成するためのオープンソースのLLMツール<br>
 </p>
 
 <br>
 
-`open-creator` is an innovative package designed to extract skills from existing conversations or a requirement, save them, and retrieve them when required. It offers a seamless way to consolidate and archive refined versions of codes, turning them into readily usable skill sets, thereby enhancing the power of the [open-interpreter](https://github.com/KillianLucas/open-interpreter).
+`open-creator` は、既存の会話や要求からスキルを抽出し、それらを保存し、必要に応じて取得するために設計された革新的なパッケージです。これは、コードの洗練されたバージョンを統合し、アーカイブするシームレスな方法を提供し、それらを即座に使用可能なスキルセットに変えることで、[open-interpreter](https://github.com/KillianLucas/open-interpreter) の力を強化します。
 
-# Features
-- [x] **Skill Library**: Efficiently save and retrieve structured function calls.
-- [x] **Reflection Agent**: Automatically structures and categorizes your function calls.
-- [x] **cache Chat LLM runs by using SQLite which is stored in `~/.cache/open_creator/llm_cache/.langchain.db`**: Save time and money by reusing previous runs.
-- [x] **Sreaming**: Stream your function calls
-- [x] **Community Hub**: Share and utilize skills from the wider community. Support `huggingface_hub`. `langchain_hub` not yet
+# 特徴
+- [x] **スキルライブラリ**：効率的に構造化された関数呼び出しを保存および取得。
+- [x] **リフレクションエージェント**：あなたの関数呼び出しを自動的に構造化し、カテゴリ分けします。
+- [x] **`~/.cache/open_creator/llm_cache/.langchain.db` に格納されているSQLiteを使用してチャットLLMをキャッシュ**：以前の実行を再利用して時間とお金を節約。
+- [x] **ストリーミング**：関数呼び出しをストリームします。
+- [x] **コミュニティハブ**：より広いコミュニティからのスキルを共有し、利用します。 `huggingface_hub` をサポート。 `langchain_hub` はまだです。
 
-# Installation
+# インストール
 ```shell
 pip install -U open-creator
 ```
 
-# Usage
+# 使用法
 ```python
 import creator
 ```
-## 1. Create a Skill
-- [x] 1.1 from a request
-- [x] 1.2 from a conversation history (openai messages format)
-- [x] 1.3 from a skill json file
-- [x] 1.4 from a messages_json_path
-- [x] 1.5 from code file content
-- [x] 1.6 from doc file content
-- [x] 1.7 from file path
-- [x] 1.8 from huggingface
-
-1.1 Create a skill from a request
+## 1. スキルを作成
+- [x] 1.1 リクエストから
 ```python
 request = "help me write a script that can extracts a specified section from a PDF file and saves it as a new PDF"
 skill = creator.create(request=request)
 ```
 
-1.5 Create a skill from code file content
+- [x] 1.2 会話履歴から（openaiメッセージ形式）
+- [x] 1.3 スキルjsonファイルから
+- [x] 1.4 messages_json_pathから
+- [x] 1.5 コードファイルの内容から
 ```python
 code_content = """
 import json
@@ -96,7 +90,8 @@ def convert_to_openai_messages(messages):
 skill = creator.create(file_content=code_content)
 ```
 
-1.6 Create a skill from doc file content
+- [x] 1.6 ドキュメントファイルの内容から
+
 ```python
 doc_content = """
 # Installation
@@ -135,48 +130,44 @@ output: 'Ich liebe Programmieren.'
 skill = creator.create(file_content=doc_content)
 ```
 
-1.7 Create a skill from file path
+- [x] 1.7 ファイルパスから
 ```python
 skill = creator.create(file_path="creator/utils/partial_json_parse.py")
 ```
 
-1.8 Create a skill from huggingface
+- [x] 1.8 huggingfaceから
 ```python
 skill = creator.create(huggingface_repo_id="YourRepoID", huggingface_skill_path="your_skill_path")
 ```
 
-## 2. Save a Skill
-- [x] 2.1 Save to default path
-- [x] 2.2 Save to specific skill path
-- [x] 2.3 Save to huggingface
 
-2.1 Save to default path
+## 2. スキルを保存
+- [x] 2.1 デフォルトのパスに保存
 ```python
 creator.save(skill)
 ```
 
-2.2 Save to specific skill path
+- [x] 2.2 特定のスキルパスに保存
 ```python
 creator.save(skill, skill_path="path/to/your/skill/directory")
 ```
 
-2.3 Save to huggingface
+- [x] 2.3 huggingfaceに保存
 ```python
 creator.save(skill, huggingface_repo_id="YourRepoID")
 ```
 
-## 3. Search skills
-- [x] 3.1 Local Search
 
-3.1 Local Search
+## 3. スキルを検索
+- [x] 3.1 ローカル検索
 ```python
 skills = creator.search("your_search_query")
 for skill in skills:
     print(skill)
 ```
 
-## 4. Use a skill
-- [x] 4.1 Use a skill
+## 4. スキルを使用
+- [x] 4.1 スキルを使用
 ```python
 from rich.markdown import Markdown
 from rich import print
@@ -192,19 +183,18 @@ resp = skill.run(input_args)
 print(resp)
 ```
 
-# Contributing
-We welcome contributions from the community! Whether it's a bug fix, new feature, or a skill to add to the library, your contributions are valued. Please check our [Contributing Guidelines](CONTRIBUTING.md) for guidelines.
 
-## License
+# 貢献
+コミュニティからの貢献を歓迎します！バグ修正、新機能、ライブラリに追加するスキルなど、あなたの貢献は価値があります。ガイドラインについては、[貢献ガイドライン](CONTRIBUTING.md) をご覧ください。
 
-Open Creator is licensed under the [MIT](./LICENSE) License. You are permitted to use, copy, modify, distribute, sublicense and sell copies of the software.
+## ライセンス
+
+Open Creatorは [MIT](./LICENSE) ライセンスの下でライセンスされています。ソフトウェアのコピーを使用、コピー、変更、配布、サブライセンス、販売することが許可されています。
 <br>
 
-
-# Reference
+# 参照
 > [1] Lucas, K. (2023). open-interpreter [Software]. Available at: https://github.com/KillianLucas/open-interpreter
 
 > [2] Qian, C., Han, C., Fung, Y. R., Qin, Y., Liu, Z., & Ji, H. (2023). CREATOR: Disentangling Abstract and Concrete Reasonings of Large Language Models through Tool Creation. arXiv preprint arXiv:2305.14318.
 
 > [3] Wang, G., Xie, Y., Jiang, Y., Mandlekar, A., Xiao, C., Zhu, Y., Fan, L., & Anandkumar, A. (2023). Voyager: An Open-Ended Embodied Agent with Large Language Models. arXiv preprint arXiv:2305.16291.
-
