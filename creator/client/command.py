@@ -1,5 +1,5 @@
 import argparse
-from rich import print as rich_print
+from creator.utils.printer import print as rich_print
 from rich.markdown import Markdown
 from rich.rule import Rule
 import os
@@ -232,6 +232,88 @@ def cmd_client(creator):
             rich_print(Markdown(repr(skill)))
             rich_print(Rule(style="white"))
 
+def code_client(creator, command: str):
+    command = command[len('creator'):].strip()
+    args_list = command.split()
+
+    parser = argparse.ArgumentParser(description='Open Creator CLI')
+    subparsers = parser.add_subparsers(dest='command')
+    subcommand_help_texts = []
+    # Add arguments
+    for arg in arguments:
+        if arg["command"]:
+            subparser = subparsers.add_parser(arg["name"], help=arg["help_text"])
+            for sub_arg in arg["sub_arguments"]:
+                if sub_arg["type"] == bool:
+                    subparser.add_argument(f'-{sub_arg["nickname"]}', f'--{sub_arg["name"]}', dest=sub_arg["name"], help=sub_arg["help_text"], action='store_true')
+                else:
+                    subparser.add_argument(f'-{sub_arg["nickname"]}', f'--{sub_arg["name"]}', dest=sub_arg["name"], help=sub_arg["help_text"], type=sub_arg["type"], default=sub_arg.get("default", None))
+            subcommand_help_texts.append(subparser.format_help())
+        else:
+            if arg["type"] == bool:
+                parser.add_argument(f'-{arg["nickname"]}', f'--{arg["name"]}', dest=arg["name"], help=arg["help_text"], action='store_true')
+            else:
+                parser.add_argument(f'-{arg["nickname"]}', f'--{arg["name"]}', dest=arg["name"], help=arg["help_text"], type=arg["type"], default=arg.get("default", None))
+    
+    custom_help_text = "\n".join(subcommand_help_texts)
+    parser.usage = custom_help_text
+    try:
+        args, unknown = parser.parse_known_args(args_list)
+    except Exception:
+        print(custom_help_text)
+        return custom_help_text
+
+    if args.config:
+        # this source code from https://github.com/KillianLucas/open-interpreter/blob/be38ef8ed6ce9d0b7768e2ec3f542337f3444f54/interpreter/cli/cli.py#L101
+        config_path = os.path.join(appdirs.user_config_dir(), 'Open-Creator', 'config.yaml')
+        config_path = os.path.join(appdirs.user_config_dir(), 'Open-Creator', 'config.yaml')
+        print(f"Opening `{config_path}`...")
+        # Use the default system editor to open the file
+        if platform.system() == 'Windows':
+            os.startfile(config_path)  # This will open the file with the default application, e.g., Notepad
+        else:
+            try:
+                # Try using xdg-open on non-Windows platforms
+                subprocess.call(['xdg-open', config_path])
+            except FileNotFoundError:
+                # Fallback to using 'open' on macOS if 'xdg-open' is not available
+                subprocess.call(['open', config_path])
+
+    if args.command == "create":
+        skill = creator.create(
+            request=args.request,
+            messages=args.messages,
+            skill_json_path=args.skill_json_path,
+            file_content=args.file_content,
+            file_path=args.file_path,
+            huggingface_repo_id=args.huggingface_repo_id,
+            huggingface_skill_path=args.huggingface_skill_path,
+        )
+        if args.save:
+            creator.save(skill=skill)
+        return repr(skill)
+    
+    if args.command == "save":
+        skill = None
+        skill = json.loads(args.skill)
+        creator.save(
+            skill=skill,
+            skill_json_path=args.skill_json_path,
+            huggingface_repo_id=args.huggingface_repo_id,
+        )
+        return "Successfully saved skill."
+
+    if args.command == "search":
+        skills = creator.search(
+            query=args.query,
+            top_k=args.top_k,
+            threshold=args.threshold,
+            remote=args.remote,
+        )
+        result = ""
+        for skill in skills:
+            result+=repr(skill)+"\n"
+        return result
 
 if __name__ == "__main__":
     cmd_client()

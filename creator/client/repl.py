@@ -6,7 +6,7 @@ from creator.schema.skill import BaseSkill, CodeSkill
 from creator.utils import generate_skill_doc
 
 import inquirer
-from rich import print
+from creator.utils.printer import print
 from rich.markdown import Markdown
 import time
 import getpass

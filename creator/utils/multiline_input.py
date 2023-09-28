@@ -8,7 +8,7 @@ from prompt_toolkit.completion import NestedCompleter
 from prompt_toolkit.styles import Style
 from pygments.lexers.markup import MarkdownLexer
 from rich.markdown import Markdown
-from rich import print
+from creator.utils.printer import print
 import time
 import os
 

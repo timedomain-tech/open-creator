@@ -13,7 +13,7 @@ from creator.hub.huggingface import hf_pull, hf_repo_update, hf_push
 from creator.retrivever.base import BaseVectorStore
 from creator.client import cmd_client
 
-from rich import print
+from creator.utils.printer import print
 from rich.markdown import Markdown
 
 import getpass

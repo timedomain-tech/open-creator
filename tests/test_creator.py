@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 import creator
 from rich.markdown import Markdown
-from rich import print
+from creator.utils.printer import print
 import os
 
 
@@ -139,6 +139,6 @@ def test_run_skill():
 
 
 if __name__ == "__main__":
-    test_run_skill()
-    # test_create_from_user_request()
+    # test_run_skill()
+    test_create_from_user_request()
 
