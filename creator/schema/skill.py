@@ -197,6 +197,8 @@ When writing code, it's imperative to follow industry standards and best practic
         params = json.dumps(inputs) if isinstance(inputs, dict) else inputs
         messages.append({"role": "function", "name": "run_code", "content": json.dumps(tool_result)})
         messages.append({"role": "user", "content": params})
+        previews_tool = code_interpreter_agent.tool
+        code_interpreter_agent.tool = config.code_interpreter
         messages = code_interpreter_agent.run(
             {
                 "messages": messages,
@@ -206,6 +208,7 @@ When writing code, it's imperative to follow industry standards and best practic
                 "verbose": True,
             }
         )
+        code_interpreter_agent.tool = previews_tool
         return messages
     
     def test(self):

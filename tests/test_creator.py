@@ -139,6 +139,6 @@ def test_run_skill():
 
 
 if __name__ == "__main__":
-    # test_run_skill()
-    test_create_from_user_request()
+    test_run_skill()
+    # test_local_search()
 

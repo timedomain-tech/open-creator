@@ -15,12 +15,13 @@ class BaseInterpreter:
     PROGRAM_END_DETECTOR = "[>>Open Creator CodeSkill Program End Placeholder<<]"
     start_command = "bash"
     print_command = "echo '{}'"
-    timeout = 120
+    timeout = 3
 
     def __init__(self):
         self.process = None
         self.stdout_thread = None
         self.stderr_thread = None
+        self.done = threading.Event()
 
     def get_persistent_process(self):
         self.process = subprocess.Popen(
@@ -39,8 +40,8 @@ class BaseInterpreter:
     def handle_stream_output(self, stream, is_stderr):
         """Reads from a stream and appends data to either stdout_data or stderr_data."""
         start_time = time.time()
-        while True:
-            line = stream.readline()
+        for line in stream:
+            inline = self.PROGRAM_END_DETECTOR in line
             if self.detect_program_end(line):
                 break
             if time.time() - start_time > self.timeout:
@@ -53,23 +54,18 @@ class BaseInterpreter:
                     self.output_cache["stdout"] += line
             time.sleep(0.1)
 
-    def add_program_end_detector(self):
+    def add_program_end_detector(self, code):
         if self.process:
-            print_command = self.print_command % self.PROGRAM_END_DETECTOR + "\n"
-            self.process.stdin.write(print_command)
-            self.process.stdin.flush()
+            print_command = self.print_command.format(self.PROGRAM_END_DETECTOR) + "\n"
+            return code + "\n\n" + print_command
 
     def clear(self):
         self.output_cache = {"stdout": "", "stderr": ""}
-        if self.stdout_thread is not None:
-            self.stdout_thread.terminate()
-        if self.stderr_thread is not None:
-            self.stderr_thread.terminate()
+        self.done.clear()
         self.stdout_thread = threading.Thread(target=self.handle_stream_output, args=(self.process.stdout, False), daemon=True)
         self.stderr_thread = threading.Thread(target=self.handle_stream_output, args=(self.process.stderr, True), daemon=True)
         self.stdout_thread.start()
         self.stderr_thread.start()
-        self.start_command = "bash"
 
     def preprocess(self, code):
         return code
@@ -82,17 +78,17 @@ class BaseInterpreter:
         if is_start or self.process is None:
             try:
                 self.get_persistent_process()
-                return {"status": "success", "stdout": "", "stderr": ""}
             except Exception:
                 traceback_string = traceback.format_exc()
                 return {"status": "error", "stdout": "", "stderr": traceback_string}
         self.clear()
         try:
             try:
+                query = self.add_program_end_detector(query)
                 self.process.stdin.write(query + "\n")
                 self.process.stdin.flush()
-                self.add_program_end_detector()
-                time.sleep(0.1)
+                
+                time.sleep(0.2)
             except subprocess.TimeoutExpired:
                 self.process.kill()
                 stdout, stderr = "", traceback.format_exc()
@@ -101,8 +97,6 @@ class BaseInterpreter:
             stderr = traceback.format_exc()
             return {"status": "error", "stdout": "", "stderr": stderr}
 
-        self.stdout_thread.join()
-        self.stderr_thread.join()
         return self.postprocess({"status": "success", **self.output_cache})
 
     def __del__(self):

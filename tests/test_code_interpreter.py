@@ -5,7 +5,7 @@ from creator.code_interpreter import PythonInterpreter, CodeInterpreter
 
 def test_python_interpreter():
     code_interpreter = PythonInterpreter()
-    response1 = code_interpreter.run(query="""
+    query = """
 def is_prime(n):
     if n <= 1:
         return False
@@ -13,7 +13,8 @@ def is_prime(n):
         if n % i == 0:
             return False
     return True
-""")
+"""
+    response1 = code_interpreter.run(query=query)
     print(response1)
 
     response2 = code_interpreter.run(query="""
@@ -45,4 +46,4 @@ def test_python_interpreter3():
 
 
 if __name__ == "__main__":
-    test_python_interpreter3()
+    test_python_interpreter()
