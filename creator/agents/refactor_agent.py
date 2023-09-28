@@ -68,7 +68,7 @@ class CodeRefactorAgent(LLMChain):
 
 
 def create_code_refactor_agent(llm):
-    path = os.join(os.path.dirname(__file__), "..", "codeskill_function_schema.json")
+    path = os.path.join(os.path.dirname(__file__), ".", "codeskill_function_schema.json")
     with open(path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {

@@ -64,7 +64,7 @@ class SkillExtractorAgent(LLMChain):
 
 def create_skill_extractor_agent(llm):
     # current file's parent as dir
-    path = os.join(os.path.dirname(__file__), "..", "codeskill_function_schema.json")
+    path = os.path.join(os.path.dirname(__file__), ".", "codeskill_function_schema.json")
     with open(path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {

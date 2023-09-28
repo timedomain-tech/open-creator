@@ -126,7 +126,7 @@ def create_code_tester_agent(llm):
     )
     tool = CodeInterpreter()
     code_interpreter_function_schema = tool.to_function_schema()
-    path = os.join(os.path.dirname(__file__), "..", "testsummary_function_schema.json")
+    path = os.path.join(os.path.dirname(__file__), ".", "testsummary_function_schema.json")
     with open(path) as f:
         test_summary_function_schema = json.load(f)
 
