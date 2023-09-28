@@ -1,0 +1,40 @@
+\section{Method}
+
+
+Open-Creator is an integrated package, incorporating all functionalities of CREATOR agents along with additional features such as saving to local or remote skill libraries and performing RAG searches from the skill library. Open-Creator is composed of three main components: Creator API, Collaborative Agents, and Skill Library Hub.
+
+\subsection{Creator API}
+
+The Creator API is a pivotal component of Open-Creator, serving as an essential interface for both developers and researchers focused on AI agents and the AI agents themselves. Designed with an emphasis on simplicity and user-friendliness, the API primarily offers three critical functionalities:
+\begin{enumerate}
+    \item \textit{creator.create}: This function stands out for its versatility, enabling the generation of unified skill objects from a wide range of sources. Users can derive skill objects from dialogues between users and agents that have code interpreter tools, representing the problem-solving processes. Also, they can craft these objects directly from sources such as code files, API documentation, specific problem requirements, or even by utilizing existing skills.
+
+    \item \textit{creator.save}: Once the skills are formulated, they require a reliable storage solution. This function offers the flexibility for users to save their skill objects in diverse formats. Be it locally or on cloud platforms like the Hugging Face Hub, users have the freedom to choose their preferred storage method.
+
+    \item \textit{creator.search}: The retrieval process is streamlined with this function. It begins by transforming the structured skills into vectors. Following this, a semantic search mechanism is employed to ensure users can retrieve the top \( k \) skills, ideally suited for tackling new problems.
+\end{enumerate}
+
+
+\subsection{Collaborative Agents}
+
+The Collaborative Agents encompasses five primary components:
+
+\begin{enumerate}
+    \item \textbf{Extractor Agent:} Responsible for converting existing problem-solving experiences (typically dialogues with a code interpreter), textual content, and documents into a unified skill object. The skill object encapsulates skill name, description, use cases, input-output parameters, associated dependencies, and code language. The code within the historical records is modularized and reorganized.
+    
+    \item \textbf{Interpreter Agent:} It leverages the open-source project, `open-interpreter` ~\cite{openinterpreter}, for prompt templates and code execution settings. The agent generates dialogue histories in the absence of known problem-solving procedures. Depending on execution results and user feedback, it preliminarily verifies the accuracy of results. The prompt templates of `open-interpreter` utilize thought chains and the rewoo framework. Initial approaches to user queries involve incremental planning and task decomposition, followed by execution and retrospective outlining of the next steps. The ReWOO ~\cite{xu2023rewoo} framework delineates the language model's inference process from external tool invocations, significantly reducing redundant prompts and computational requirements.
+    
+    \item \textbf{Tester Agent:} A variant of the interpreter agent, its primary role differs as it generates test cases and reports for stored skill objects. This evaluates their robustness and generalization performance, subsequently providing feedback to the interpreter for iterations.
+    
+    \item \textbf{Refactor Agent:} This agent facilitates modifications based on user demands. A technique involving operator overloading elegantly represents skill amalgamation, fine-tuning, and modularization of complex skills. Instead of repetitively restructuring extensive skill inputs, a mathematical operation-based approach simplifies the interface. Skill objects can be accumulated, and the resultant skill objects are appended with natural language using symbols > or <. For instance, "skillA + skillB > user\_request" represents the merging of two skills as per user demands. "SkillA < user\_request" illustrates the modularization of a complex skill based on user requirements. For skill fine-tuning, "skillA > user\_request" suffices.
+    
+    \item \textbf{Creator Agent:} This agent orchestrates the usage of the Creator API interfaces and coordinates the operations of the above four agents in response to user queries and intents. It uses the search interface to retrieve relevant skills for problem-solving. If the retrieved skills are inadequate, it employs the create interface to devise a new solution, followed by the save interface to persist the new skill. It inherently supports direct operations on API interfaces and dispatches responses across various agents. The agent also employs overloaded operators for skill iterative updates and refactoring.
+\end{enumerate}
+
+The Agents are developed on the langchain ~\cite{langchain} platform and are optimized with LLM cache. They are progressively designed to support diverse open-source or proprietary API-based LLMs.  Figure ~\ref{fig:creator_agents} aptly depicts their interrelationships.
+
+\subsection{Skill Library Hub}
+
+The Skill Library focuses on the persistent storage of skills. It employs a directory structure where each skill is stored in its named subfolder. Additionally, the advantages of the Hugging Face Hub community are harnessed to allow users to upload their private skill libraries to the cloud.
+
+After users craft a skill, they have the option to save it on the cloud by providing a Hugging Face `repo\_id`. If the user hasn't established a repository, one is automatically forked from our pre-defined template. Following the fork, the user's skill is uploaded. To access skills from others' libraries, users need only supply the public repo\_id and the designated skill directory name for downloading locally. After downloading, the search index is auto-updated to include the new skill. With the community's growth around the skill library, we've also introduced cloud-based searching, making it easier to tap into collective community insights.

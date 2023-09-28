@@ -1,0 +1,52 @@
+\section{Related Work}
+
+Among the various contributions, two works, namely CREATOR ~\cite{qian2023creator} and VOYAGER ~\cite{wang2023voyager}, merit particular attention.
+
+\subsection{CREATOR}
+
+The CREATOR framework emerges as a noteworthy initiative addressing the intricate challenges faced by LLMs in tool utilization for problem-solving. Unlike conventional approaches, CREATOR uniquely positions LLMs not merely as users but as creators of tools. This pivotal transition enhances the models’ capabilities in solving problems with heightened precision and flexibility, offering a fresh perspective on leveraging the tool-creating prowess of LLMs. The framework comprises four stages:
+\begin{itemize}
+    \item \textbf{Creation:} LLMs are given explicit instructions and examples, guiding them to generate tools specific for given problems with focus on essential features.
+    \item \textbf{Decision:} Post-tool creation, LLMs decide on tool application based on documentation and context analysis.
+    \item \textbf{Execution:} This involves integrating the crafted tool code with the decision-making code, executing it through a code interpreter, and capturing the results or error messages.
+    \item \textbf{Correction:} In case of execution failure, LLMs make necessary adjustments to the tool or decision, based on error tracking information.
+\end{itemize}
+
+The innovative approach of CREATOR brings to the forefront several advantages. Firstly, it alleviates the cognitive load on LLMs by distinctly separating the processes of abstract thinking (required for tool creation) and concrete thinking (necessary for decision-making). Secondly, the approach facilitates automated corrections through the strategic use of code testing and sensitivity analysis. Lastly, compared to LLM cache benefits ~\cite{GPTCache}, the validated tools crafted through CREATOR inherently possess superior generalization capabilities, making them adept at tackling a variety of new problems efficiently.
+
+We consider the above as a new novel learning mechanism distinct from both the supervised learning in Artificial Neural Networks (ANNs) ~\cite{Schmidhuber_2015} and the few-shot in-context learning observed in LLMs ~\cite{dong2023survey}. Table~\ref{tab:learning_approaches} provides a concise summary of this proposition:
+
+\begin{itemize}
+    \item For ANNs, the traditional approach involves learning weights through gradient descent algorithms to approximate an input-output mapping function. The generalization capability of ANNs primarily relies on the quality of the supervised data and the efficacy of the mapping function itself.
+    \item In the case of LLMs, extensive pre-training on large corpora coupled with fine-tuning through specific instructions allows these models to significantly improve performance on downstream tasks, even with only a few examples for in-context learning.
+    \item Regarding Agents, the learning process transitions into a procedure where the interaction experiences with users, which are aimed at problem-solving, are converted into persistent skills. Generalization, in this context, involves utilizing Retrieval-Augmented Generation (RAG) ~\cite{lewis2021retrievalaugmented, li2022survey, mialon2023augmented} to semantically search and select the most appropriate tools for the current context, as well as handling parameter passing effectively.
+\end{itemize}
+
+This \textit{create and reuse} mechanism propels AI agents forward, capturing skills developed through LLMs. Unlike traditional deep learning, which often acts as a 'black box', this approach ensures skills are both reliable and interpretable. These skills are systematically stored in a library. When faced with new challenges, the system uses RAG techniques to select the best tools from this library. If no existing skill suffices, the system iteratively crafts new ones, ensuring continuous enhancement and adaptability in tackling intricate problems.
+
+LLMs have a natural propensity to provide detailed steps and explanations. However, solving intricate problems under context constraints necessitates a more abstract skill set. Traditionally, users had to manually assemble operations specific to different domains, a process that was not only labor-intensive but also resulted in skill sets that were difficult to reuse, hindering the construction of complex, layered projects. The introduction of a framework for automated skill library creation substantially reduces the cost associated with manual tool design, facilitating the rapid and scalable creation and preservation of tools that can meet nuanced and customized requirements.
+
+Furthermore, skills stored in the library can be chain-combined and refactored to develop new skills. The cost associated with creating new skills is minimized since the process can be automated: a task decomposition agent can simulate user demands, a code interpreter can craft the problem-solving process, and the resultant solution can be abstracted into a new skill.
+
+\subsection{VOYAGER}
+
+VOYAGER, on the other hand, provides empirical validation of the CREATOR concept within the context of the Minecraft game.
+It introduces a lifelong learning agent based on LLMs, designed for open-ended exploration tasks in Minecraft. This agent incorporates three innovative components:
+\begin{itemize}
+    \item \textit{Automatic Curriculum}: It utilizes GPT-4 to continuously generate new exploration tasks and challenges, fostering the acquisition of more complex skills by the agent. The curriculum dynamically adjusts the difficulty of tasks based on the agent’s current status and progress.
+    \item \textit{Skill Library}: Whenever GPT-4 generates and verifies executable code that successfully completes a new task, this code is added to the skill library as a new skill. Each skill in the library is represented by code, which can be reused, interpreted, and combined to form more complex skills.
+    \item \textit{Iterative Prompting}: This mechanism refines the code generated by GPT-4 through execution, environmental feedback, error acquisition, and self-validation of task success. The iteration continues until the task is successfully completed, after which the refined skill is added to the skill library.
+\end{itemize}
+
+Experimental results demonstrate that VOYAGER can autonomously acquire various skills without human intervention, outperforming other LLM-based methods. It excels in obtaining unique items, unlocking milestones in the crucial technology tree more quickly, and traversing longer distances. Importantly, the skills learned by VOYAGER can be generalized to new Minecraft worlds, facilitating the completion of novel tasks.
+
+Despite the innovative approaches of CREATOR and VOYAGER, each has its limitations. CREATOR falls short by not incorporating the concept of a skill library and does not discuss how created skills are stored and reused through a mechanism like RAG. On the other hand, VOYAGER, while effective, is specialized for the Minecraft environment, which might pose challenges when generalizing to other complex environments or tasks.
+
+To advance the concepts of CREATOR and the skill library further, our open-creator introduces the following three key additions:
+
+\begin{itemize}
+    \item \textit{Consistency in Skill Schema:} A dedicated “skill\_library” ensures consistency in user experience when facing challenges. Access to carefully curated and refined knowledge not only offers reliable solutions but also guarantees uniform results. This consistency is crucial when reflecting on and replicating successful processes by others, as inconsistent or unpredictable experiences can be frustrating. While CREATOR introduced methodologies, the absence of open-source code makes it challenging for others to replicate their success. The dedicated skill library in open-creator provides a standardized repository of skills that eliminates the usual inconsistencies associated with problem-solving, offering a robust and consistent user experience.
+    \item \textit{Skill Library Hub:} A significant downside of not having a cohesive skill library is the missed opportunity to leverage the collective wisdom of the global community. Innovative developers and users around the world continually discover optimized solutions to challenges. Without a centralized platform to archive and share these insights, there's a risk of continually reinventing the wheel. The skill library serves as a repository where community members can contribute, refine, and validate a diverse array of solutions, thereby amplifying the potential of shared knowledge and facilitating the creation of a robust knowledge base.
+    \item \textit{Skill Refactoring:} Open-creator allows for more flexibility in modifying, assembling, and disassembling created skills. Skills may need updates over time and with changing environments. The introduced mechanism allows AI agents to continually optimize skills based on feedback and new data, supporting the evolution of skills to meet emerging needs and challenges.
+\end{itemize}
+

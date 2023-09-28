@@ -1,0 +1,79 @@
+\documentclass{article}
+
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{fancyhdr}       % header
+\usepackage{graphicx}       % graphics
+\graphicspath{{figures/}}     % organize your images and other figures under figures/ folder
+\usepackage{tikz}
+\usepackage{tabularx}
+\usepackage{array}
+% \usepackage{natbib}
+\PassOptionsToPackage{numbers, compress}{natbib}
+
+
+\newcommand{\halfcircle}{
+  \begin{tikzpicture}[baseline=-0.75ex]
+    \fill[black] (0,0) -- (0.25,0) arc (0:180:0.25) -- cycle; % Fill the upper half
+    \draw (0,0) -- (-0.25,0) arc (0:180:-0.25); % Draw the border for the lower half
+  \end{tikzpicture}
+}
+
+%Header
+\pagestyle{fancy}
+\thispagestyle{empty}
+\rhead{ \textit{ }} 
+
+%% Title
+% \halfcircle{}
+\title{Open-Creator: Bridging Code Interpreter and Skill Library}
+
+\author{
+Junmin Gong\(^{*}\) \\
+\texttt{gongjunmin@timedomain.ai} \\
+Timedomain \\
+\and
+Sen Wang \(\dagger\) \\
+\texttt{sayo@timedomain.ai} \\
+Timedomain \\
+\and
+Wenxiao Zhao \(\dagger\) \\
+\texttt{sean.z@timedomain.ai} \\
+Timedomain \\
+\and
+Jing Guo\(\ddagger\) \\
+\texttt{joe.g@timedomain.ai} \\
+Timedomain \\
+}
+
+
+\begin{document}
+\textcolor{red}{\textbf{Note:} The experimental section is currently in progress and will be updated in the subsequent versions.}
+\maketitle
+\input{sections/0-abstract}
+\input{sections/1-introduction}
+\input{tables/learning_approaches}
+\input{sections/2-related_work}
+\input{figures/framework}
+\input{sections/3-method}
+% \input{sections/4-experiments}
+% \input{sections/5-discussions}
+% \input{sections/6-conclusion}
+\input{sections/7-acknowledgement}
+\newpage
+%Bibliography
+\bibliographystyle{unsrt}
+\bibliography{references}  
+
+
+\end{document}
