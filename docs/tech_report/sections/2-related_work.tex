@@ -1,10 +1,10 @@
 \section{Related Work}
 
-Among the various contributions, two works, namely CREATOR and VOYAGER, merit particular attention.
+Among the various contributions, two works, namely CREATOR ~\cite{qian2023creator} and VOYAGER ~\cite{wang2023voyager}, merit particular attention.
 
 \subsection{CREATOR}
 
-The CREATOR framework emerges as a noteworthy initiative addressing the intricate challenges faced by Large Language Models (LLMs) in tool utilization for problem-solving. Unlike conventional approaches, CREATOR uniquely positions LLMs not merely as users but as creators of tools. This pivotal transition enhances the models’ capabilities in solving problems with heightened precision and flexibility, offering a fresh perspective on leveraging the tool-creating prowess of LLMs. The framework comprises four stages: Creation, Decision, Execution, and Correction.
+The CREATOR framework emerges as a noteworthy initiative addressing the intricate challenges faced by LLMs in tool utilization for problem-solving. Unlike conventional approaches, CREATOR uniquely positions LLMs not merely as users but as creators of tools. This pivotal transition enhances the models’ capabilities in solving problems with heightened precision and flexibility, offering a fresh perspective on leveraging the tool-creating prowess of LLMs. The framework comprises four stages:
 \begin{itemize}
     \item \textbf{Creation:} LLMs are given explicit instructions and examples, guiding them to generate tools specific for given problems with focus on essential features.
     \item \textbf{Decision:} Post-tool creation, LLMs decide on tool application based on documentation and context analysis.
@@ -12,17 +12,17 @@ The CREATOR framework emerges as a noteworthy initiative addressing the intricat
     \item \textbf{Correction:} In case of execution failure, LLMs make necessary adjustments to the tool or decision, based on error tracking information.
 \end{itemize}
 
-The innovative approach of CREATOR brings to the forefront several advantages. Firstly, it alleviates the cognitive load on LLMs by distinctly separating the processes of abstract thinking (required for tool creation) and concrete thinking (necessary for decision-making). Secondly, the approach facilitates automated corrections through the strategic use of code testing and sensitivity analysis. Lastly, compared to LLM cache benefits, the validated tools crafted through CREATOR inherently possess superior generalization capabilities, making them adept at tackling a variety of new problems efficiently.
+The innovative approach of CREATOR brings to the forefront several advantages. Firstly, it alleviates the cognitive load on LLMs by distinctly separating the processes of abstract thinking (required for tool creation) and concrete thinking (necessary for decision-making). Secondly, the approach facilitates automated corrections through the strategic use of code testing and sensitivity analysis. Lastly, compared to LLM cache benefits ~\cite{GPTCache}, the validated tools crafted through CREATOR inherently possess superior generalization capabilities, making them adept at tackling a variety of new problems efficiently.
 
-We consider the above as a new novel learning mechanism distinct from both the supervised learning in Artificial Neural Networks (ANNs) and the few-shot in-context learning observed in Large Language Models (LLMs). Table~\ref{tab:learning_approaches} provides a concise summary of this proposition:
+We consider the above as a new novel learning mechanism distinct from both the supervised learning in Artificial Neural Networks (ANNs) ~\cite{Schmidhuber_2015} and the few-shot in-context learning observed in LLMs ~\cite{dong2023survey}. Table~\ref{tab:learning_approaches} provides a concise summary of this proposition:
 
 \begin{itemize}
     \item For ANNs, the traditional approach involves learning weights through gradient descent algorithms to approximate an input-output mapping function. The generalization capability of ANNs primarily relies on the quality of the supervised data and the efficacy of the mapping function itself.
     \item In the case of LLMs, extensive pre-training on large corpora coupled with fine-tuning through specific instructions allows these models to significantly improve performance on downstream tasks, even with only a few examples for in-context learning.
-    \item Regarding Agents, the learning process transitions into a procedure where the interaction experiences with users, which are aimed at problem-solving, are converted into persistent skills. Generalization, in this context, involves utilizing Retrieval-Augmented Generation (RAG) to semantically search and select the most appropriate tools for the current context, as well as handling parameter passing effectively.
+    \item Regarding Agents, the learning process transitions into a procedure where the interaction experiences with users, which are aimed at problem-solving, are converted into persistent skills. Generalization, in this context, involves utilizing Retrieval-Augmented Generation (RAG) ~\cite{lewis2021retrievalaugmented, li2022survey, mialon2023augmented} to semantically search and select the most appropriate tools for the current context, as well as handling parameter passing effectively.
 \end{itemize}
 
-This mechanism, which we refer to as \textit{create and reuse}, is poised to elevate the applications of our AI agents to new heights. The skills generated by LLMs are accumulated and honed during the problem-solving process, embodying a high degree of reliability and interpretability. This contrasts starkly with the ‘black box’ nature intrinsic to conventional deep learning models. Skills developed can be persisted in a structured format, thereby contributing to a comprehensive skill library. Upon encountering new but related problems in the future, the system can leverage RAG techniques to retrieve the most fitting tools for the task at hand. If the existing skills fall short of addressing the new challenges effectively, there is an iterative process in place for creating and incorporating new skills into the library. This approach significantly enhances the robustness of the system in tackling complex problems.
+This \textit{create and reuse} mechanism propels AI agents forward, capturing skills developed through LLMs. Unlike traditional deep learning, which often acts as a 'black box', this approach ensures skills are both reliable and interpretable. These skills are systematically stored in a library. When faced with new challenges, the system uses RAG techniques to select the best tools from this library. If no existing skill suffices, the system iteratively crafts new ones, ensuring continuous enhancement and adaptability in tackling intricate problems.
 
 LLMs have a natural propensity to provide detailed steps and explanations. However, solving intricate problems under context constraints necessitates a more abstract skill set. Traditionally, users had to manually assemble operations specific to different domains, a process that was not only labor-intensive but also resulted in skill sets that were difficult to reuse, hindering the construction of complex, layered projects. The introduction of a framework for automated skill library creation substantially reduces the cost associated with manual tool design, facilitating the rapid and scalable creation and preservation of tools that can meet nuanced and customized requirements.
 
@@ -31,7 +31,7 @@ Furthermore, skills stored in the library can be chain-combined and refactored t
 \subsection{VOYAGER}
 
 VOYAGER, on the other hand, provides empirical validation of the CREATOR concept within the context of the Minecraft game.
-It introduces a lifelong learning agent based on Large Language Models (LLMs), designed for open-ended exploration tasks in Minecraft. This agent incorporates three innovative components:
+It introduces a lifelong learning agent based on LLMs, designed for open-ended exploration tasks in Minecraft. This agent incorporates three innovative components:
 \begin{itemize}
     \item \textit{Automatic Curriculum}: It utilizes GPT-4 to continuously generate new exploration tasks and challenges, fostering the acquisition of more complex skills by the agent. The curriculum dynamically adjusts the difficulty of tasks based on the agent’s current status and progress.
     \item \textit{Skill Library}: Whenever GPT-4 generates and verifies executable code that successfully completes a new task, this code is added to the skill library as a new skill. Each skill in the library is represented by code, which can be reused, interpreted, and combined to form more complex skills.

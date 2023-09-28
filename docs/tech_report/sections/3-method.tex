@@ -1,7 +1,7 @@
 \section{Method}
 
 
-Open-Creator is an integrated package, incorporating all functionalities of CREATOR agents along with additional features such as saving to local or remote skill libraries and performing Retrieval-Augmented Generation (RAG) searches from the skill library. Open-Creator is composed of three main components: Creator API, Collaborative Agents, and Skill Library Hub.
+Open-Creator is an integrated package, incorporating all functionalities of CREATOR agents along with additional features such as saving to local or remote skill libraries and performing RAG searches from the skill library. Open-Creator is composed of three main components: Creator API, Collaborative Agents, and Skill Library Hub.
 
 \subsection{Creator API}
 
@@ -17,21 +17,21 @@ The Creator API is a pivotal component of Open-Creator, serving as an essential 
 
 \subsection{Collaborative Agents}
 
-The Collaborative Agents encompasses five primary components: the extractor agent, interpreter agent, tester agent, refactor agent, and creator agent. While its foundational setup doesn't deviate significantly from the CREATOR paper, distinct differences are:
+The Collaborative Agents encompasses five primary components:
 
 \begin{enumerate}
     \item \textbf{Extractor Agent:} Responsible for converting existing problem-solving experiences (typically dialogues with a code interpreter), textual content, and documents into a unified skill object. The skill object encapsulates skill name, description, use cases, input-output parameters, associated dependencies, and code language. The code within the historical records is modularized and reorganized.
     
-    \item \textbf{Interpreter Agent:} It leverages the open-source project, open interpreter, for prompt templates and code execution settings. The agent generates dialogue histories in the absence of known problem-solving procedures. Depending on execution results and user feedback, it preliminarily verifies the accuracy of results. The prompt templates of open interpreter utilize thought chains and the rewoo framework. Initial approaches to user queries involve incremental planning and task decomposition, followed by execution and retrospective outlining of the next steps. The rewoo framework delineates the language model's inference process from external tool invocations, significantly reducing redundant prompts and computational requirements.
+    \item \textbf{Interpreter Agent:} It leverages the open-source project, `open-interpreter` ~\cite{openinterpreter}, for prompt templates and code execution settings. The agent generates dialogue histories in the absence of known problem-solving procedures. Depending on execution results and user feedback, it preliminarily verifies the accuracy of results. The prompt templates of `open-interpreter` utilize thought chains and the rewoo framework. Initial approaches to user queries involve incremental planning and task decomposition, followed by execution and retrospective outlining of the next steps. The ReWOO ~\cite{xu2023rewoo} framework delineates the language model's inference process from external tool invocations, significantly reducing redundant prompts and computational requirements.
     
-    \item \textbf{Tester Agent:} A variant of the interpreter, its primary role differs as it generates test cases and reports for stored skill objects. This evaluates their robustness and generalization performance, subsequently providing feedback to the interpreter for iterations.
+    \item \textbf{Tester Agent:} A variant of the interpreter agent, its primary role differs as it generates test cases and reports for stored skill objects. This evaluates their robustness and generalization performance, subsequently providing feedback to the interpreter for iterations.
     
     \item \textbf{Refactor Agent:} This agent facilitates modifications based on user demands. A technique involving operator overloading elegantly represents skill amalgamation, fine-tuning, and modularization of complex skills. Instead of repetitively restructuring extensive skill inputs, a mathematical operation-based approach simplifies the interface. Skill objects can be accumulated, and the resultant skill objects are appended with natural language using symbols > or <. For instance, "skillA + skillB > user\_request" represents the merging of two skills as per user demands. "SkillA < user\_request" illustrates the modularization of a complex skill based on user requirements. For skill fine-tuning, "skillA > user\_request" suffices.
     
-    \item \textbf{Creator Agent:} This agent orchestrates the usage of the CREATOR API interfaces and coordinates the operations of the above four agents in response to user queries and intents. It uses the search interface to retrieve relevant skills for problem-solving. If the retrieved skills are inadequate, it employs the create interface to devise a new solution, followed by the save interface to persist the new skill. It inherently supports direct operations on API interfaces and dispatches responses across various agents. The agent also employs overloaded operators for skill iterative updates and refactoring.
+    \item \textbf{Creator Agent:} This agent orchestrates the usage of the Creator API interfaces and coordinates the operations of the above four agents in response to user queries and intents. It uses the search interface to retrieve relevant skills for problem-solving. If the retrieved skills are inadequate, it employs the create interface to devise a new solution, followed by the save interface to persist the new skill. It inherently supports direct operations on API interfaces and dispatches responses across various agents. The agent also employs overloaded operators for skill iterative updates and refactoring.
 \end{enumerate}
 
-The Agents are developed on the langchain platform and are optimized with LLM cache. They are progressively designed to support diverse open-source or proprietary API-based LLMs.  Figure ~\ref{fig:framework} aptly depicts their interrelationships.
+The Agents are developed on the langchain ~\cite{langchain} platform and are optimized with LLM cache. They are progressively designed to support diverse open-source or proprietary API-based LLMs.  Figure ~\ref{fig:framework} aptly depicts their interrelationships.
 
 \subsection{Skill Library Hub}
 

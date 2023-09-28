@@ -14,16 +14,17 @@
 \usepackage{lipsum}
 \usepackage{fancyhdr}       % header
 \usepackage{graphicx}       % graphics
-\graphicspath{{media/}}     % organize your images and other figures under media/ folder
+% \graphicspath{{media/}}     % organize your images and other figures under media/ folder
 \usepackage{tikz}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{natbib}
 
 
 \newcommand{\halfcircle}{
-  \begin{tikzpicture}[baseline=-0.7ex]
-    \fill[black] (0,0) -- (0.3,0) arc (0:180:0.3) -- cycle; % Fill the upper half
-    \draw (0,0) -- (-0.3,0) arc (0:180:-0.3); % Draw the border for the lower half
+  \begin{tikzpicture}[baseline=-0.75ex]
+    \fill[black] (0,0) -- (0.25,0) arc (0:180:0.25) -- cycle; % Fill the upper half
+    \draw (0,0) -- (-0.25,0) arc (0:180:-0.25); % Draw the border for the lower half
   \end{tikzpicture}
 }
 
@@ -33,7 +34,8 @@
 \rhead{ \textit{ }} 
 
 %% Title
-\title{\halfcircle{} Open-Creator: Bridging Code Interpreter and Skill Library}
+% \halfcircle{}
+\title{Open-Creator: Bridging Code Interpreter and Skill Library}
 
 \author{
 Junmin Gong\(^{*}\) \\
@@ -49,29 +51,27 @@ Wenxiao Zhao \(\dagger\) \\
 Timedomain \\
 \and
 Jing Guo\(\ddagger\) \\
-\texttt{guojing@timedomain.ai} \\
+\texttt{joe.g@timedomain.ai} \\
 Timedomain \\
 }
 
-% keywords can be removed
-% \keywords{AI Agents \and Code Interpreters \and Skill Library \and Tool Creation}
 
 \begin{document}
+\textcolor{red}{\textbf{Note:} The experimental section is currently in progress and will be updated in the subsequent versions.}
 \maketitle
-
-\input{sections/0_abstract}
-\input{sections/1_introduction}
+\input{sections/0-abstract}
+\input{sections/1-introduction}
 \input{tables/learning_approaches}
-\input{sections/2_related_work}
+\input{sections/2-related_work}
 \input{figures/framework}
-\input{sections/3_method}
-\input{sections/4_experiments}
-\input{sections/5_discussions}
-\input{sections/6_conclusion}
+\input{sections/3-method}
+% \input{sections/4-experiments}
+% \input{sections/5-discussions}
+% \input{sections/6-conclusion}
 \input{sections/7-acknowledgement}
-
+\newpage
 %Bibliography
-\bibliographystyle{unsrt}  
+\bibliographystyle{unsrt}
 \bibliography{references}  
 
 
