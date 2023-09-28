@@ -31,7 +31,7 @@ The Collaborative Agents encompasses five primary components:
     \item \textbf{Creator Agent:} This agent orchestrates the usage of the Creator API interfaces and coordinates the operations of the above four agents in response to user queries and intents. It uses the search interface to retrieve relevant skills for problem-solving. If the retrieved skills are inadequate, it employs the create interface to devise a new solution, followed by the save interface to persist the new skill. It inherently supports direct operations on API interfaces and dispatches responses across various agents. The agent also employs overloaded operators for skill iterative updates and refactoring.
 \end{enumerate}
 
-The Agents are developed on the langchain ~\cite{langchain} platform and are optimized with LLM cache. They are progressively designed to support diverse open-source or proprietary API-based LLMs.  Figure ~\ref{fig:framework} aptly depicts their interrelationships.
+The Agents are developed on the langchain ~\cite{langchain} platform and are optimized with LLM cache. They are progressively designed to support diverse open-source or proprietary API-based LLMs.  Figure ~\ref{fig:creator_agents} aptly depicts their interrelationships.
 
 \subsection{Skill Library Hub}
 

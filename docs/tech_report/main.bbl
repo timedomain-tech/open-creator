@@ -26,7 +26,8 @@ Minghao Li, Feifan Song, Bowen Yu, Haiyang Yu, Zhoujun Li, Fei Huang, and Yongbi
 \newblock Api-bank: A benchmark for tool-augmented llms, 2023.
 
 \bibitem{openinterpreter}
-Open interpreter, 2023.
+KillianLucas.
+\newblock Open interpreter, 2023.
 
 \bibitem{skreta2023errors}
 Marta Skreta, Naruki Yoshikawa, Sebastian Arellano-Rubach, Zhi Ji, Lasse~Bjørn Kristensen, Kourosh Darvish, Alán Aspuru-Guzik, Florian Shkurti, and Animesh Garg.
@@ -59,7 +60,8 @@ Anton Osika et~al.
 \newblock Gpt engineer, 2023.
 
 \bibitem{GPTeam}
-Gpteam: Collaborative ai agents, 2023.
+101dotxyz.
+\newblock Gpteam: Collaborative ai agents, 2023.
 
 \bibitem{bairi2023codeplan}
 Ramakrishna Bairi, Atharv Sonwane, Aditya Kanade, Vageesh~D C, Arun Iyer, Suresh Parthasarathy, Sriram Rajamani, B.~Ashok, and Shashank Shet.
@@ -74,7 +76,8 @@ Cheng Qian, Chi Han, Yi~R. Fung, Yujia Qin, Zhiyuan Liu, and Heng Ji.
 \newblock Creator: Disentangling abstract and concrete reasonings of large language models through tool creation, 2023.
 
 \bibitem{GPTCache}
-Gptcache : A library for creating semantic cache for llm queries, 2023.
+zilliztech.
+\newblock Gptcache : A library for creating semantic cache for llm queries, 2023.
 
 \bibitem{Schmidhuber_2015}
 Jürgen Schmidhuber.
@@ -98,6 +101,7 @@ Grégoire Mialon, Roberto Dessì, Maria Lomeli, Christoforos Nalmpantis, Ram Pas
 \newblock Augmented language models: a survey, 2023.
 
 \bibitem{langchain}
-Hwchase17/langchain: building applications with llms through composability, 2023.
+langchain team.
+\newblock Hwchase17/langchain: building applications with llms through composability, 2023.
 
 \end{thebibliography}
