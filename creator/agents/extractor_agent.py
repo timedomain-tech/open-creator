@@ -53,8 +53,8 @@ class SkillExtractorAgent(LLMChain):
 
         extracted_skill = self.create_outputs(response)[0]["extracted_skill"]
         extracted_skill["conversation_history"] = messages
-        extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
-        extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
+        extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"]) if "skill_parameters" in extracted_skill else None
+        extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"]) if "skill_return" in extracted_skill else None
         if callback:
             callback.on_chain_end()
         return {

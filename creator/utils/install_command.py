@@ -23,7 +23,7 @@ def _generate_python_install_command(dependencies):
     if not isinstance(dependencies, list):
         dependencies = [dependencies]
     for dep in dependencies:
-        if dep.dependency_type == "package":
+        if dep.dependency_type not in ("build-in", "function"):
             shell_command = shell_command_str.format(package_name=dep.dependency_name)
             if dep.dependency_version:
                 if dep.dependency_version[:2] not in ("==", ">=", "<=", "!="):

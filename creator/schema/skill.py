@@ -31,11 +31,11 @@ class BaseSkill(BaseModel):
 
 
 class CodeSkillParameter(BaseModel):
-    param_name: str = Field(default="query", description="the name of the parameter")
-    param_type: str = Field(default="string", description="the type, only support string, integer, float, boolean, array, object", enum=["string", "integer", "float", "boolean", "array", "object"])
-    param_description: str = Field(default="the input query", description="the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format")
-    param_required: bool = Field(default=True, description="whether it is required")
-    param_default: Optional[Any] = Field(default=None, description="the default value, it depends on the type")
+    param_name: str = Field(default="query", description="the name of the parameter", alias="parameter_name")
+    param_type: str = Field(default="string", description="the type, only support string, integer, float, boolean, array, object", enum=["string", "integer", "float", "boolean", "array", "object"], alias="parameter_type")
+    param_description: str = Field(default="the input query", description="the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format", alias="parameter_description")
+    param_required: bool = Field(default=True, description="whether it is required", alias="parameter_required")
+    param_default: Optional[Any] = Field(default=None, description="the default value, it depends on the type", alias="parameter_default")
 
     def to_json_schema(self):
         json_schema = {
@@ -50,7 +50,7 @@ class CodeSkillParameter(BaseModel):
 class CodeSkillDependency(BaseModel):
     dependency_name: str = Field("")
     dependency_version: Optional[str] = Field("", description="the version of the dependency only filled if context provided")
-    dependency_type: Optional[str] = Field(enum=["built-in", "package", "function"], default="built-in")
+    dependency_type: Optional[str] = Field(enum=["built-in", "package", "function"], default="built-in", description="when the dependency is an another code skill, please set it as function")
 
 
 class TestCase(BaseModel):
@@ -104,7 +104,7 @@ When writing code, it's imperative to follow industry standards and best practic
         refactorable = False
         skills_to_combine = []
         user_request = "please help me refine the skill object"
-        refactor_type = "refine"
+        refactor_type = "Refine"
 
     def to_function_call(self):
         parameters = {
@@ -132,7 +132,7 @@ When writing code, it's imperative to follow industry standards and best practic
     def to_skill_function_schema(self):
         code_skill_json_schema = remove_title(self.model_json_schema())
         defs = code_skill_json_schema.pop("$defs")
-        defs_to_remove = ["BaseSkillMetadata", "TestSummary"]
+        defs_to_remove = ["BaseSkillMetadata", "TestSummary", "TestCase"]
         for prop in defs_to_remove:
             defs.pop(prop)
         code_skill_json_schema["$defs"] = defs
@@ -173,13 +173,16 @@ When writing code, it's imperative to follow industry standards and best practic
     def __lt__(self, user_request:str):
         self.Config.refactorable = True
         self.Config.user_request = user_request
-        self.Config.refactor_type = "decompose"
+        self.Config.refactor_type = "Decompose"
         return self.refactor()
 
     def __gt__(self, user_request:str):
         self.Config.refactorable = True
         self.Config.user_request = user_request
-        self.Config.refactor_type = "combine"
+        if len(self.Config.skills_to_combine) <= 1:
+            self.Config.refactor_type = "Refine"
+        else:
+            self.Config.refactor_type = "Combine"
         return self.refactor()
 
     def run(self, inputs: Union[str, dict[str, Any]]):
@@ -246,15 +249,14 @@ When writing code, it's imperative to follow industry standards and best practic
         if not self.Config.refactorable:
             print("This skill is not refactorable since it is not combined with other skills or add any user request")
             return
-        
-        num_output_skills = "one" if self.Config.refactor_type != "decompose" else "appropriate number of"
         messages = [
-            {"role": "system", "content": f"Your refactor type is: {self.Config.refactor_type} and output {num_output_skills} skill object(s)"},
+            {"role": "system", "content": f"Your action type is: {self.Config.refactor_type}"},
             {"role": "function", "name": "show_skill", "content": repr(self)}
         ]
+        additional_request = "\nplease output only one skill object" if self.Config.refactor_type in ("Combine", "Refine") else "\nplease help me decompose the skill object into different independent skill objects" 
         messages.append({
             "role": "user",
-            "content": self.Config.user_request
+            "content": self.Config.user_request + additional_request
         })
         refactored_skill_jsons = code_refactor_agent.run(
             {
@@ -264,10 +266,9 @@ When writing code, it's imperative to follow industry standards and best practic
         )
         refactored_skills = []
         for refactored_skill_json in refactored_skill_jsons:
-            refactored_skill = self.__class__(refactored_skill_json)
+            refactored_skill = self.__class__(**refactored_skill_json)
             refactored_skill.skill_metadata = BaseSkillMetadata()
             refactored_skills.append(refactored_skill)
-
         return refactored_skills
     
     def __repr__(self):

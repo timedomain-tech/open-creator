@@ -13,18 +13,17 @@ import os
 from creator.llm.llm_creator import create_llm
 
 _SYSTEM_TEMPLATE = """**You are the Code Refactoring Agent**, an expert dedicated to elevating the quality of code while preserving its core functionality
-**Guiding Principles**:
-1. **Consistency and Functionality**: Always prioritize the code's intrinsic behavior while reshaping its structure for clarity and maintainability
-2. **Incremental Improvements**: Approach refactoring in manageable steps, ensuring each change aligns with the intended outcome and maintains the integrity of the code
-3. **Clarity in Naming and Documentation**: Assign descriptive names to functions, variables, and classes. Embed essential docstrings to elucidate purpose and functionality
-4. **Efficient Structures and Logic**: Streamline complex logic patterns, employ optimal data constructs, and integrate callbacks or error-handling mechanisms where necessary
-
-**Actions**:
-- **Refine**: When presented with a code skill object and a user_request, produce a refactored version aligned with the user's specifications.
-- **Integrate**: Merge multiple functions based on the user's specifications, be it a fusion of functionalities, chaining them in sequence, or using one as a guiding reference.
-- **Decompose**: Segment a `code skill object` into smaller, focused units in response to the `user_request`, emphasizing modularity and independence.
-
-Your mission: Navigate users towards refined, efficient, and tailored code solutions, embodying best practices and their unique requirements.
+Follow the guidelines below:
+1. Only extract all the required properties mentioned in the 'create_refactored_codeskills' function
+2. When the action type is Refine or Combine, return only one item in the list
+3. When the action type is Decompose, return more than one items in the list
+4. Your mission: Navigate users towards refined, efficient, and tailored code solutions, embodying best practices and their unique requirements.
+5. When creating a new skill object, consider the following principles
+    1. **Consistency and Functionality**: Always prioritize the code's intrinsic behavior while reshaping its structure for clarity and maintainability
+    2. **Incremental Improvements**: Approach refactoring in manageable steps, ensuring each change aligns with the intended outcome and maintains the integrity of the code
+    3. **Clarity in Naming and Documentation**: Assign descriptive names to functions, variables, and classes. Embed essential docstrings to elucidate purpose and functionality
+    4. **Efficient Structures and Logic**: Streamline complex logic patterns, employ optimal data constructs, and integrate callbacks or error-handling mechanisms where necessary
+5. When you output the skill_dependencies, skill_parameters, and skill_return, always follow definiton of CodeSkillDependency and CodeSkillParameter
 """
 
 
@@ -56,10 +55,11 @@ class CodeRefactorAgent(LLMChain):
         response = self.generate([inputs], run_manager=run_manager)
 
         refacted_skills = self.create_outputs(response)[0]["refacted_skills"]
+        refacted_skills = refacted_skills["refacted_skills"]
         for extracted_skill in refacted_skills:
             extracted_skill["conversation_history"] = messages
-            extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"])
-            extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"])
+            extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"]) if "skill_parameters" in extracted_skill else None
+            extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"]) if "skill_return" in extracted_skill else None
         if callback:
             callback.on_chain_end()
         return {
@@ -72,14 +72,21 @@ def create_code_refactor_agent(llm):
     with open(path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {
-        "name": "refacted_code_skill",
-        "description": "a function that constructs a list of skill objects",
+        "name": "create_refactored_codeskills",
+        "description": "a function that constructs a list of refactored skill objects. return only one item when your action is to combine or refine skill object(s), otherwise return more than one items",
         "parameters": {
-            "type": "array",
-            "items": code_skill_json_schema,
-            "minItems": 1
+            "properties": {
+                "refacted_skills": {
+                    "type": "array",
+                    "items": code_skill_json_schema,
+                    "minItems": 1
+                }
+            },
+            "type": "object",
+            "required": ["refacted_skills"]
         }
     }
+
     llm_kwargs = {"functions": [function_schema], "function_call": {"name": function_schema["name"]}}
     output_parser = JsonOutputFunctionsParser()
     # dummy prompt

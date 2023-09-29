@@ -128,6 +128,7 @@
                         }
                     ],
                     "default": "built-in",
+                    "description": "when the dependency is an another code skill, please set it as function",
                     "enum": [
                         "built-in",
                         "package",
@@ -178,38 +179,6 @@
                     "description": "the default value, it depends on the type"
                 }
             },
-            "type": "object"
-        },
-        "TestCase": {
-            "properties": {
-                "test_input": {
-                    "description": "The input data or conditions used for the test.",
-                    "type": "string"
-                },
-                "run_command": {
-                    "description": "The command or function that was executed for the test.",
-                    "type": "string"
-                },
-                "expected_result": {
-                    "description": "The expected outcome or result of the test.",
-                    "type": "string"
-                },
-                "actual_result": {
-                    "description": "The actual outcome or result observed after the test was executed.",
-                    "type": "string"
-                },
-                "is_passed": {
-                    "description": "A boolean indicating whether the test passed or failed.",
-                    "type": "boolean"
-                }
-            },
-            "required": [
-                "test_input",
-                "run_command",
-                "expected_result",
-                "actual_result",
-                "is_passed"
-            ],
             "type": "object"
         }
     }
