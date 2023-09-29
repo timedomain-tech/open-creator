@@ -21,8 +21,7 @@ def resolve_path(path):
 _local_skill_library_path = resolve_path(yaml_config.get("LOCAL_SKILL_LIBRARY_PATH", ".cache/open_creator/skill_library"))
 _remote_skill_library_path = resolve_path(yaml_config.get("REMOTE_SKILL_LIBRARY_PATH", ".cache/open_creator/remote"))
 _local_skill_library_vectordb_path = resolve_path(yaml_config.get("LOCAL_SKILL_LIBRARY_VECTORD_PATH", ".cache/open_creator/vectordb/"))
-_prompt_cache_history_path = resolve_path(yaml_config.get("PROMPT_CACHE_HISTORY_PATH", ".cache/open_creator/prompt_cache/"))
-_prompt_cache_history_file = yaml_config.get("PROMPT_CACHE_HISTORY_FILE", "history.txt")
+_prompt_cache_history_path = resolve_path(yaml_config.get("PROMPT_CACHE_HISTORY_PATH", ".cache/open_creator/prompt_cache/history.txt"))
 _skill_extract_agent_cache_path = resolve_path(yaml_config.get("SKILL_EXTRACT_AGENT_CACHE_PATH", ".cache/open_creator/llm_cache"))
 _official_skill_library_path = resolve_path(yaml_config.get("OFFICIAL_SKILL_LIBRARY_PATH", "timedomain/skill-library"))
 _official_skill_library_template_path = resolve_path(yaml_config.get("OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH", "timedomain/skill-library-template"))
@@ -37,10 +36,8 @@ for path in [_skill_extract_agent_cache_path, _local_skill_library_path, _local_
         os.makedirs(path)
 
 # Ensure the history file exists
-_prompt_cache_history_file_path = os.path.join(_prompt_cache_history_path, _prompt_cache_history_file)
-
-if not os.path.exists(_prompt_cache_history_file_path):
-    open(_prompt_cache_history_file_path, 'a').close()
+if not os.path.exists(_prompt_cache_history_path):
+    open(_prompt_cache_history_path, 'a').close()
 
 build_in_skill_config = {}  # Placeholder for any built-in skill configurations
 
@@ -49,7 +46,7 @@ class LibraryConfig(BaseModel):
     local_skill_library_path: str = _local_skill_library_path
     remote_skill_library_path: str = _remote_skill_library_path
     local_skill_library_vectordb_path: str = _local_skill_library_vectordb_path
-    prompt_cache_history_path: str = _prompt_cache_history_file_path
+    prompt_cache_history_path: str = _prompt_cache_history_path
     skill_extract_agent_cache_path: str = _skill_extract_agent_cache_path
     model: str = _model
     official_skill_library_path: str = _official_skill_library_path
