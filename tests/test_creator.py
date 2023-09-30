@@ -34,6 +34,7 @@ def test_create_from_messages():
 def test_create_from_messages_json_path():
     skill = creator.create(messages_json_path="./messages_example.json")
     creator.save(skill=skill)
+    print(Markdown(repr(skill)))
 
 
 def test_create_from_code_file_content():
@@ -137,8 +138,60 @@ def test_run_skill():
     resp = skill.run(input_args)
     print(resp)
 
+def test_run_skill_with_request():
+    skill = creator.search("pdf extract section")[0]
+    input_args = "extract 3-8 page form creator.pdf and save it as creator3-8.pdf"
+    print(Markdown(repr(skill)))
+    resp = skill.run(input_args)
+    print(resp)
+
+def test_create_from_file_content2():
+    doc_content = """
+# Installation
+\`\`\`shell
+pip install langchain openai 
+\`\`\`
+The chat model will respond with a message.
+\`\`\`python
+from langchain.schema import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage
+)
+from langchain.chat_models import ChatOpenAI
+
+chat = ChatOpenAI()
+chat([HumanMessage(content="Translate this sentence from English to French: I love programming.")])
+\`\`\`
+you will get AIMessage(content="J'adore la programmation.", additional_kwargs={}, example=False)
+
+We can then wrap our chat model in a ConversationChain, which has built-in memory for remembering past user inputs and model outputs.
+
+\`\`\`python
+from langchain.chains import ConversationChain  
+  
+conversation = ConversationChain(llm=chat)  
+conversation.run("Translate this sentence from English to French: I love programming.")
+\`\`\`
+output: 'Je adore la programmation.'
+
+conversation.run("Translate it to German.")
+
+output: 'Ich liebe Programmieren.'
+"""
+    skill = creator.create(file_content=doc_content)
+    print(Markdown(repr(skill)))
+    creator.save(skill, skill_path="./")
+
+
+def test_run_skill_with_request2():
+    skill = creator.create(request="filter how many prime numbers are in 201")
+    creator.save(skill=skill)
+    print(Markdown(repr(skill)))
+    result = skill.run("try n is 68")
+    print(result)
 
 if __name__ == "__main__":
-    test_create_from_messages()
+    test_run_skill_with_request2()
     # test_local_search()
 

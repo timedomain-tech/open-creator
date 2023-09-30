@@ -184,6 +184,11 @@ resp = skill.run(input_args)
 print(resp)
 ```
 
+- [x] 4.2 リクエストによるスキルの使用
+```python
+request = "extract 3-8 page form creator.pdf and save it as creator3-8.pdf"
+resp = skill.run(request)
+```
 
 # 貢献
 コミュニティからの貢献を歓迎します！バグ修正、新機能、ライブラリに追加するスキルなど、あなたの貢献は価値があります。ガイドラインについては、[貢献ガイドライン](CONTRIBUTING.md) をご覧ください。

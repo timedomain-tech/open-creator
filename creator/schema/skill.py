@@ -31,11 +31,35 @@ class BaseSkill(BaseModel):
 
 
 class CodeSkillParameter(BaseModel):
-    param_name: str = Field(default="query", description="the name of the parameter", alias="parameter_name")
-    param_type: str = Field(default="string", description="the type, only support string, integer, float, boolean, array, object", enum=["string", "integer", "float", "boolean", "array", "object"], alias="parameter_type")
-    param_description: str = Field(default="the input query", description="the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format", alias="parameter_description")
-    param_required: bool = Field(default=True, description="whether it is required", alias="parameter_required")
-    param_default: Optional[Any] = Field(default=None, description="the default value, it depends on the type", alias="parameter_default")
+    param_name: str = Field(default="query", description="the name of the parameter")
+    param_type: str = Field(default="string", description="the type, only support string, integer, float, boolean, array, object", enum=["string", "integer", "float", "boolean", "array", "object"])
+    param_description: str = Field(default="the input query", description="the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format")
+    param_required: bool = Field(default=True, description="whether it is required")
+    param_default: Optional[Any] = Field(default=None, description="the default value, it depends on the type")
+
+    @classmethod
+    def construct_with_aliases(cls, **data):
+        if 'parameter_name' in data and 'param_name' not in data:
+            data['param_name'] = data.pop('parameter_name')
+        if 'parameter_type' in data and 'param_type' not in data:
+            data['param_type'] = data.pop('parameter_type')
+        if 'parameter_description' in data and 'param_description' not in data:
+            data['param_description'] = data.pop('parameter_description')
+        if 'parameter_required' in data and 'param_required' not in data:
+            data['param_required'] = data.pop('parameter_required')
+        if 'parameter_default' in data and 'param_default' not in data:
+            data['param_default'] = data.pop('parameter_default')
+        if 'return_name' in data and 'param_name' not in data:
+            data['param_name'] = data.pop('return_name')
+        if 'return_type' in data and 'param_type' not in data:
+            data['param_type'] = data.pop('return_type')
+        if 'return_description' in data and 'param_description' not in data:
+            data['param_description'] = data.pop('return_description')
+        if 'return_required' in data and 'param_required' not in data:
+            data['param_required'] = data.pop('return_required')
+        if 'return_default' in data and 'param_default' not in data:
+            data['param_default'] = data.pop('return_default')
+        return data
 
     def to_json_schema(self):
         json_schema = {
@@ -105,6 +129,22 @@ When writing code, it's imperative to follow industry standards and best practic
         skills_to_combine = []
         user_request = "please help me refine the skill object"
         refactor_type = "Refine"
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        if "skill_parameters" in data and data["skill_parameters"]:
+            if isinstance(data["skill_parameters"], list):
+                self.skill_parameters = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**param)) for param in data["skill_parameters"]]
+            elif isinstance(data["skill_parameters"], dict):
+                self.skill_parameters = CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_parameters"]))
+        
+        if "skill_return" in data and data["skill_return"]:
+            if isinstance(data["skill_return"], list):
+                self.skill_return = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**param)) for param in data["skill_return"]]
+            elif isinstance(data["skill_return"], dict):
+                self.skill_return = CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_return"]))
+                if self.skill_return.param_name in ("null", "None") or self.skill_return.param_type in ("null", "None"):
+                    self.skill_return = None
 
     def to_function_call(self):
         parameters = {
@@ -216,20 +256,27 @@ When writing code, it's imperative to follow industry standards and best practic
     
     def test(self):
         if self.conversation_history is None or len(self.conversation_history) == 0:
-            print("No conversation history provided, cannot test")
-            return
+            self.conversation_history = []
+            # print("No conversation history provided, cannot test")
+            # return
         if not self.skill_code:
             print("No code provided, cannot test")
             return
         
+        previews_tool = code_tester_agent.tool
+        code_tester_agent.tool = config.code_interpreter
+
         self.check_and_install_dependencies()
-        tool_result = config.code_interpreter.run({
+        tool_input = {
             "language": self.skill_program_language,
             "code": self.skill_code
-        })
+        }
+        tool_result = config.code_interpreter.run(tool_input)
         messages = [
             {"role": "user", "content": repr(self)},
-            {"role": "function", "name": "run_code", "content": json.dumps(tool_result)}
+            {"role": "assistant", "content": "", "function_call": {"name": "run_code", "arguments": json.dumps(tool_input)}},
+            {"role": "function", "name": "run_code", "content": json.dumps(tool_result)},
+            {"role": "user", "content": "I have already run the function for you so you can directy use the function by passing the parameters without import the function"},
         ]
         test_result = code_tester_agent.run(
             {
@@ -240,8 +287,9 @@ When writing code, it's imperative to follow industry standards and best practic
                 "verbose": True,
             }
         )
+        code_tester_agent.tool = previews_tool
         if "test_summary" in test_result:
-            self.test_summary = TestSummary(**test_result["test_summary"])
+            self.test_summary = TestSummary(**{"test_cases": test_result["test_summary"]})
         self.conversation_history = self.conversation_history + test_result["messages"]
         return self.test_summary
 
@@ -272,7 +320,6 @@ When writing code, it's imperative to follow industry standards and best practic
         return refactored_skills
     
     def __repr__(self):
-
         if self.Config.refactorable:
             if len(self.Config.skills_to_combine) == 0:
                 self.Config.skills_to_combine.append(self)

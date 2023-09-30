@@ -177,7 +177,7 @@ for skill in skills:
 ```
 
 ## 4. Use a skill
-- [x] 4.1 Use a skill
+- [x] 4.1 Use a skill by input args
 ```python
 from rich.markdown import Markdown
 from rich import print
@@ -191,6 +191,12 @@ input_args = {
 print(Markdown(repr(skill)))
 resp = skill.run(input_args)
 print(resp)
+```
+
+- [x] 4.2 use a skill by request
+```python
+request = "extract 3-8 page form creator.pdf and save it as creator3-8.pdf"
+resp = skill.run(request)
 ```
 
 # Contributing

@@ -58,7 +58,7 @@ def validate_create_params(func):
             return None
         
         # Return the original function with the validated parameters
-        return func(cls, *args, **kwargs)
+        return func(cls, **kwargs)
     return wrapper
 
 
@@ -69,21 +69,27 @@ def validate_save_params(func):
     """
     @wraps(func)
     def wrapper(cls, *args, **kwargs):
+        arg_names = func.__code__.co_varnames[:func.__code__.co_argcount]
+        kwargs = {**dict(zip(arg_names, args)), **kwargs}
+        skill_key = ""
+        for k, v in kwargs.items():
+            if type(v) == CodeSkill:
+                skill_key = k
+        kwargs["skill"] = kwargs.pop(skill_key, None)
         skill = kwargs.get("skill", None)
         if skill is None:
             print("[red]Warning[/red]: [yellow]Please provide a skill object.[/yellow]")
             return None
-
-        arg_names = func.__code__.co_varnames[:func.__code__.co_argcount]
-        kwargs = {**dict(zip(arg_names, args)), **kwargs}
-
+        skill_path = kwargs.get("skill_path", None)
+        if skill_path is not None and os.path.dirname(skill_path) != skill.skill_name:
+            skill_path = os.path.join(skill_path, skill.skill_name)
+            kwargs["skill_path"] = skill_path
         params = ["huggingface_repo_id", "skill_path"]
         # Check if only one parameter is provided
         provided_params = [param for param in params if kwargs.get(param)]
         if len(provided_params) == 0:
-            skill = kwargs.get("skill")
             kwargs["skill_path"] = os.path.join(config.local_skill_library_path, skill.skill_name)
-        return func(cls, *args, **kwargs)
+        return func(cls, **kwargs)
 
     return wrapper
 

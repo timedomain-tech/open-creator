@@ -205,7 +205,7 @@ def create_complex_skill():
         'skill_parameters': [
             {'param_name': 'input_data', 'param_type': 'any', 'param_description': 'The input dataset to be visualized and analyzed.', 'param_required': True, 'param_default': None}
         ],
-        'skill_return': {'param_name': 'query', 'param_type': 'string', 'param_description': 'the input query', 'param_required': True, 'param_default': None},
+        'skill_return': None,
         'skill_dependencies': [
             {'dependency_name': 'visualize_data', 'dependency_version': '', 'dependency_type': 'built-in'},
             {'dependency_name': 'calculate_average', 'dependency_version': '', 'dependency_type': 'built-in'}
@@ -217,7 +217,7 @@ def create_complex_skill():
 
 def test_refactor_decompose():
     skill = create_complex_skill()
-    print(Markdown(repr(skill)))
+    # print(Markdown(repr(skill)))
     decomposed_skill = skill < "I want to decompose this skill into two skills: one for visualizing the data using a bar chart, and one for calculating the average."
     print(Markdown(repr(decomposed_skill)))
 

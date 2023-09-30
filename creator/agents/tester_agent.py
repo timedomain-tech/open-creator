@@ -40,8 +40,9 @@ OS: {operating_system}
 
 
 class CodeTesterAgent(LLMChain):
-    total_tries: int = 5
+    total_tries: int = 10
     tool: BaseTool
+    functions: list = []
 
     @property
     def _chain_type(self):
@@ -64,7 +65,7 @@ class CodeTesterAgent(LLMChain):
         total_tries = self.total_tries
         current_try = 0
 
-        llm_with_functions = self.llm.bind(functions=[self.tool.to_function_schema(), TestSummary.to_test_function_schema()])
+        llm_with_functions = self.llm.bind(functions=self.functions)
         callback = None
         if self.llm.callbacks:
             callback = self.llm.callbacks.handlers[0]
@@ -92,11 +93,10 @@ class CodeTesterAgent(LLMChain):
                 break
 
             function_name = function_call.get("name", "")
-            arguments = json.loads(function_call.get("arguments", "{}"))
+            arguments = stream_partial_json_to_dict(function_call.get("arguments", "{}"))
             if function_name == "test_summary":
-                test_summary = arguments.get("test_summary", [])
+                test_summary = arguments.get("test_cases", [])
                 break
-            arguments = stream_partial_json_to_dict(arguments)
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
@@ -129,12 +129,10 @@ def create_code_tester_agent(llm):
     path = os.path.join(os.path.dirname(__file__), ".", "testsummary_function_schema.json")
     with open(path) as f:
         test_summary_function_schema = json.load(f)
-
-    llm_kwargs = {"functions": [code_interpreter_function_schema, test_summary_function_schema]}
     chain = CodeTesterAgent(
         llm=llm,
         prompt=prompt,
-        llm_kwargs=llm_kwargs,
+        functions=[code_interpreter_function_schema, test_summary_function_schema],
         output_parser=JsonOutputFunctionsParser(),
         output_key="output",
         tool=tool,

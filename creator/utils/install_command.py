@@ -28,6 +28,8 @@ def _generate_python_install_command(dependencies):
             if dep.dependency_version:
                 if dep.dependency_version[:2] not in ("==", ">=", "<=", "!="):
                     shell_command += "==" + dep.dependency_version
+                elif dep.dependency_version == "latest":
+                    shell_command += '"'
                 else:
                     shell_command += dep.dependency_version
             shell_command += '"'

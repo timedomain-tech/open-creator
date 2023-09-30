@@ -182,6 +182,13 @@ resp = skill.run(input_args)
 print(resp)
 ```
 
+- [x] 4.2 以自然语言需求作为传参
+```python
+request = "extract 3-8 page form creator.pdf and save it as creator3-8.pdf"
+resp = skill.run(request)
+```
+
+
 
 # 贡献
 我们欢迎来自社区的贡献！无论是错误修复、新功能还是添加到库中的技能，您的贡献都是有价值的。请查看我们的 [贡献指南](CONTRIBUTING.md) 以获取指导原则。

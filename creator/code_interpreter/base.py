@@ -15,7 +15,7 @@ class BaseInterpreter:
     PROGRAM_END_DETECTOR = "[>>Open Creator CodeSkill Program End Placeholder<<]"
     start_command = "bash"
     print_command = "echo '{}'"
-    timeout = 3
+    timeout = 30
 
     def __init__(self):
         self.process = None
@@ -41,7 +41,6 @@ class BaseInterpreter:
         """Reads from a stream and appends data to either stdout_data or stderr_data."""
         start_time = time.time()
         for line in stream:
-            inline = self.PROGRAM_END_DETECTOR in line
             if self.detect_program_end(line):
                 break
             if time.time() - start_time > self.timeout:

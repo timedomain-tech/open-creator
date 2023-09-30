@@ -32,7 +32,6 @@ def generate_skill_doc(skill):
         doc += format_parameter(skill.skill_parameters) + "\n"
     
     doc += "\n- **Returns**:\n"
-
     if isinstance(skill.skill_return, list):
         for ret in skill.skill_return:
             doc += format_return(ret) + "\n"
