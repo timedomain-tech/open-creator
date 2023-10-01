@@ -121,8 +121,10 @@ class Creator:
         """Load skill from a given path."""
         with open(skill_json_path, mode="r") as f:
             skill = CodeSkill.model_validate_json(f.read())
-            skill.skill_metadata.created_at = skill.skill_metadata.created_at.strftime("%Y-%m-%d %H:%M:%S")
-            skill.skill_metadata.updated_at = skill.skill_metadata.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+            if not isinstance(skill.skill_metadata.created_at, str):
+                skill.skill_metadata.created_at = skill.skill_metadata.created_at.strftime("%Y-%m-%d %H:%M:%S")
+            if not isinstance(skill.skill_metadata.updated_at, str):
+                skill.skill_metadata.updated_at = skill.skill_metadata.updated_at.strftime("%Y-%m-%d %H:%M:%S")
         return skill
 
     @classmethod
@@ -167,7 +169,6 @@ class Creator:
         if file_path:
             with open(file_path) as f:
                 file_content = "# file name: " + os.path.basename(file_path) + "\n" + f.read()
-            return cls._create_from_messages(messages)
 
         if file_content:
             messages = [{
