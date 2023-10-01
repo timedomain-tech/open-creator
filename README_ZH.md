@@ -24,6 +24,10 @@
 - [x] **流**：流式处理您的函数调用
 - [x] **社区中心**：分享并利用来自更广泛社区的技能。支持 `huggingface_hub`。`langchain_hub` 还未支持。
 
+# Updates
+- [x] **2023-10-01**: 修复一些bugs，以及支持测试和重构代理agent
+
+
 # 安装
 ```shell
 pip install -U open-creator

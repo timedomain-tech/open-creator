@@ -24,6 +24,9 @@
 - [x] **Sreaming**: Stream your function calls
 - [x] **Community Hub**: Share and utilize skills from the wider community. Support `huggingface_hub`. `langchain_hub` not yet
 
+# Updates
+- [x] **2023-10-01**: Fix bugs and support tester agent and refactor agent
+
 # Installation
 ```shell
 pip install -U open-creator
