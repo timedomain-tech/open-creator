@@ -10,7 +10,7 @@
     <a href="docs/tech_report/open-creator.pdf"><img src="https://img.shields.io/badge/arXiv-Paper-blue.svg" alt="paper"></a>
     <br><br>
     <b>Build your costomized skill library</b><br>
-    An open-source LLM tool helps create your tools<br>
+    An open-source LLM tool for extracting repeatable tasks from your conversations, and saving them into a customized skill library for retrieval.<br>
 </p>
 
 <br>
