@@ -69,5 +69,5 @@ All contributions to Open Creator are governed by the MIT license.
 
 Your patience and understanding as we refine our operations are invaluable. Thank you for being an integral part of our community!
 
-[discord]: https://discord.gg/mMszyg2j
+[discord]: https://discord.gg/eEraZEry53
 
