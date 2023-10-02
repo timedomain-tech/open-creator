@@ -1,7 +1,7 @@
 <h1 align="center">◓ Open Creator</h1>
 
 <p align="center">
-    <a href="https://discord.gg/mMszyg2j">
+    <a href="https://discord.gg/eEraZEry53">
         <img alt="Discord" src="https://img.shields.io/discord/1153640284530417684?logo=discord&style=flat&logoColor=white"/>
     </a>
     <a href="README_JA.md"><img src="https://img.shields.io/badge/ドキュメント-日本語-white.svg" alt="JA doc"/></a>
