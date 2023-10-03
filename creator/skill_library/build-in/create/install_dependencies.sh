@@ -1,0 +1,1 @@
+pip show creator || pip install -U "open-creator"

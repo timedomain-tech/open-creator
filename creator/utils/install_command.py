@@ -26,10 +26,10 @@ def _generate_python_install_command(dependencies):
         if dep.dependency_type not in ("build-in", "function"):
             shell_command = shell_command_str.format(package_name=dep.dependency_name)
             if dep.dependency_version:
-                if dep.dependency_version[:2] not in ("==", ">=", "<=", "!="):
-                    shell_command += "==" + dep.dependency_version
-                elif dep.dependency_version == "latest":
+                if dep.dependency_version == "latest":
                     shell_command += '"'
+                elif dep.dependency_version[:2] not in ("==", ">=", "<=", "!="):
+                    shell_command += "==" + dep.dependency_version
                 else:
                     shell_command += dep.dependency_version
             shell_command += '"'

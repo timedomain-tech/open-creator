@@ -43,6 +43,41 @@ _HELP_STR = """
 - `%help`: Print this help message
 """
 
+"""
+# Entering Help Commands
+
+- `%create`: Create a new skill from above conversation history
+    - `-s` or `--save`: Save skill after creation
+
+- `%save`: Save the skill
+    - `-sp` or `--skill_path`: Path to skill JSON file
+    - `-hf` or `--huggingface`: Huggingface repo ID
+
+- `%search`: Search for a skill
+    - `-q` or `--query`: Search query
+    - `-k` or `--top_k`: Number of results to return, default 3
+
+- `%exit`: Exit the CLI
+- `%clear`: clear current skill cache and printed messages
+- `%reset`: reset all messages and cached skills
+- `%undo`: undo the last request
+- `%help`: Print this help message
+"""
+
+"""
+refer to: https://github.com/JushBJJ/Mr.-Ranedeer-AI-Tutor
+use a creator agent that can select following actions:
+1. create
+2. save
+3. search
+4. additional meta prompt
+    - exit
+    - clear
+    - resest
+    - undo
+    - help
+tester, interpreter, extractor, and refactor agents are using differnt emoji
+"""
 
 
 def load_skill_in_console(skill):
@@ -129,7 +164,7 @@ def _handle_command(messages, command, cache_skills):
     return True
 
 
-def interactive():
+def repl_client(creator):
     messages = []
     cache_skills = []
     console = Console()
@@ -172,3 +207,62 @@ def interactive():
                 "verbose": True,
             }
         )
+
+"""
+usage: usage: creator create [-h] [-r REQUEST] [-m MESSAGES] [-sp SKILL_JSON_PATH] [-c FILE_CONTENT] [-f FILE_PATH] [-hf_id HUGGINGFACE_REPO_ID] [-hf_path HUGGINGFACE_SKILL_PATH] [-s]
+
+options:
+  -h, --help            show this help message and exit
+  -r REQUEST, --request REQUEST
+                        Request string
+  -m MESSAGES, --messages MESSAGES
+                        Openai messages format
+  -sp SKILL_JSON_PATH, --skill_json_path SKILL_JSON_PATH
+                        Path to skill JSON file
+  -c FILE_CONTENT, --file_content FILE_CONTENT
+                        File content of API docs or code file
+  -f FILE_PATH, --file_path FILE_PATH
+                        Path to API docs or code file
+  -hf_id HUGGINGFACE_REPO_ID, --huggingface_repo_id HUGGINGFACE_REPO_ID
+                        Huggingface repo ID
+  -hf_path HUGGINGFACE_SKILL_PATH, --huggingface_skill_path HUGGINGFACE_SKILL_PATH
+                        Huggingface skill path
+  -s, --save            Save skill after creation
+
+usage: creator save [-h] [-s SKILL] [-sp SKILL_JSON_PATH] [-hf_id HUGGINGFACE_REPO_ID]
+
+options:
+  -h, --help            show this help message and exit
+  -s SKILL, --skill SKILL
+                        Skill json object
+  -sp SKILL_JSON_PATH, --skill_json_path SKILL_JSON_PATH
+                        Path to skill JSON file
+  -hf_id HUGGINGFACE_REPO_ID, --huggingface_repo_id HUGGINGFACE_REPO_ID
+                        Huggingface repo ID
+
+usage: creator search [-h] [-q QUERY] [-k TOP_K] [-t THRESHOLD] [-r]
+
+options:
+  -h, --help            show this help message and exit
+  -q QUERY, --query QUERY
+                        Search query
+  -k TOP_K, --top_k TOP_K
+                        Number of results to return, default 3
+  -t THRESHOLD, --threshold THRESHOLD
+                        Threshold for search, default 0.8
+  -r, --remote          Search from remote
+
+Open Creator CLI
+
+positional arguments:
+  {create,save,search}
+    create              Create a new skill from above various ways
+    save                Save the skill
+    search              Search for a skill
+
+options:
+  -h, --help            show this help message and exit
+  -i, --interactive     Enter interactive mode
+  -q, --quiet           Quiet mode to enter interactive mode and not rich_print LOGO and help
+  -config, --config     open config.yaml file in text editor
+"""
