@@ -1,0 +1,6 @@
+[
+    {
+        "role": "user",
+        "content": "# file name: search.py\nimport creator\nfrom creator.schema.skill import CodeSkill\n\n\ndef search(query: str, top_k=1, threshold=0.8) -> list[CodeSkill]:\n    \"\"\"\n    Search skills by query.\n    \n    Parameters:\n    query: str, the query.\n    top_k: int, optional, the maximum number of skills to return.\n    threshold: float, optional, the minimum similarity score to return a skill.\n    Returns:\n    a list of CodeSkill objects.\n\n    Example:\n    >>> import creator\n    >>> skills = search(\"I want to extract some pages from a pdf\")\n    \"\"\"\n\n    return creator.search(query=query, top_k=top_k, threshold=threshold)\n\n"
+    }
+]
