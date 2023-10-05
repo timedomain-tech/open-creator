@@ -1,5 +1,7 @@
 import json
 
+# TODO: use langchain 
+# from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 
 def stream_partial_json_to_dict(s: str) -> dict:
     """
