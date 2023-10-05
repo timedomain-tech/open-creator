@@ -9,10 +9,11 @@ from langchain.adapters.openai import convert_message_to_dict, convert_openai_me
 from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
+from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter
 from creator.config.library import config
-from creator.utils import truncate_output, stream_partial_json_to_dict, ask_run_code_confirm
+from creator.utils import truncate_output, ask_run_code_confirm
 
 from creator.llm.llm_creator import create_llm
 
@@ -21,13 +22,12 @@ _SYSTEM_TEMPLATE = """
 """
 
 
-class CodeInterpreterAgent(LLMChain):
-    total_tries: int = 5
+class CreatorAgent(LLMChain):
     tool: BaseTool
 
     @property
     def _chain_type(self):
-        return "CodeInterpreterAgent"
+        return "CreatorAgent"
 
     @property
     def input_keys(self) -> List[str]:
@@ -73,7 +73,7 @@ class CodeInterpreterAgent(LLMChain):
             if not can_run_code:
                 break
             
-            arguments = stream_partial_json_to_dict(function_call.get("arguments", "{}"))
+            arguments = parse_partial_json(function_call.get("arguments", "{}"))
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
@@ -94,7 +94,7 @@ class CodeInterpreterAgent(LLMChain):
         }
 
 
-def create_code_interpreter_agent(llm):
+def create_creator_agent(llm):
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", _SYSTEM_TEMPLATE),
@@ -103,7 +103,7 @@ def create_code_interpreter_agent(llm):
     tool = CodeInterpreter()
     function_schema = tool.to_function_schema()
     llm_kwargs = {"functions": [function_schema], "function_call": {"name": function_schema["name"]}}
-    chain = CodeInterpreterAgent(
+    chain = CreatorAgent(
         llm=llm,
         prompt=prompt,
         llm_kwargs=llm_kwargs,
@@ -116,4 +116,4 @@ def create_code_interpreter_agent(llm):
 
 
 llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
-code_interpreter_agent = create_code_interpreter_agent(llm=llm)
+code_interpreter_agent = create_creator_agent(llm=llm)

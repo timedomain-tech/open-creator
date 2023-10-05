@@ -6,6 +6,8 @@ SKILL_EXTRACT_AGENT_CACHE_PATH: .cache/open_creator/llm_cache
 OFFICIAL_SKILL_LIBRARY_PATH: timedomain/skill-library
 OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH: timedomain/skill-library-template
 
+BUILD_IN_SKILL_LIBRARY_DIR: skill_library/open-creator/
+
 # for AZURE, it is your_deployment_id
 # for ANTHROPIC, it is claude-2
 # for VertexAI, it is chat-bison

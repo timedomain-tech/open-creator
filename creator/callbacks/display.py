@@ -6,7 +6,7 @@ from rich.table import Table
 from rich.markdown import Markdown
 from rich.box import MINIMAL
 
-from creator.utils import stream_partial_json_to_dict
+from langchain.output_parsers.json import parse_partial_json
 
 
 class MessageBox:
@@ -103,7 +103,7 @@ class MessageBox:
 
         if len(self.name) > 0:
             if self.name == "run_code":
-                arguments_dict = stream_partial_json_to_dict(self.arguments)
+                arguments_dict = parse_partial_json(self.arguments)
                 if arguments_dict is None:
                     return
                 language = arguments_dict.get("language", "python")

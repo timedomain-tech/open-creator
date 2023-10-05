@@ -8,10 +8,11 @@ from langchain.adapters.openai import convert_message_to_dict, convert_openai_me
 from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
+from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter
 from creator.config.library import config
-from creator.utils import truncate_output, stream_partial_json_to_dict, ask_run_code_confirm
+from creator.utils import truncate_output, ask_run_code_confirm
 
 from creator.llm.llm_creator import create_llm
 
@@ -91,7 +92,7 @@ class CodeInterpreterAgent(LLMChain):
             if not can_run_code:
                 break
             
-            arguments = stream_partial_json_to_dict(function_call.get("arguments", "{}"))
+            arguments = parse_partial_json(function_call.get("arguments", "{}"))
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))

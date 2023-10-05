@@ -9,10 +9,11 @@ from langchain.adapters.openai import convert_message_to_dict, convert_openai_me
 from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
 from langchain.tools.base import BaseTool
+from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter
 from creator.config.library import config
-from creator.utils import truncate_output, ask_run_code_confirm, stream_partial_json_to_dict
+from creator.utils import truncate_output, ask_run_code_confirm
 from creator.llm.llm_creator import create_llm
 
 
@@ -93,7 +94,7 @@ class CodeTesterAgent(LLMChain):
                 break
 
             function_name = function_call.get("name", "")
-            arguments = stream_partial_json_to_dict(function_call.get("arguments", "{}"))
+            arguments = parse_partial_json(function_call.get("arguments", "{}"))
             if function_name == "test_summary":
                 test_summary = arguments.get("test_cases", [])
                 break
