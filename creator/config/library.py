@@ -32,7 +32,7 @@ _model = yaml_config.get("MODEL_NAME", "gpt-3.5-turbo-16k-0613")
 _run_human_confirm = yaml_config.get("RUN_HUMAN_CONFIRM", False)
 _use_stream_callback = yaml_config.get("USE_STREAM_CALLBACK", True)
 _build_in_skill_library_dir = yaml_config.get("BUILD_IN_SKILL_LIBRARY_DIR", "skill_library/open-creator/")
-_build_in_skill_library_dir = os.path.join(project_dir, "..", _build_in_skill_library_dir)
+_build_in_skill_library_dir = os.path.join(project_dir, _build_in_skill_library_dir)
 
 # Ensure directories exist
 for path in [_skill_extract_agent_cache_path, _local_skill_library_path, _local_skill_library_vectordb_path, _prompt_cache_history_path]:
