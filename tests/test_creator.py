@@ -192,6 +192,6 @@ def test_run_skill_with_request2():
     print(result)
 
 if __name__ == "__main__":
-    test_run_skill_with_request2()
+    test_create_from_file_content2()
     # test_local_search()
 

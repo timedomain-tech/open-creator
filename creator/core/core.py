@@ -100,6 +100,7 @@ class Creator:
     Provides functionalities for generating skills from various sources.
     """
     vectordb = None
+    config = config
 
     @classmethod
     def _create_from_messages(cls, messages) -> CodeSkill:
@@ -168,7 +169,7 @@ class Creator:
         
         if file_path:
             with open(file_path) as f:
-                file_content = "# file name: " + os.path.basename(file_path) + "\n" + f.read()
+                file_content = "### file name: " + os.path.basename(file_path) + "\n---" + f.read()
 
         if file_content:
             messages = [{

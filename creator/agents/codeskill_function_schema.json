@@ -16,10 +16,6 @@
             },
             "type": "array"
         },
-        "skill_usage_example": {
-            "description": "Example of how to use the skill",
-            "type": "string"
-        },
         "skill_program_language": {
             "description": "Programming language the skill is written in",
             "enum": [
@@ -89,6 +85,10 @@
             ],
             "default": null,
             "description": "List of dependencies the skill requires to run, typically packages but can also be other skill functions"
+        },
+        "skill_usage_example": {
+            "description": "Example of how to use the skill",
+            "type": "string"
         }
     },
     "required": [

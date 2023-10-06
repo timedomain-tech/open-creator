@@ -99,7 +99,6 @@ class TestSummary(BaseModel):
 
 
 class CodeSkill(BaseSkill):
-    skill_usage_example: str = Field(..., description="Example of how to use the skill")
     skill_program_language: str = Field(..., description="Programming language the skill is written in", enum=["python", "R", "shell", "javascript", "applescript", "html"])
     skill_code: str = Field(..., description="""Code of the skill, written in the programming language specified above. Remeber to import all the dependencies and packages you need.
 When writing code, it's imperative to follow industry standards and best practices to ensure readability, maintainability, and efficiency. Here are some guidelines to consider:
@@ -119,6 +118,7 @@ When writing code, it's imperative to follow industry standards and best practic
     skill_parameters: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="List of parameters the skill requires, defined using json schema")
     skill_return: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="Return value(s) of the skill")
     skill_dependencies: Optional[Union[CodeSkillDependency, List[CodeSkillDependency]]] = Field(None, description="List of dependencies the skill requires to run, typically packages but can also be other skill functions")
+    skill_usage_example: str = Field(..., description="Example of how to use the skill")
     
     conversation_history: Optional[List[Dict]] = Field(None, description="Conversation history that the skill was extracted from")
     test_summary: Optional[TestSummary] = Field(None, description="Test cases for the skill")
