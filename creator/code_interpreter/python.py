@@ -14,7 +14,7 @@ class PythonInterpreter(BaseInterpreter):
         # Removes whitespace & ` from end
         query = re.sub(r"(\s|`)*$", "", query)
         query = "\n".join([line for line in query.split("\n") if line.strip() != ""])
-        return query
+        return "\n\n" + query + "\n\n"
     
     def postprocess(self, response):
         def clean_string(s):

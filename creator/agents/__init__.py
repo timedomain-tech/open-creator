@@ -8,6 +8,5 @@ __all__ = [
     "skill_extractor_agent",
     "code_interpreter_agent",
     "code_tester_agent",
-    "code_refactor_agent",
-    "creator_agent"
+    "code_refactor_agent"
 ]

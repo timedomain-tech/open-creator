@@ -32,8 +32,20 @@ def pre_run(code_interpreter):
     code_interpreter.run({"language": "python", "code": save_skill_obj.skill_code})
     code_interpreter.run({"language": "python", "code": search_skill_obj.skill_code})
 
+def fix_run_python(function_call):
+    name = function_call.get("name", "run_code")
+    arguments = function_call.get("arguments", "{}")
+    arguments_json = parse_partial_json(arguments)
+    if name != "run_code" or not arguments_json:
+        return {
+            "name": "run_code",
+            "arguments": json.dumps({"language": "python", "code": arguments}, ensure_ascii=False)
+        }
+    return function_call
+    
 
 class CreatorAgent(LLMChain):
+    total_tries: int = 5
     tool: BaseTool
 
     @property
@@ -84,7 +96,9 @@ class CreatorAgent(LLMChain):
                 can_run_code = ask_run_code_confirm()
             if not can_run_code:
                 break
-            
+            function_call = fix_run_python(function_call)
+            message.additional_kwargs["function_call"] = function_call
+            langchain_messages[-1] = message
             arguments = parse_partial_json(function_call.get("arguments", "{}"))
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)
@@ -129,4 +143,4 @@ def create_creator_agent(llm):
 
 
 llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
-creator_agent = create_creator_agent(llm=llm)
+open_creator_agent = create_creator_agent(llm=llm)

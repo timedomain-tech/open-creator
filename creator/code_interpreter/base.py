@@ -1,6 +1,7 @@
 import subprocess
 import traceback
 import threading
+from loguru import logger
 import time
 
 
@@ -41,6 +42,7 @@ class BaseInterpreter:
         """Reads from a stream and appends data to either stdout_data or stderr_data."""
         start_time = time.time()
         for line in stream:
+            logger.debug(line)
             if self.detect_program_end(line):
                 break
             if time.time() - start_time > self.timeout:
@@ -74,6 +76,7 @@ class BaseInterpreter:
 
     def run(self, query: str, is_start: bool = False) -> dict:
         query = self.preprocess(query)
+        logger.debug(query)
         if is_start or self.process is None:
             try:
                 self.get_persistent_process()

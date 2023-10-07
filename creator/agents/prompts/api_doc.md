@@ -129,11 +129,19 @@ Certainly, let's refine the "Skill object method" section for enhanced clarity a
 
 Explore the functionalities and modifications of a skill object through methods and overloaded operators.
 
+#### Method: `show`
+Show a skill name, description, parameters, returns, usage examples and etc
+- **Example Usage**:
+```python
+skill = create(request="create a skill that request is 'open the chrome and go to www.google.com in my mac'")
+skill.show()
+```
+
 #### Method: `run`
 Execute a skill with provided arguments or request.
 
 - **Example Usage**:
-  ```python
+```python
 skills = search("pdf extract section")
 if skills:
     skill = skills[0]
@@ -144,37 +152,38 @@ if skills:
         "output_path": "creator3-8.pdf"
     }
     print(skill.run(input_args))
-  ```
+```
   
 #### Method: `test`
 Validate a skill using a tester agent.
 
 - **Example Usage**:
-  ```python
+```python
 skill = create(request="filter prime numbers in a range, e.g., filter_prime_numbers(2, 201)")
 test_summary = skill.test()
 print(test_summary)
 print(skill.conversation_history)
-  ```
+```
   
 #### Overloaded Operators: 
 Modify and refine skills using operator overloading.
 
 1. **Combining Skills**: Utilize the `+` operator to chain or execute skills in parallel, detailing the coordination with the `>` operator.
-   ```python
-   new_skill = skillA + skillB > "Explanation of how skills A and B operate together"
-   ```
+```python
+new_skill = skillA + skillB > "Explanation of how skills A and B operate together"
+```
    
 2. **Refactoring Skills**: Employ the `>` operator to enhance or modify existing skills.
-   ```python
-   refactored_skill = skill > "Descriptive alterations or enhancements"
-   ```
+```python
+refactored_skill = skill > "Descriptive alterations or enhancements"
+```
    
 3. **Decomposing Skills**: Use the `<` operator to break down a skill into simpler components.
-   ```python
-   simpler_skills = skill < "Description of how the skill should be decomposed"
-   ```
+```python
+simpler_skills = skill < "Description of how the skill should be decomposed"
+```
 
 #### Notes:
 - Ensure accurate descriptions when using overloaded operators to ensure skill modifications are clear and understandable.
 - Validate skills with `test` method to ensure functionality post-modification.
+- `CodeSkill` is a pydantic model, to see its propetries, use `.__annotations__`

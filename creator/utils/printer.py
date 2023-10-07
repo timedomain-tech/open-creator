@@ -4,6 +4,12 @@ from rich.markdown import Markdown
 from rich.json import JSON
 
 
+def to_str(s):
+    if isinstance(s, (dict, list)):
+        return json.dumps(s, indent=4)
+    return str(s)
+
+
 class Printer:
     def __init__(self):
         self.callbacks = {}
@@ -15,7 +21,8 @@ class Printer:
         self.callbacks.pop(func_name, None)
 
     def print(self, *messages, sep=' ', end='\n', file=None, flush=False, print_type='str'):
-        formatted_message = sep.join(map(str, messages))
+
+        formatted_message = sep.join(map(to_str, messages))
         
         if print_type == 'markdown':
             formatted_message = Markdown(formatted_message)
@@ -44,9 +51,3 @@ printer.add_default_callback()
 def print(*args, sep=' ', end='\n', file=None, flush=False, print_type='str', **kwargs):
     printer.print(*args, sep=sep, end=end, file=file, flush=flush, print_type=print_type, **kwargs)
 
-
-# Example messages
-print("Hello, World!")
-print("# Hello, Markdown World!", print_type='markdown')
-print(json.dumps({"key": "value"}), print_type='json')
-print("Hello", "World!", sep='-', end='***\n')
