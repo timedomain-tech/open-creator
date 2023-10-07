@@ -3,7 +3,7 @@ from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
 from creator.config.library import config
-from creator.utils import generate_skill_doc, generate_install_command
+from creator.utils import generate_skill_doc, generate_install_command, print
 from creator.agents import code_interpreter_agent, code_tester_agent, code_refactor_agent
 import json
 import getpass
@@ -189,7 +189,7 @@ When writing code, it's imperative to follow industry standards and best practic
             "language": "shell",
             "code": install_script,
         })
-        print(result)
+        print(result, print_type="json")
         return
 
     def __add__(self, other_skill):
@@ -252,10 +252,8 @@ When writing code, it's imperative to follow industry standards and best practic
     def test(self):
         if self.conversation_history is None or len(self.conversation_history) == 0:
             self.conversation_history = []
-            # print("No conversation history provided, cannot test")
-            # return
         if not self.skill_code:
-            print("No code provided, cannot test")
+            print("> No code provided, cannot test", print_type="markdown")
             return
         
         previews_tool = code_tester_agent.tool
@@ -287,7 +285,7 @@ When writing code, it's imperative to follow industry standards and best practic
 
     def refactor(self):
         if not self.Config.refactorable:
-            print("This skill is not refactorable since it is not combined with other skills or add any user request")
+            print("> This skill is not refactorable since it is not combined with other skills or add any user request", print_type="markdown")
             return
         messages = [
             {"role": "system", "content": f"Your action type is: {self.Config.refactor_type}"},
@@ -326,3 +324,6 @@ When writing code, it's imperative to follow industry standards and best practic
             return "\n---\n".join(skill_docs) + refactor_config_str
         else:
             return generate_skill_doc(self)
+
+    def show(self):
+        print(self.__repr__(), print_type="markdown")

@@ -1,35 +1,52 @@
-from rich.markdown import Markdown
+import json
 from rich import print as rich_print
+from rich.markdown import Markdown
+from rich.json import JSON
+
 
 class Printer:
     def __init__(self):
         self.callbacks = {}
 
     def add_callback(self, func):
-        """
-        message may be a Markdown object, so we need to handle this cases, define your callback like this:
-
-        from rich.markdown import Markdown
-        def custom_print(message):
-            if type(message) is Markdown:
-                print(message.markup)
-            else:
-                print(message)
-        """
         self.callbacks[func.__name__] = func
 
     def remove_callback(self, func_name):
-        if func_name in self.callbacks:
-            del self.callbacks[func_name]
+        self.callbacks.pop(func_name, None)
 
-    def print(self, message):
+    def print(self, *messages, sep=' ', end='\n', file=None, flush=False, print_type='str'):
+        formatted_message = sep.join(map(str, messages))
+        
+        if print_type == 'markdown':
+            formatted_message = Markdown(formatted_message)
+        elif print_type == 'json':
+            formatted_message = JSON(formatted_message)
+
         for callback in self.callbacks.values():
-            callback(message)
+            callback(formatted_message, end=end, file=file, flush=flush)
+
+    def add_default_callback(self):
+        def default_print(message, end='\n', file=None, flush=False):
+            rich_print(message, file=file, end=end, flush=flush)
+
+        self.add_callback(default_print)
 
 
+# Save the original print function
+original_print = print
+
+# Example usage:
 printer = Printer()
+printer.add_default_callback()  
 
-printer.add_callback(rich_print)
 
-def print(message):
-    printer.print(message)
+# Replace the built-in print
+def print(*args, sep=' ', end='\n', file=None, flush=False, print_type='str', **kwargs):
+    printer.print(*args, sep=sep, end=end, file=file, flush=flush, print_type=print_type, **kwargs)
+
+
+# Example messages
+print("Hello, World!")
+print("# Hello, Markdown World!", print_type='markdown')
+print(json.dumps({"key": "value"}), print_type='json')
+print("Hello", "World!", sep='-', end='***\n')

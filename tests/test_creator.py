@@ -1,15 +1,13 @@
 import sys
 sys.path.append("..")
 import creator
-from rich.markdown import Markdown
-from creator.utils.printer import print
 import os
 
 
 def test_create_from_user_request():
     skill = creator.create(request="filter how many prime numbers are in 201")
     creator.save(skill=skill)
-    print(Markdown(repr(skill)))
+    skill.show()
 
 
 def test_create_from_messages():
@@ -34,7 +32,7 @@ def test_create_from_messages():
 def test_create_from_messages_json_path():
     skill = creator.create(messages_json_path="./messages_example.json")
     creator.save(skill=skill)
-    print(Markdown(repr(skill)))
+    skill.show()
 
 
 def test_create_from_code_file_content():
@@ -105,26 +103,26 @@ def test_create_from_huggingface():
 def test_create_from_skill_json_path():
     skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/create/skill.json"
     skill = creator.create(skill_json_path=skill_json_path)
-    print(Markdown(repr(skill)))
+    skill.show()
 
 def test_save_to_skill_path():
     skill_json_path = skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json"
     skill = creator.create(skill_json_path=skill_json_path)
-    print(Markdown(repr(skill)))
+    skill.show()
     skill_path = "../build-in-skill_library/ask_run_code_confirm"
-    print(skill.skill_metadata)
+    skill.show()
     creator.save(skill=skill, skill_path=skill_path)
 
 def test_save_to_hub():
     skill_json_path = skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json"
     skill = creator.create(skill_json_path=skill_json_path)
-    print(Markdown(repr(skill)))
+    skill.show()
     creator.save(skill=skill, huggingface_repo_id="ChuxiJ/skill_library")
 
 def test_local_search():
     skills = creator.search("I want to extract some pages from a pdf")
     for skill in skills:
-        print(Markdown(repr(skill)))
+        skill.show()
 
 def test_run_skill():
     skill = creator.search("pdf extract section")[0]
@@ -134,14 +132,14 @@ def test_run_skill():
         "end_page": 8,
         "output_path": "creator3-8.pdf"
     }
-    print(Markdown(repr(skill)))
+    skill.show()
     resp = skill.run(input_args)
     print(resp)
 
 def test_run_skill_with_request():
     skill = creator.search("pdf extract section")[0]
     input_args = "extract 3-8 page form creator.pdf and save it as creator3-8.pdf"
-    print(Markdown(repr(skill)))
+    skill.show()
     resp = skill.run(input_args)
     print(resp)
 
@@ -180,18 +178,18 @@ conversation.run("Translate it to German.")
 output: 'Ich liebe Programmieren.'
 """
     skill = creator.create(file_content=doc_content)
-    print(Markdown(repr(skill)))
+    skill.show()
     creator.save(skill, skill_path="./")
 
 
 def test_run_skill_with_request2():
     skill = creator.create(request="filter how many prime numbers are in 201")
     creator.save(skill=skill)
-    print(Markdown(repr(skill)))
+    skill.show()
     result = skill.run("try n is 68")
     print(result)
 
 if __name__ == "__main__":
-    test_create_from_file_content2()
+    test_create_from_user_request()
     # test_local_search()
 

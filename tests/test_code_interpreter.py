@@ -32,11 +32,12 @@ def test_to_function_call():
 
 
 def test_python_interpreter2():
-    code = 'def is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\nprimes = [num for num in range(2, 201) if is_prime(num)]\nprimes'
+    code = 'def filter_prime_numbers(start, end):\n\n    def isPrime(num):\n        if num < 2:\n            return False\n        for i in range(2, int(num ** 0.5) + 1):\n            if num % i == 0:\n                return False\n        return True\n    count = 0\n    for num in range(start, end + 1):\n        if isPrime(num):\n            count += 1\n    return count'
     code_interpreter = PythonInterpreter()
     output = code_interpreter.run(code)
     print(output)
-
+    output = code_interpreter.run(query="filter_prime_numbers(2, 202)")
+    print(output)
 
 def test_python_interpreter3():
     code = 'input("do you want to run the code? Y or n")'
@@ -46,4 +47,4 @@ def test_python_interpreter3():
 
 
 if __name__ == "__main__":
-    test_python_interpreter()
+    test_python_interpreter2()

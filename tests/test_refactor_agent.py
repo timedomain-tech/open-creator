@@ -3,8 +3,6 @@ sys.path.append("..")
 
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
 from rich import print
-from rich.markdown import Markdown
-import json
 
 
 def create_finetune_testcase():
@@ -62,21 +60,21 @@ def create_finetune_testcase():
 
 def test_refactor_add_input_param():
     skillA = create_finetune_testcase()
-    print(Markdown(repr(skillA)))
+    skillA.show()
     finetuned_skillA = skillA > "add a parameter that allows the choice of whether to remove duplicate values"
-    print(Markdown(repr(finetuned_skillA)))
+    finetuned_skillA.show()
 
 def test_refactor_add_output_param():
     skillA = create_finetune_testcase()
-    print(Markdown(repr(skillA)))
+    skillA.show()
     finetuned_skillA = skillA > "Not only get cleaned data, but also want to get statistics on deleted null and duplicate values"
-    print(Markdown(repr(finetuned_skillA)))
+    finetuned_skillA.show()
 
 def test_refactor_change_logic():
     skillA = create_finetune_testcase()
-    print(Markdown(repr(skillA)))
+    skillA.show()
     finetuned_skillA = skillA > 'Convert all "null" or "NaN" of string type to true null before removing nulls'
-    print(Markdown(repr(finetuned_skillA)))
+    finetuned_skillA.show()
 
 def create_combine_testcase():
     skillA_json = {
@@ -174,22 +172,22 @@ def data_cleaning(data):
 
 def test_refactor_chain_combine():
     skillA, skillB, skillC = create_combine_testcase()
-    print(Markdown(repr(skillA)))
-    print(Markdown(repr(skillB)))
+    skillA.show()
+    skillB.show()
     chained_skill = skillA + skillB > "I have a dataset with empty values. First, I want to clean the data by removing the empty values, then visualize it using a bar chart."
-    print(Markdown(repr(chained_skill)))
+    chained_skill.show()
 
 def test_refactor_internal_logic_combination():
     skillA, skillB, skillC = create_combine_testcase()
-    print(Markdown(repr(skillA)))
-    print(Markdown(repr(skillB)))
+    skillA.show()
+    skillB.show()
     chained_skill = skillA + skillB + skillC > "I have a dataset. I want to calculate its average. If the average is above a certain threshold, I'd like to visualize the data using a bar chart. Otherwise, I just want the average value."
-    print(Markdown(repr(chained_skill)))
+    chained_skill.show()
 
 def test_refactor_parallel_combination():
     skillA, skillB, skillC = create_combine_testcase()
     chained_skill = skillA + skillB + skillC > "I have a dataset. I want to both visualize the data using a bar chart and calculate its average simultaneously"
-    print(Markdown(repr(chained_skill)))
+    chained_skill.show()
     skill = chained_skill[0]
     print(skill.model_dump())
 
@@ -217,9 +215,8 @@ def create_complex_skill():
 
 def test_refactor_decompose():
     skill = create_complex_skill()
-    # print(Markdown(repr(skill)))
     decomposed_skill = skill < "I want to decompose this skill into two skills: one for visualizing the data using a bar chart, and one for calculating the average."
-    print(Markdown(repr(decomposed_skill)))
+    decomposed_skill.show()
 
 if __name__ == "__main__":
     test_refactor_decompose()

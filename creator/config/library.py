@@ -2,7 +2,7 @@ from langchain.cache import SQLiteCache
 import langchain
 from pydantic import BaseModel
 from creator.code_interpreter import CodeInterpreter
-from creator.utils import load_yaml_config
+from creator.config.load_config import load_yaml_config
 import os
 
 

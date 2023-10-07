@@ -9,7 +9,7 @@ from .multiline_input import multiline_prompt
 from .dict2list import convert_to_values_list
 from .user_info import get_user_info
 from .load_prompt import load_system_prompt
-
+from .printer import print
 
 __all__ = [
     "generate_install_command",
@@ -22,5 +22,6 @@ __all__ = [
     "multiline_prompt",
     "convert_to_values_list",
     "get_user_info",
-    "load_system_prompt"
+    "load_system_prompt",
+    "print"
 ]

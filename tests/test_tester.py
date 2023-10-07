@@ -2,9 +2,7 @@ import sys
 sys.path.append("..")
 
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
-from rich import print
-from rich.markdown import Markdown
-import json
+from creator.utils import print
 
 
 def create_skill():

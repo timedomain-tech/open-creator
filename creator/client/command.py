@@ -1,7 +1,6 @@
 import argparse
 from creator.utils.printer import print as rich_print
 from creator.config.open_config import open_user_config
-from rich.markdown import Markdown
 from rich.rule import Rule
 import json
 
@@ -191,7 +190,7 @@ def cmd_client(creator):
             huggingface_repo_id=args.huggingface_repo_id,
             huggingface_skill_path=args.huggingface_skill_path,
         )
-        rich_print(Markdown(repr(skill)))
+        skill.show()
         if args.save:
             creator.save(skill=skill)
     
@@ -213,7 +212,7 @@ def cmd_client(creator):
         )
         rich_print(Rule(style="white"))
         for skill in skills:
-            rich_print(Markdown(repr(skill)))
+            skill.show()
             rich_print(Rule(style="white"))
 
 

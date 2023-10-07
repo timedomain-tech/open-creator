@@ -6,15 +6,13 @@ from creator.config.library import config
 from creator.utils import (
     generate_install_command,
     generate_language_suffix,
-    generate_skill_doc
+    generate_skill_doc,
+    print
 )
 
 from creator.hub.huggingface import hf_pull, hf_repo_update, hf_push
 from creator.retrivever.base import BaseVectorStore
 from creator.client import cmd_client
-
-from creator.utils.printer import print
-from rich.markdown import Markdown
 
 import json
 from functools import wraps
@@ -180,7 +178,7 @@ class Creator:
             return skill
 
         # Raise an error if none of the above conditions are met
-        print(Markdown("> Please provide one of the following parameters: messages, request, skill_path, messages_json_path, file_content, or file_path."))
+        print("> Please provide one of the following parameters: messages, request, skill_path, messages_json_path, file_content, or file_path.", print_type="markdown")
 
     @classmethod
     @validate_save_params
@@ -248,14 +246,14 @@ class Creator:
                 os.system(command=f"cp -r {skill_path} {remote_skill_path}")
                 hf_push(remote_skill_path)
 
-        print(Markdown(f"> saved to {skill_path}"))
+        print(f"> saved to {skill_path}", print_type="markdown")
 
     @classmethod
     def search(self, query: str, top_k: int = 3, threshold=0.8, remote=False) -> List[Union[BaseSkill, CodeSkill]]:
         if remote:
             raise NotImplementedError
         if self.vectordb is None:
-            print(Markdown("> loading vector database..."))
+            print("> loading vector database...", print_type="markdown")
             self.vectordb = BaseVectorStore()
         skills = self.vectordb.search(query, top_k=top_k, threshold=threshold)
 

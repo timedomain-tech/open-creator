@@ -174,7 +174,6 @@ for skill in skills:
 ## 4. スキルを使用
 - [x] 4.1 スキルを使用
 ```python
-from rich.markdown import Markdown
 from rich import print
 skill = creator.search("pdf extract section")[0]
 input_args = {
@@ -183,7 +182,7 @@ input_args = {
     "end_page": 8,
     "output_path": "creator3-8.pdf"
 }
-print(Markdown(repr(skill)))
+skill.show()
 resp = skill.run(input_args)
 print(resp)
 ```
