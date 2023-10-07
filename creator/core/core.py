@@ -16,8 +16,6 @@ from creator.client import cmd_client
 from creator.utils.printer import print
 from rich.markdown import Markdown
 
-import getpass
-import platform
 import json
 from functools import wraps
 
@@ -107,9 +105,6 @@ class Creator:
         """Generate skill from messages."""
         skill_json = skill_extractor_agent.run({
             "messages": messages,
-            "username": getpass.getuser(),
-            "current_working_directory": os.getcwd(),
-            "operating_system": platform.system(),
             "verbose": True,
         })
         skill = CodeSkill(**skill_json)
@@ -157,9 +152,6 @@ class Creator:
                     "role": "user",
                     "content": request
                 }],
-                "username": getpass.getuser(),
-                "current_working_directory": os.getcwd(),
-                "operating_system": platform.system(),
                 "verbose": True,
             })
         

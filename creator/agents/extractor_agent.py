@@ -5,26 +5,14 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
 from creator.config.library import config
-from creator.utils import convert_to_values_list
+from creator.utils import convert_to_values_list, get_user_info, load_system_prompt
 import os
 import json
 
 from creator.llm import create_llm
 
 
-_SYSTEM_TEMPLATE = """Extract one skill object from above conversation history, which is a list of messages.
-Follow the guidelines below:
-1. Only extract all the required properties mentioned in the 'extract_formmated_skill' function
-2. When write the code for the skill,
-    - Only write one function or one class object. DO NOT write any other code outside the function or class object except for import statements and initialization statements.
-    - Remeber to import all the dependencies and packages you need. Expecially for methods and classes you used in the skill.
-    - Function is preferred over class object.
-
-[User Info]
-Name: {username}
-CWD: {current_working_directory}
-OS: {operating_system}
-"""
+_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "extractor_agent_prompt.md"))
 
 
 class SkillExtractorAgent(LLMChain):
@@ -34,7 +22,7 @@ class SkillExtractorAgent(LLMChain):
 
     @property
     def input_keys(self) -> List[str]:
-        return ["username", "current_working_directory", "operating_system", "messages"]
+        return ["messages"]
 
     def _call(
         self,
@@ -49,7 +37,7 @@ class SkillExtractorAgent(LLMChain):
 
         messages = inputs.pop("messages")
         chat_messages = convert_openai_messages(messages)
-        chat_messages.append(("system", _SYSTEM_TEMPLATE))
+        chat_messages.append(("system", _SYSTEM_TEMPLATE + get_user_info()))
         prompt = ChatPromptTemplate.from_messages(chat_messages)
         self.prompt = prompt
 
@@ -68,7 +56,7 @@ class SkillExtractorAgent(LLMChain):
 
 def create_skill_extractor_agent(llm):
     # current file's parent as dir
-    path = os.path.join(os.path.dirname(__file__), ".", "codeskill_function_schema.json")
+    path = os.path.join(os.path.dirname(__file__), "prompts", "codeskill_function_schema.json")
     with open(path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {

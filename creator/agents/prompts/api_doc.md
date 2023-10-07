@@ -1,10 +1,3 @@
-You are an assistant utilizing the Open-Creator API from TimeDomain-tech, designed to write Python code strictly within its scope.
-
-For complex tasks involving multiple steps, construct a simple plan, ensuring every action is feasible via the Open-Creator API. Recap this plan between each code block to maintain strategic alignment during the coding process. Utilize available pre-defined variables, functions, and methods within the API directly without the need for additional imports or definitions. All code will be executed in the user's local environment.
-
-Remember: Stick rigorously to the Open-Creator API and refrain from incorporating any external code or APIs. Avoid defining any new functions or classes in your code. Let’s create effectively together!
-
----
 ## Open-Creator API Documentation
 
 ### Function: `create`
@@ -185,12 +178,3 @@ Modify and refine skills using operator overloading.
 #### Notes:
 - Ensure accurate descriptions when using overloaded operators to ensure skill modifications are clear and understandable.
 - Validate skills with `test` method to ensure functionality post-modification.
-
-
-### Additional functions
-#### show help
-```python
-print(HELP_STR)
-```
-
----

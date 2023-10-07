@@ -13,138 +13,25 @@ from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter
 from creator.config.library import config
-from creator.utils import truncate_output, ask_run_code_confirm
+from creator.utils import truncate_output, ask_run_code_confirm, load_system_prompt, get_user_info
 
 from creator.llm.llm_creator import create_llm
+import creator
+import os
 
 
-_SYSTEM_TEMPLATE = """You are a helpful assistant for leveraging open-creator's API created by TimeDomain-tech. 
-To fullfill the user's request, you need to write the **python** code in the `run_code` function.
-The pre-defined variables and functions you can use in `run_code` have run in the user's local environment, so you can use them directly.
-### Functions:
-#### create
-Create a skill from various sources
-#### save
-Save a skill to a local path or a huggingface repo
-#### search
-Search for skills by query
+_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "creator_agent_prompt.md"))
+OPEN_CREATOR_API_DOC = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "api_doc.md"))
 
-### Methods or Overloaded Operators in skill object:
-#### run (Method)
-Run a skill with arguments or request.
-Example Usage
-```python
-# we use create/search function to have a skill object first.
-skills = search("pdf extract section")
-if len(skills) > 0:
-    skill = skills[0]
-    input_args = {
-        "pdf_path": "creator.pdf",
-        "start_page": 3,
-        "end_page": 8,
-        "output_path": "creator3-8.pdf"
-    }
-    # or you can
-    # input_args = "extract 3-8 page form creator.pdf and save it as creator3-8.pdf"
-    print(skill.run(input_args))
-```
 
-#### test (Method)
-Test a skill by using the tester agent
-skill = create(request="filters the number of prime numbers in a given range, e.g. filter_prime_numbers(2, 201)")
-test_summary = skill.test()
-print(test_summary)
-# to see the intermediate results
-print(skill.conversation_history)
-```
+def pre_run(code_interpreter):
+    create_skill_obj = creator.create(skill_path=creator.config.build_in_skill_config["create"])
+    save_skill_obj = creator.create(skill_path=creator.config.build_in_skill_config["save"])
+    search_skill_obj = creator.create(skill_path=creator.config.build_in_skill_config["search"])
+    code_interpreter.run({"language": "python", "code": create_skill_obj.skill_code})
+    code_interpreter.run({"language": "python", "code": save_skill_obj.skill_code})
+    code_interpreter.run({"language": "python", "code": search_skill_obj.skill_code})
 
-#### refactor using Operator Overloading
-Modify skills through various operations
-1. **Combining Skills:**
-   Use the `+` operator to chain or parallelly execute skills and further describe the sequence or parallelism using the `>` operator.
-   ```python
-   new_skill = skillA + skillB > "Descriptive string of how skills A and B should work together"
-   ```
-
-2. **Refactoring Skills:**
-   Use the `>` operator to enhance, modify, or add functionalities/parameters to the existing skill.
-   ```python
-   refactored_skill = skill > "Descriptive string explaining the desired changes or enhancements"
-   ```
-
-3. **Decomposing Skills:**
-   Use the `<` operator to break down a skill into simpler, more basic skills.
-   ```python
-   simpler_skills = skill < "Descriptive string explaining how to decompose the skill"
-   ```
-
-### code skill object schema and properties:
-```python
-class BaseSkillMetadata(BaseModel):
-    created_at: Union[datetime, str]
-    author: str
-    updated_at: Union[datetime, str]
-    usage_count: int
-    version: str
-    additional_kwargs: dict
-
-class BaseSkill(BaseModel):
-    skill_name: str
-    skill_description: str
-    skill_metadata: Optional[BaseSkillMetadata]
-    skill_tags: List[str]
-
-class CodeSkillParameter(BaseModel):
-    param_name: str
-    param_type: str
-    param_description: str
-    param_required: bool
-    param_default: Optional[Any]
-
-class CodeSkillDependency(BaseModel):
-    dependency_name: str
-    dependency_version: Optional[str]
-    dependency_type: Optional[str]
-
-class TestCase(BaseModel):
-    test_input: str
-    run_command: str
-    expected_result: str
-    actual_result: str
-    is_passed: bool
-
-class TestSummary(BaseModel):
-    test_cases: List[TestCase]
-
-class CodeSkill:
-    skill_program_language: str
-    skill_code: str
-    skill_parameters: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]]
-    skill_return: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]]
-    skill_dependencies: Optional[Union[CodeSkillDependency, List[CodeSkillDependency]]]
-    skill_usage_example: str
-    conversation_history: Optional[List[Dict]]
-    test_summary: Optional[TestSummary]
-```
-
-### Additional functions
-#### show help
-```python
-print(HELP_STR)
-```
-#### modify config
-```python
-from creator.config.open_config import open_user_config
-open_user_config()
-```
-
-[User Info]
-Name: {username}
-CWD: {current_working_directory}
-OS: {operating_system}
-"""
-
-# creator.config.build_in_skill_config["create"]
 
 class CreatorAgent(LLMChain):
     tool: BaseTool
@@ -155,7 +42,7 @@ class CreatorAgent(LLMChain):
 
     @property
     def input_keys(self) -> List[str]:
-        return ["username", "current_working_directory", "operating_system", "messages"]
+        return ["messages"]
 
     def _call(
         self,
@@ -164,6 +51,7 @@ class CreatorAgent(LLMChain):
     ) -> Dict[str, Any]:
 
         messages = inputs.pop("messages")
+        inputs["OPEN_CREATOR_API_DOC"] = OPEN_CREATOR_API_DOC
         allow_user_confirm = config.run_human_confirm
         langchain_messages = convert_openai_messages(messages)
 
@@ -181,7 +69,7 @@ class CreatorAgent(LLMChain):
                 callback.on_chain_start()
 
             prompt = ChatPromptTemplate.from_messages(messages=[
-                ("system", _SYSTEM_TEMPLATE),
+                ("system", _SYSTEM_TEMPLATE + get_user_info()),
                 *langchain_messages
             ])
             llm_chain = prompt | llm_with_functions
@@ -225,6 +113,7 @@ def create_creator_agent(llm):
         ]
     )
     tool = CodeInterpreter()
+    pre_run(tool)
     function_schema = tool.to_function_schema()
     llm_kwargs = {"functions": [function_schema], "function_call": {"name": function_schema["name"]}}
     chain = CreatorAgent(
@@ -240,4 +129,4 @@ def create_creator_agent(llm):
 
 
 llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
-code_interpreter_agent = create_creator_agent(llm=llm)
+creator_agent = create_creator_agent(llm=llm)

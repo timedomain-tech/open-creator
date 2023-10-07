@@ -5,10 +5,8 @@ from creator.utils import remove_title
 from creator.config.library import config
 from creator.utils import generate_skill_doc, generate_install_command
 from creator.agents import code_interpreter_agent, code_tester_agent, code_refactor_agent
-import getpass
 import json
-import os
-import platform
+import getpass
 
 
 class BaseSkillMetadata(BaseModel):
@@ -245,9 +243,6 @@ When writing code, it's imperative to follow industry standards and best practic
         messages = code_interpreter_agent.run(
             {
                 "messages": messages,
-                "username": getpass.getuser(),
-                "current_working_directory": os.getcwd(),
-                "operating_system": platform.system(),
                 "verbose": True,
             }
         )
@@ -281,9 +276,6 @@ When writing code, it's imperative to follow industry standards and best practic
         test_result = code_tester_agent.run(
             {
                 "messages": messages,
-                "username": getpass.getuser(),
-                "current_working_directory": os.getcwd(),
-                "operating_system": platform.system(),
                 "verbose": True,
             }
         )

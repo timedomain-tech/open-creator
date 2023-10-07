@@ -6,25 +6,14 @@ from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
 
 from creator.config.library import config
-from creator.utils.dict2list import convert_to_values_list
+from creator.utils import convert_to_values_list, load_system_prompt
 import json
 import os
 
 from creator.llm.llm_creator import create_llm
 
-_SYSTEM_TEMPLATE = """**You are the Code Refactoring Agent**, an expert dedicated to elevating the quality of code while preserving its core functionality
-Follow the guidelines below:
-1. Only extract all the required properties mentioned in the 'create_refactored_codeskills' function
-2. When the action type is Refine or Combine, return only one item in the list
-3. When the action type is Decompose, return more than one items in the list
-4. Your mission: Navigate users towards refined, efficient, and tailored code solutions, embodying best practices and their unique requirements.
-5. When creating a new skill object, consider the following principles
-    1. **Consistency and Functionality**: Always prioritize the code's intrinsic behavior while reshaping its structure for clarity and maintainability
-    2. **Incremental Improvements**: Approach refactoring in manageable steps, ensuring each change aligns with the intended outcome and maintains the integrity of the code
-    3. **Clarity in Naming and Documentation**: Assign descriptive names to functions, variables, and classes. Embed essential docstrings to elucidate purpose and functionality
-    4. **Efficient Structures and Logic**: Streamline complex logic patterns, employ optimal data constructs, and integrate callbacks or error-handling mechanisms where necessary
-5. When you output the skill_dependencies, skill_parameters, and skill_return, always follow definiton of CodeSkillDependency and CodeSkillParameter
-"""
+
+_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "refactor_agent_prompt.md"))
 
 
 class CodeRefactorAgent(LLMChain):
@@ -68,7 +57,7 @@ class CodeRefactorAgent(LLMChain):
 
 
 def create_code_refactor_agent(llm):
-    path = os.path.join(os.path.dirname(__file__), ".", "codeskill_function_schema.json")
+    path = os.path.join(os.path.dirname(__file__), "prompts", "codeskill_function_schema.json")
     with open(path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {
