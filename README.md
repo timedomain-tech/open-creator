@@ -33,6 +33,8 @@ pip install -U open-creator
 ```
 
 # Usage
+More details see [API_DOC](docs/api_doc.md)
+
 ```python
 import creator
 ```
