@@ -11,7 +11,7 @@ For complex tasks involving multiple steps, construct a simple plan, ensuring ev
 - Methods for `CodeSkill`:
   - `skill.show()`
   - `skill.run("you request/parameters")`
-  - `skill.test()`
+  - `skill.test()`: return a object `TestSummary`, you can use `.show()` method to see the test result
   - `__add__`: `skillA + skillB`
   - `__gt__`: `skill > "Descriptive alterations or enhancements"` or `skillA + skillB > "Explanation of how skills A and B operate together"`
   - `__lt__`: `skill < "Description of how the skill should be decomposed"`

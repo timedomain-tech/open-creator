@@ -51,5 +51,28 @@ def test_run_creator_agent3():
     print(resp[-1])
 
 
+def test_run_creator_agent4():
+    messages = [
+        {
+            "role": "user", "content": "create a skill that request is 'given a 4 digit sequence and output the solution of Game of 24 for example input is 1 1 2 12', show it"
+        }
+    ]
+    res = open_creator_agent.run({
+        "messages": messages,
+        "verbose": True,
+    })
+    print(res)
+    res.append(
+        {
+            "role": "user",
+            "content": "refine the skill and only retrun top 5 solutions (sorted and if has) if test ok (by showing the test summary), save it, otherwise do nothing"
+        }
+    )
+    res = open_creator_agent.run({
+        "messages": res,
+        "verbose": True,
+    })
+
+
 if __name__ == "__main__":
-    test_run_creator_agent2()
+    test_run_creator_agent4()

@@ -51,7 +51,7 @@ def create_skill():
 def test_tester_agent():
     skill = create_skill()
     test_summary = skill.test()
-    print(test_summary)
+    test_summary.show()
 
 
 if __name__ == "__main__":
