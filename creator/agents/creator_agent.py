@@ -115,7 +115,7 @@ class CreatorAgent(LLMChain):
 
         openai_message = list(map(convert_message_to_dict, langchain_messages))
         if callback:
-            callback.message_box.end()
+            callback.end()
         return {
             "messages": openai_message
         }
