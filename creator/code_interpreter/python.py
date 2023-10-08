@@ -1,5 +1,6 @@
 from .base import BaseInterpreter
 import re
+import ast
 
 
 class PythonInterpreter(BaseInterpreter):
@@ -9,12 +10,22 @@ class PythonInterpreter(BaseInterpreter):
     print_command: str = "print('{}')"
 
     def preprocess(self, query: str):
-        # Removes `, whitespace & python from start
-        query = re.sub(r"^(\s|`)*(?i:python)?\s*", "", query)
-        # Removes whitespace & ` from end
-        query = re.sub(r"(\s|`)*$", "", query)
-        query = "\n".join([line for line in query.split("\n") if line.strip() != ""])
-        return "\n\n" + query + "\n\n"
+        # Parse the query into an abstract syntax tree
+        tree = ast.parse(query)
+
+        # Unparse the tree into code, adding an extra newline after function and class definitions
+        modified_code_lines = []
+        for node in tree.body:
+            code_chunk = ast.unparse(node)
+            modified_code_lines.append(code_chunk)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.For, ast.AsyncFor, ast.While, ast.If)):
+                # Add an extra newline after function and class definitions, and loop/if statements
+                modified_code_lines.append("")
+
+        # Join all code chunks into the final modified code
+        modified_code = "\n".join(modified_code_lines)
+
+        return modified_code
     
     def postprocess(self, response):
         def clean_string(s):

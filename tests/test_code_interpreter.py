@@ -45,6 +45,13 @@ def test_python_interpreter3():
     output = code_interpreter.run(code)
     print(output)
 
+def test_python_interpreter4():
+    arguments = '{\n  "language": "python",\n  "code": "def is_prime(n):\\n    if n <= 1:\\n        return False\\n    elif n <= 3:\\n        return True\\n    elif n % 2 == 0 or n % 3 == 0:\\n        return False\\n    i = 5\\n    while i * i <= n:\\n        if n % i == 0 or n % (i + 2) == 0:\\n            return False\\n        i += 6\\n    return True\\n\\n# Test the function\\nprint(is_prime(2))  # Should return True\\nprint(is_prime(4))  # Should return False"\n}'
+    import json
+    arguments = json.loads(arguments)
+    code_interpreter = PythonInterpreter()
+    output = code_interpreter.run(arguments["code"])
+    print(output)
 
 if __name__ == "__main__":
-    test_python_interpreter2()
+    test_python_interpreter4()

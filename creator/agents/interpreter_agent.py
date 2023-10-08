@@ -21,6 +21,18 @@ import os
 _SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "interpreter_agent_prompt.md"))
 
 
+def fix_run_python(function_call):
+    name = function_call.get("name", "run_code")
+    arguments = function_call.get("arguments", "{}")
+    arguments_json = parse_partial_json(arguments)
+    if name != "run_code" or not arguments_json:
+        return {
+            "name": "run_code",
+            "arguments": json.dumps({"language": "python", "code": arguments}, ensure_ascii=False)
+        }
+    return function_call
+    
+
 class CodeInterpreterAgent(LLMChain):
     total_tries: int = 5
     tool: BaseTool
@@ -72,7 +84,9 @@ class CodeInterpreterAgent(LLMChain):
                 can_run_code = ask_run_code_confirm()
             if not can_run_code:
                 break
-            
+            function_call = fix_run_python(function_call)
+            message.additional_kwargs["function_call"] = function_call
+            langchain_messages[-1] = message
             arguments = parse_partial_json(function_call.get("arguments", "{}"))
             tool_result = self.tool.run(arguments)
             tool_result = truncate_output(tool_result)

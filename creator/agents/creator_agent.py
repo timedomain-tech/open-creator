@@ -32,6 +32,7 @@ def pre_run(code_interpreter):
     code_interpreter.run({"language": "python", "code": save_skill_obj.skill_code})
     code_interpreter.run({"language": "python", "code": search_skill_obj.skill_code})
 
+
 def fix_run_python(function_call):
     name = function_call.get("name", "run_code")
     arguments = function_call.get("arguments", "{}")

@@ -42,7 +42,13 @@ def test_run_creator_agent2():
     })
     print(res)
 
-# TODO: fix no stdout problem
+
+def test_run_creator_agent3():
+    skill = creator.create(request="given a 4 digit sequence and output the solution of Game of 24. for example input is 1 1 2 12, use python as code language")
+    skill.show()
+    creator.save(skill)
+    resp = skill.run("try 1 1 1 12")
+    print(resp[-1])
 
 
 if __name__ == "__main__":
