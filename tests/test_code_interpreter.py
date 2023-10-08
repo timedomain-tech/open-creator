@@ -1,5 +1,5 @@
-import sys
-sys.path.append("..")
+# import sys
+# sys.path.append("..")
 from creator.code_interpreter import PythonInterpreter, CodeInterpreter
 
 
@@ -25,7 +25,14 @@ print(is_prime(17))
 print(is_prime('string'))  # This will cause a TypeError
 """)
     print(response3)
-
+    response4 = code_interpreter.run(query="""
+print(is_prime(19))
+""")
+    print(response4)
+    response5 = code_interpreter.run(query="""
+print(is_prime([1,8,9]))
+""")
+    print(response5)
 
 def test_to_function_call():
     print(CodeInterpreter().to_function_schema())
@@ -54,4 +61,4 @@ def test_python_interpreter4():
     print(output)
 
 if __name__ == "__main__":
-    test_python_interpreter4()
+    test_python_interpreter2()

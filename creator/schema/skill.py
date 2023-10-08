@@ -291,6 +291,7 @@ When writing code, it's imperative to follow industry standards and best practic
             {"role": "function", "name": "run_code", "content": json.dumps(tool_result)},
             {"role": "user", "content": "I have already run the function for you so you can directy use the function by passing the parameters without import the function"},
         ]
+        print(messages, print_type="json")
         test_result = code_tester_agent.run(
             {
                 "messages": messages,

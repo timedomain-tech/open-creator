@@ -79,7 +79,6 @@ class CreatorAgent(LLMChain):
             llm_chain = prompt | llm_with_functions
             message = llm_chain.invoke(inputs)
             langchain_messages.append(message)
-            print(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
                 break
@@ -91,7 +90,6 @@ class CreatorAgent(LLMChain):
                 break
             
             function_call = fix_arguments(function_call)
-            print("function_call after fix", function_call)
             message.additional_kwargs["function_call"] = function_call
             langchain_messages[-1] = message
             arguments = parse_partial_json(function_call.get("arguments", "{}"))

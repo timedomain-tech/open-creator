@@ -19,8 +19,6 @@ class BaseInterpreter:
 
     def __init__(self):
         self.process = None
-        self.stdout_thread = None
-        self.stderr_thread = None
         self.done = threading.Event()
 
     def get_persistent_process(self):

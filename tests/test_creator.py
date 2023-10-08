@@ -8,6 +8,7 @@ def test_create_from_user_request():
     skill = creator.create(request="filter how many prime numbers are in 201")
     creator.save(skill=skill)
     skill.show()
+    skill.run("how many prime numbers in 107")
 
 
 def test_create_from_messages():
