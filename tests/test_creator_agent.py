@@ -33,7 +33,7 @@ def test_run_creator_agent():
 def test_run_creator_agent2():
     messages = [
         {
-            "role": "user", "content": "create a skill that request is 'given a 4 digit sequence and output the solution of Game of 24', save it, test it and show it"
+            "role": "user", "content": "create a skill that request is 'given a 4 digit sequence and output the solution of Game of 24 for example input is 1 1 2 12', show it and save it"
         }
     ]
     res = open_creator_agent.run({

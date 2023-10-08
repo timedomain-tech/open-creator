@@ -5,6 +5,7 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.markdown import Markdown
 from rich.box import MINIMAL
+import sys
 
 from creator.callbacks.base_message_box import BaseMessageBox
 
@@ -40,15 +41,22 @@ class RichMessageBox(BaseMessageBox):
     def start(self):
         self.text_live.start()
         self.code_live.start()
+        # self.use_rich = sys.stdout.isatty()
+        self.use_rich = True
 
     def end(self) -> None:
         """Ends the live display."""
-        if self.content:
-            self.refresh(cursor=False, is_code=False)
-        if self.code and self.language:
-            self.refresh(cursor=False, is_code=True)
-        self.text_live.stop()
-        self.code_live.stop()
+        if self.use_rich:
+            if self.content:
+                self.refresh(cursor=False, is_code=False)
+            if self.code and self.language:
+                self.refresh(cursor=False, is_code=True)
+            self.text_live.stop()
+            self.code_live.stop()
+        else:
+            print(self.content)
+            print(self.code)
+            print(self.output)
 
     def refresh_text(self, cursor: bool = True) -> None:
         """Refreshes the content display."""
@@ -81,10 +89,11 @@ class RichMessageBox(BaseMessageBox):
 
     def refresh(self, cursor: bool = True, is_code: bool = True) -> None:
         """General refresh method."""
-        if is_code:
-            self.refresh_code(cursor=cursor)
-        else:
-            self.refresh_text(cursor=cursor)
+        if self.use_rich:
+            if is_code:
+                self.refresh_code(cursor=cursor)
+            else:
+                self.refresh_text(cursor=cursor)
 
     def update_from_chunk(self, chunk) -> None:
         # print(chunk)
@@ -105,7 +114,7 @@ class RichMessageBox(BaseMessageBox):
             self.refresh(cursor=True, is_code=False)
 
         if len(self.name) > 0:
-            if self.name == "run_code":
+            if self.name in ("run_code", "python"):
                 arguments_dict = parse_partial_json(self.arguments)
                 if arguments_dict is None:
                     return

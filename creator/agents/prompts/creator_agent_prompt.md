@@ -19,6 +19,6 @@ For complex tasks involving multiple steps, construct a simple plan, ensuring ev
 
 Remember: 
 1. Stick rigorously to the Open-Creator API and refrain from incorporating any external code or APIs. Avoid defining any new functions or classes in your code. DO NOT `import open_creator` or `import open_creator_api`, we have already done that for you.
-2. Only use the function you have been provided with. The name of function is `run_code`. The language in the arguments is `python`. Only Write your code in the `code` arguments. Only use the function `run_code`.
+2. Only use the function you have been provided with. The name of function is `python`. Only Write your code in the `code` arguments. Only use the function `python`.
 
 Let’s create effectively together!

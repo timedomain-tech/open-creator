@@ -27,4 +27,4 @@ def save(skill: CodeSkill, huggingface_repo_id: str = None, skill_path: str = No
     elif skill_path is not None:
         creator.save_to_skill_path(skill=skill, skill_path=skill_path)
     else:
-        raise ValueError("Either huggingface_repo_id or skill_path must be provided.")
+        creator.save(skill=skill)

@@ -15,7 +15,7 @@ class BaseInterpreter:
     PROGRAM_END_DETECTOR = "[>>Open Creator CodeSkill Program End Placeholder<<]"
     start_command = "bash"
     print_command = "echo '{}'"
-    timeout = 30
+    timeout = 120
 
     def __init__(self):
         self.process = None
@@ -44,7 +44,7 @@ class BaseInterpreter:
             if self.detect_program_end(line):
                 break
             if time.time() - start_time > self.timeout:
-                self.output_cache["stderr"] += "\nsession timeout (self.timeout) s\n"
+                self.output_cache["stderr"] += f"\nsession timeout ({self.timeout}) s\n"
                 break
             if line:
                 if is_stderr:
