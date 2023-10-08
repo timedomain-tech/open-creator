@@ -34,7 +34,7 @@ def fix_run_python(function_call):
     
 
 class CodeInterpreterAgent(LLMChain):
-    total_tries: int = 5
+    total_tries: int = 10
     tool: BaseTool
 
     @property
