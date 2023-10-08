@@ -67,7 +67,6 @@ class CreatorAgent(LLMChain):
             llm_chain = prompt | llm_with_functions
             message = llm_chain.invoke(inputs)
             langchain_messages.append(message)
-            print(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
                 break
