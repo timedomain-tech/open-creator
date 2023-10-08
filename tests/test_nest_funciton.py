@@ -1,5 +1,4 @@
 import ast
-import astunparse  # you might need to install this module
 
 
 class FunctionFlattener(ast.NodeTransformer):
@@ -32,5 +31,19 @@ def flatten_functions(code):
     new_tree.body.extend(flattener.functions_to_add)
 
     # Convert the modified AST back to code
-    return astunparse.unparse(new_tree)
+    return ast.unparse(new_tree)
 
+code = """
+def function_with_multiple_nested_functions(x):
+    
+    def first_nested(y):
+        return y + 5
+    
+    def second_nested(z):
+        return z * 2
+    
+    return first_nested(x) + second_nested(x)
+
+"""
+
+print(flatten_functions(code))

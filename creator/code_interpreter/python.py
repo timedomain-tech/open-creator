@@ -1,7 +1,6 @@
 from .base import BaseInterpreter
 import re
 import ast
-import astunparse
 
 
 class FunctionFlattener(ast.NodeTransformer):
@@ -34,7 +33,7 @@ def flatten_functions(code):
     new_tree.body.extend(flattener.functions_to_add)
 
     # Convert the modified AST back to code
-    return astunparse.unparse(new_tree)
+    return ast.unparse(new_tree)
 
 
 class PythonInterpreter(BaseInterpreter):
