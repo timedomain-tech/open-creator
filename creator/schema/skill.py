@@ -81,6 +81,15 @@ class TestCase(BaseModel):
     expected_result: str = Field(description="The expected outcome or result of the test.")
     actual_result: str = Field(description="The actual outcome or result observed after the test was executed.")
     is_passed: bool = Field(description="A boolean indicating whether the test passed or failed.")
+    
+    def __repr__(self):
+        return (
+            f"**Test Input:** {self.test_input}\n"
+            f"**Run Command:** {self.run_command}\n"
+            f"**Expected Result:** {self.expected_result}\n"
+            f"**Actual Result:** {self.actual_result}\n"
+            f"**Is Passed:** {'Yes' if self.is_passed else 'No'}\n"
+        )
 
 
 class TestSummary(BaseModel):
@@ -94,6 +103,17 @@ class TestSummary(BaseModel):
             "description": "A method to be invoked once all test cases have been successfully completed. This function provides a comprehensive summary of each test case, detailing their input, execution command, expected results, actual results, and pass status.",
             "parameters": test_function_schema
         }
+    
+    def __repr__(self):
+        output = ["## Test Summary\n"]
+        for i, test_case in enumerate(self.test_cases, start=1):
+            output.append(f"### Test Case {i}\n")
+            output.append(test_case.__repr__())
+            output.append("---\n")
+        return "\n".join(output)
+
+    def show(self):
+        print("\n".join(repr(self)), print_type="markdown")
 
 
 class CodeSkill(BaseSkill):
@@ -250,7 +270,7 @@ When writing code, it's imperative to follow industry standards and best practic
         return messages
     
     def test(self):
-        if self.conversation_history is None or len(self.conversation_history) == 0:
+        if self.conversation_history is None:
             self.conversation_history = []
         if not self.skill_code:
             print("> No code provided, cannot test", print_type="markdown")
@@ -280,6 +300,7 @@ When writing code, it's imperative to follow industry standards and best practic
         code_tester_agent.tool = previews_tool
         if "test_summary" in test_result:
             self.test_summary = TestSummary(**{"test_cases": test_result["test_summary"]})
+        
         self.conversation_history = self.conversation_history + test_result["messages"]
         return self.test_summary
 
@@ -289,7 +310,8 @@ When writing code, it's imperative to follow industry standards and best practic
             return
         messages = [
             {"role": "system", "content": f"Your action type is: {self.Config.refactor_type}"},
-            {"role": "function", "name": "show_skill", "content": repr(self)}
+            {"role": "function", "name": "show_skill", "content": repr(self)},
+            {"role": "function", "name": "show_code", "content": f"current skill code:\n```{self.skill_program_language}\n{self.skill_code}\n```"}
         ]
         additional_request = "\nplease output only one skill object" if self.Config.refactor_type in ("Combine", "Refine") else "\nplease help me decompose the skill object into different independent skill objects" 
         messages.append({
@@ -307,7 +329,24 @@ When writing code, it's imperative to follow industry standards and best practic
             refactored_skill = self.__class__(**refactored_skill_json)
             refactored_skill.skill_metadata = BaseSkillMetadata()
             refactored_skills.append(refactored_skill)
+        if len(refactored_skills) == 1:
+            return refactored_skills[0]
         return refactored_skills
+    
+    def auto_optimize(self, retry_times=3):
+        pre_tested = True
+        if self.test_summary is None:
+            pre_tested = False
+            self.test()
+        skill = self.model_copy()
+
+        for i in range(retry_times):
+            all_passed = all(test_case.is_passed for test_case in skill.test_summary.test_cases)
+            if all_passed and pre_tested:
+                return skill
+            print(f"> Auto Refine Skill {i+1}/{retry_times}", print_type="markdown")
+            skill = skill > "I have tested the skill, but it failed, please refine it."
+        return self
     
     def __repr__(self):
         if self.Config.refactorable:

@@ -24,6 +24,18 @@ _SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "p
 OPEN_CREATOR_API_DOC = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "api_doc.md"))
 
 
+def fix_arguments(function_call):
+    arguments = parse_partial_json(function_call.get("arguments", "{}"))
+    if arguments is None and function_call.get("arguments", None) is not None:
+        return {
+            "name": "python",
+            "arguments": json.dumps({
+                "code": function_call.get("arguments")
+            }, ensure_ascii=False)
+        }
+    return function_call
+
+
 class CreatorAgent(LLMChain):
     total_tries: int = 5
     tool: BaseTool
@@ -67,20 +79,28 @@ class CreatorAgent(LLMChain):
             llm_chain = prompt | llm_with_functions
             message = llm_chain.invoke(inputs)
             langchain_messages.append(message)
+            print(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
                 break
-
+            
             can_run_code = True
             if allow_user_confirm:
                 can_run_code = ask_run_code_confirm()
             if not can_run_code:
                 break
-
-            arguments = parse_partial_json(function_call.get("arguments", "{}")).get("code", None)
+            
+            function_call = fix_arguments(function_call)
+            print("function_call after fix", function_call)
+            message.additional_kwargs["function_call"] = function_call
+            langchain_messages[-1] = message
+            arguments = parse_partial_json(function_call.get("arguments", "{}"))
             if arguments is None:
                 break
-            tool_result = self.tool.run(arguments)
+            code = arguments.get("code", None)
+            if code is None:
+                break
+            tool_result = self.tool.run(code)
             tool_result = truncate_output(tool_result)
             output = str(tool_result.get("stdout", "")) + str(tool_result.get("stderr", ""))
             if callback:
