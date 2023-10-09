@@ -78,6 +78,8 @@ class LibraryConfig(BaseModel):
     interpreter_agent_prompt_path: str = os.path.join(project_dir, "prompts", "interpreter_agent_prompt.md")
     tester_agent_prompt_path: str = os.path.join(project_dir, "prompts", "tester_agent_prompt.md")
     testsummary_function_schema_path: str = os.path.join(project_dir, "prompts", "testsummary_function_schema.json")
+    tips_for_debugging_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_debugging_prompt.md")
+    tips_for_testing_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_testing_prompt.md")
 
 
 config = LibraryConfig()

@@ -4,6 +4,7 @@
 import tiktoken
 from typing import List, Dict, Any, Tuple, Optional, Union
 
+
 MODEL_MAX_TOKENS = {
     'gpt-4': 8192,
     'gpt-4-0613': 8192,
@@ -21,6 +22,12 @@ def num_tokens_from_messages(messages: List[Dict[str, Any]],
     """
     Function to return the number of tokens used by a list of messages.
     """
+
+    # Check the model name at the beginning
+    if "gpt-3.5-turbo" in model:
+        model = "gpt-3.5-turbo-0613"
+    elif "gpt-4" in model:
+        model = "gpt-4-0613"
 
     # Attempt to get the encoding for the specified model
     if model is None:
@@ -51,10 +58,6 @@ def num_tokens_from_messages(messages: List[Dict[str, Any]],
         elif model == "gpt-3.5-turbo-0301":
             tokens_per_message = 4
             tokens_per_name = -1
-        elif "gpt-3.5-turbo" in model:
-            return num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613")
-        elif "gpt-4" in model:
-            return num_tokens_from_messages(messages, model="gpt-4-0613")
         else:
             # Slightly raised numbers for an unknown model / prompt template
             # In the future this should be customizable
@@ -89,10 +92,10 @@ def shorten_message_to_fit_limit(message: Dict[str, Any], tokens_needed: int,
     while True:
         total_tokens = num_tokens_from_messages([message], model)
 
-        if total_tokens <= tokens_needed:
+        if total_tokens < tokens_needed:
             break
-
-        ratio = (tokens_needed) / total_tokens
+        
+        ratio = tokens_needed / total_tokens
 
         new_length = int(total_tokens * ratio)
 
@@ -152,8 +155,6 @@ def trim(
 
         max_tokens -= system_message_tokens
 
-        max_tokens -= system_message_tokens
-
     final_messages = []
 
     # Reverse the messages so we process oldest messages first
@@ -171,17 +172,14 @@ def trim(
             final_messages_tokens = num_tokens_from_messages(final_messages, model)
             tokens_remaining = max_tokens - final_messages_tokens
 
-            # If we have some tokens to play with, we can try trimming the top message.
-            if True:
+            # If adding the next message exceeds the token limit, try trimming it
+            # (This only works for non-function call messages)
+            if "function_call" not in message:
+                shorten_message_to_fit_limit(message, tokens_remaining, model)
 
-                # If adding the next message exceeds the token limit, try trimming it
-                # (This only works for non-function call messages)
-                if "function_call" not in message:
-                    shorten_message_to_fit_limit(message, tokens_remaining, model)
-
-                # If the trimmed message can fit, add it
-                if num_tokens_from_messages([message], model) + final_messages_tokens <= max_tokens:
-                    final_messages = [message] + final_messages
+            # If the trimmed message can fit, add it
+            if num_tokens_from_messages([message], model) + final_messages_tokens <= max_tokens:
+                final_messages = [message] + final_messages
 
             break
 

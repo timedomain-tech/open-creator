@@ -1,9 +1,8 @@
 from typing import List, Dict, Any, Optional
 import json
-import os
 
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
-from langchain.schema.messages import FunctionMessage
+from langchain.schema.messages import FunctionMessage, HumanMessage
 from langchain.prompts import ChatPromptTemplate
 from langchain.adapters.openai import convert_message_to_dict, convert_openai_messages
 from langchain.chains import LLMChain
@@ -18,6 +17,7 @@ from creator.llm.llm_creator import create_llm
 
 
 _SYSTEM_TEMPLATE = load_system_prompt(config.tester_agent_prompt_path)
+DEBUGGING_TIPS = load_system_prompt(config.tips_for_testing_prompt_path)
 
 
 class CodeTesterAgent(LLMChain):
@@ -86,6 +86,10 @@ class CodeTesterAgent(LLMChain):
 
             function_message = FunctionMessage(name="run_code", content=json.dumps(tool_result, ensure_ascii=False))
             langchain_messages.append(function_message)
+            if len(tool_result.get("stderr", "")) > 0 and "error" in tool_result["stderr"].lower():  # add tips for debugging
+                langchain_messages.append(HumanMessage(content=DEBUGGING_TIPS))
+            elif len(output) > 100:  # tips for avoiding repeating the output of `run_code`
+                langchain_messages.append(HumanMessage(content="go on to next step if has, otherwise end."))
             current_try += 1
             if callback:
                 callback.on_chain_end()
