@@ -15,10 +15,11 @@ from creator.config.library import config
 from creator.utils import truncate_output, ask_run_code_confirm, get_user_info, load_system_prompt
 
 from creator.llm.llm_creator import create_llm
-import os
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "interpreter_agent_prompt.md"))
+# prompt modified from: https://github.com/KillianLucas/open-interpreter/blob/11200b25de773b78a63874a8378872eaec39abc7/interpreter/config.yaml#L1
+# MIT license
+_SYSTEM_TEMPLATE = load_system_prompt(config.interpreter_agent_prompt_path)
 
 
 def fix_run_python(function_call):
@@ -129,5 +130,5 @@ def create_code_interpreter_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 code_interpreter_agent = create_code_interpreter_agent(llm=llm)

@@ -17,11 +17,10 @@ from creator.utils import truncate_output, ask_run_code_confirm, load_system_pro
 
 from creator.llm.llm_creator import create_llm
 import creator
-import os
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "creator_agent_prompt.md"))
-OPEN_CREATOR_API_DOC = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "api_doc.md"))
+_SYSTEM_TEMPLATE = load_system_prompt(config.creator_agent_prompt_path)
+OPEN_CREATOR_API_DOC = load_system_prompt(config.api_doc_path)
 
 
 def fix_arguments(function_call):
@@ -144,5 +143,5 @@ def create_creator_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 open_creator_agent = create_creator_agent(llm=llm)

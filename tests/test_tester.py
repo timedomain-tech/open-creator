@@ -2,8 +2,8 @@ import sys
 sys.path.append("..")
 
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
-import langchain
-print(langchain.llm_cache)
+import creator
+
 
 def create_skill():
     skill_json = {
@@ -51,8 +51,9 @@ def create_skill():
 def test_tester_agent():
     skill = create_skill()
     test_summary = skill.test()
+    print(repr(test_summary))
     test_summary.show()
-    skill.save()
+    creator.save(skill)
 
 
 if __name__ == "__main__":

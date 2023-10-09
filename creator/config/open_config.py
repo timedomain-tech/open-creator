@@ -5,7 +5,8 @@ import platform
 
 
 def open_user_config():
-    # this source code from https://github.com/KillianLucas/open-interpreter/blob/be38ef8ed6ce9d0b7768e2ec3f542337f3444f54/interpreter/cli/cli.py#L101
+    # modified from https://github.com/KillianLucas/open-interpreter/blob/be38ef8ed6ce9d0b7768e2ec3f542337f3444f54/interpreter/cli/cli.py#L101
+    # MIT license
     config_path = os.path.join(appdirs.user_config_dir(), 'Open-Creator', 'config.yaml')
     config_path = os.path.join(appdirs.user_config_dir(), 'Open-Creator', 'config.yaml')
     print(f"Opening `{config_path}`...")

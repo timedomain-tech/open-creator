@@ -13,7 +13,7 @@ import os
 from creator.llm.llm_creator import create_llm
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "refactor_agent_prompt.md"))
+_SYSTEM_TEMPLATE = load_system_prompt(config.refactor_agent_prompt_path)
 
 
 class CodeRefactorAgent(LLMChain):
@@ -57,7 +57,7 @@ class CodeRefactorAgent(LLMChain):
 
 
 def create_code_refactor_agent(llm):
-    path = os.path.join(os.path.dirname(__file__), "prompts", "codeskill_function_schema.json")
+    path = os.path.join(config.codeskill_function_schema_path)
     with open(path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {
@@ -95,6 +95,6 @@ def create_code_refactor_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 code_refactor_agent = create_code_refactor_agent(llm)
 

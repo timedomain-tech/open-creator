@@ -21,8 +21,8 @@ class BaseSkillMetadata(BaseModel):
 class BaseSkill(BaseModel):
     skill_name: str = Field(..., description="Skill name in snake_case format or camelCase format, should match the function name or class name")
     skill_description: str = Field("", description=(
-        "Please provide a description for this skill. Ensure your description is clear, concise, and specific, limited to no more than 6 sentences." 
-        "Explain the primary functionality of the skill and offer specific applications or use cases." 
+        "Please provide a description for this skill. Ensure your description is clear, concise, and specific, limited to no more than 6 sentences."
+        "Explain the primary functionality of the skill and offer specific applications or use cases."
     ))
     skill_metadata: Optional[BaseSkillMetadata] = Field(None, description="Metadata of the skill")
     skill_tags: List[str] = Field(..., description="Write 3-5 keywords describing the skill, avoid terms that might lead to confusion, and ensure consistency in style and language")
@@ -81,14 +81,14 @@ class TestCase(BaseModel):
     expected_result: str = Field(description="The expected outcome or result of the test.")
     actual_result: str = Field(description="The actual outcome or result observed after the test was executed.")
     is_passed: bool = Field(description="A boolean indicating whether the test passed or failed.")
-    
+
     def __repr__(self):
         return (
-            f"**Test Input:** {self.test_input}\n"
-            f"**Run Command:** {self.run_command}\n"
-            f"**Expected Result:** {self.expected_result}\n"
-            f"**Actual Result:** {self.actual_result}\n"
-            f"**Is Passed:** {'Yes' if self.is_passed else 'No'}\n"
+            f"- **Test Input:** {self.test_input}\n"
+            f"- **Run Command:** {self.run_command}\n"
+            f"- **Expected Result:** {self.expected_result}\n"
+            f"- **Actual Result:** {self.actual_result}\n"
+            f"- **Is Passed:** {'Yes' if self.is_passed else 'No'}\n"
         )
 
 
@@ -103,17 +103,17 @@ class TestSummary(BaseModel):
             "description": "A method to be invoked once all test cases have been successfully completed. This function provides a comprehensive summary of each test case, detailing their input, execution command, expected results, actual results, and pass status.",
             "parameters": test_function_schema
         }
-    
+
     def __repr__(self):
         output = ["## Test Summary\n"]
-        for i, test_case in enumerate(self.test_cases, start=1):
+        for i, test_case in enumerate(self.test_cases):
             output.append(f"### Test Case {i}\n")
-            output.append(test_case.__repr__())
+            output.append(repr(test_case))
             output.append("---\n")
         return "\n".join(output)
 
     def show(self):
-        print("\n".join(repr(self)), print_type="markdown")
+        print(repr(self), print_type="markdown")
 
 
 class CodeSkill(BaseSkill):
@@ -137,7 +137,7 @@ When writing code, it's imperative to follow industry standards and best practic
     skill_return: Optional[Union[CodeSkillParameter, List[CodeSkillParameter]]] = Field(None, description="Return value(s) of the skill")
     skill_dependencies: Optional[Union[CodeSkillDependency, List[CodeSkillDependency]]] = Field(None, description="List of dependencies the skill requires to run, typically packages but can also be other skill functions")
     skill_usage_example: str = Field(..., description="Example of how to use the skill")
-    
+
     conversation_history: Optional[List[Dict]] = Field(None, description="Conversation history that the skill was extracted from")
     test_summary: Optional[TestSummary] = Field(None, description="Test cases for the skill")
 
@@ -155,7 +155,7 @@ When writing code, it's imperative to follow industry standards and best practic
                 self.skill_parameters = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**param)) for param in data["skill_parameters"]]
             elif isinstance(data["skill_parameters"], dict):
                 self.skill_parameters = CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_parameters"]))
-        
+
         if "skill_return" in data and data["skill_return"]:
             if isinstance(data["skill_return"], list):
                 self.skill_return = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**param)) for param in data["skill_return"]]
@@ -218,12 +218,12 @@ When writing code, it's imperative to follow industry standards and best practic
         # If the list is empty, add the current object to it
         if not self.Config.skills_to_combine:
             self.Config.skills_to_combine.append(self)
-        
+
         # Add the other_skill to the list
         self.Config.skills_to_combine.append(other_skill)
-        
+
         return self  # Return the current object to support continuous addition
-    
+
     def __radd__(self, other_skill):
         self.Config.refactorable = True
         self.__add__(other_skill)
@@ -268,14 +268,14 @@ When writing code, it's imperative to follow industry standards and best practic
         )
         code_interpreter_agent.tool = previews_tool
         return messages
-    
+
     def test(self):
         if self.conversation_history is None:
             self.conversation_history = []
         if not self.skill_code:
             print("> No code provided, cannot test", print_type="markdown")
             return
-        
+
         previews_tool = code_tester_agent.tool
         code_tester_agent.tool = config.code_interpreter
 
@@ -291,7 +291,7 @@ When writing code, it's imperative to follow industry standards and best practic
             {"role": "function", "name": "run_code", "content": json.dumps(tool_result)},
             {"role": "user", "content": "I have already run the function for you so you can directy use the function by passing the parameters without import the function"},
         ]
-        print(messages, print_type="json")
+
         test_result = code_tester_agent.run(
             {
                 "messages": messages,
@@ -301,7 +301,7 @@ When writing code, it's imperative to follow industry standards and best practic
         code_tester_agent.tool = previews_tool
         if "test_summary" in test_result:
             self.test_summary = TestSummary(**{"test_cases": test_result["test_summary"]})
-        
+
         self.conversation_history = self.conversation_history + test_result["messages"]
         return self.test_summary
 
@@ -314,11 +314,12 @@ When writing code, it's imperative to follow industry standards and best practic
             {"role": "function", "name": "show_skill", "content": repr(self)},
             {"role": "function", "name": "show_code", "content": f"current skill code:\n```{self.skill_program_language}\n{self.skill_code}\n```"}
         ]
-        additional_request = "\nplease output only one skill object" if self.Config.refactor_type in ("Combine", "Refine") else "\nplease help me decompose the skill object into different independent skill objects" 
+        additional_request = "\nplease output only one skill object" if self.Config.refactor_type in ("Combine", "Refine") else "\nplease help me decompose the skill object into different independent skill objects"
         messages.append({
             "role": "user",
             "content": self.Config.user_request + additional_request
         })
+        messages = self.conversation_history + [{"role": "system", "content": "Above context is conversation history from other agents. Now let's refactor our skill."}] + messages
         refactored_skill_jsons = code_refactor_agent.run(
             {
                 "messages": messages,
@@ -333,22 +334,27 @@ When writing code, it's imperative to follow industry standards and best practic
         if len(refactored_skills) == 1:
             return refactored_skills[0]
         return refactored_skills
-    
-    def auto_optimize(self, retry_times=3):
-        pre_tested = True
-        if self.test_summary is None:
-            pre_tested = False
-            self.test()
-        skill = self.model_copy()
 
+    def auto_optimize(self, retry_times=3):
+        skill = self.model_copy(deep=True)
+        refined = False
         for i in range(retry_times):
-            all_passed = all(test_case.is_passed for test_case in skill.test_summary.test_cases)
-            if all_passed and pre_tested:
+            if skill.test_summary is None:
+                test_summary = skill.test()
+                if test_summary is None:
+                    print("> Skill test failed, cannot auto optimize", print_type="markdown")
+                    return skill
+
+            all_passed = all(test_case.is_passed for test_case in test_summary.test_cases)
+            if all_passed and refined:
                 return skill
             print(f"> Auto Refine Skill {i+1}/{retry_times}", print_type="markdown")
             skill = skill > "I have tested the skill, but it failed, please refine it."
+            if all_passed:
+                skill.test_summary = test_summary
+            refined = True
         return self
-    
+
     def __repr__(self):
         if self.Config.refactorable:
             if len(self.Config.skills_to_combine) == 0:

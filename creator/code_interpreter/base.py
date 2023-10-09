@@ -40,8 +40,10 @@ class BaseInterpreter:
         start_time = time.time()
         for line in stream:
             if self.detect_program_end(line):
+                start_time = time.time()
                 break
             if time.time() - start_time > self.timeout:
+                start_time = time.time()
                 self.output_cache["stderr"] += f"\nsession timeout ({self.timeout}) s\n"
                 break
             if line:
@@ -71,7 +73,11 @@ class BaseInterpreter:
         return output
 
     def run(self, query: str, is_start: bool = False) -> dict:
-        query = self.preprocess(query)
+        try:
+            query = self.preprocess(query)
+        except Exception:
+            traceback_string = traceback.format_exc()
+            return {"status": "error", "stdout": "", "stderr": traceback_string}
         if is_start or self.process is None:
             try:
                 self.get_persistent_process()

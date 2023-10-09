@@ -5,4 +5,4 @@ Follow the guidelines below:
     - Only write one function or one class object. DO NOT write any other code outside the function or class object except for import statements and initialization statements.
     - Remeber to import all the dependencies and packages you need. Expecially for methods and classes you used in the skill.
     - Function is preferred over class object.
-    - DO NOT write nested functions or inner functions (a function inside a function). This will cause the code parser to fail.
+    - AVOID write nested functions or inner functions (a function inside a function). This may cause the code parser to fail.

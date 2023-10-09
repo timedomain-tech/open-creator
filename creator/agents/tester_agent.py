@@ -17,7 +17,7 @@ from creator.utils import truncate_output, ask_run_code_confirm, get_user_info, 
 from creator.llm.llm_creator import create_llm
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "tester_agent_prompt.md"))
+_SYSTEM_TEMPLATE = load_system_prompt(config.tester_agent_prompt_path)
 
 
 class CodeTesterAgent(LLMChain):
@@ -107,8 +107,7 @@ def create_code_tester_agent(llm):
     )
     tool = CodeInterpreter()
     code_interpreter_function_schema = tool.to_function_schema()
-    path = os.path.join(os.path.dirname(__file__), "prompts", "testsummary_function_schema.json")
-    with open(path) as f:
+    with open(config.testsummary_function_schema_path) as f:
         test_summary_function_schema = json.load(f)
     chain = CodeTesterAgent(
         llm=llm,
@@ -122,5 +121,5 @@ def create_code_tester_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 code_tester_agent = create_code_tester_agent(llm=llm)
