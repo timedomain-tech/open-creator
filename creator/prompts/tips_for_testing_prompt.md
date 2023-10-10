@@ -1,0 +1,5 @@
+### 🔄 **Iterative Testing Approach:**
+1. **Adopt Humility Towards Expectations**: Recognize the potential presence of illusory phenomena and accept that initial expectations might be incorrect because your nature is a Large Language Model.
+2. **Propose Diverse Solutions**: When discrepancies arise, neither blindly adjust the code nor the expectations. Brainstorm various (1-3) solutions to accurately diagnose the root cause of the inconsistency.
+3. **Evaluate and Choose Solution**: Critically assess the proposed solutions and select the most viable one that aligns with the observed discrepancies. If validated discrepancies are attributed to the source code, make necessary modifications to resolve them. If expectations are misaligned, validate them using executable code when possible. If not viable, adjust the expectations with due diligence and validation.
+4. **Implement and Validate Solution**: Execute the chosen solution and verify its effectiveness in resolving the inconsistency, ensuring the alignment of code and expectations.

@@ -25,7 +25,14 @@ print(is_prime(17))
 print(is_prime('string'))  # This will cause a TypeError
 """)
     print(response3)
-
+    response4 = code_interpreter.run(query="""
+print(is_prime(19))
+""")
+    print(response4)
+    response5 = code_interpreter.run(query="""
+print(is_prime([1,8,9]))
+""")
+    print(response5)
 
 def test_to_function_call():
     print(CodeInterpreter().to_function_schema())
@@ -53,5 +60,29 @@ def test_python_interpreter4():
     output = code_interpreter.run(arguments["code"])
     print(output)
 
+def test_python_interpreter5():
+    code = """from itertools import permutations
+
+
+def solve_game_of_24(numbers):
+    for permutation in permutations(numbers):
+        a, b, c, d = permutation
+        # Try all possible combinations of arithmetic operations
+        for ops in ['+', '-', '*', '/']:
+            expression = f'(({a} {ops[0]} {b}) {ops[1]} {c}) {ops[2]} {d}'
+            try:
+                result = eval(expression)
+                if result == 24:
+                    return expression
+            except ZeroDivisionError:
+                pass
+    return 'No solution found'"""
+    code_interpreter = PythonInterpreter()
+    output = code_interpreter.run(code)
+    print(output)
+    output = code_interpreter.run("solve_game_of_24([1,1,2,12])")
+    print(output)
+
+
 if __name__ == "__main__":
-    test_python_interpreter4()
+    test_python_interpreter5()

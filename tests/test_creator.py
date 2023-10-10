@@ -8,6 +8,7 @@ def test_create_from_user_request():
     skill = creator.create(request="filter how many prime numbers are in 201")
     creator.save(skill=skill)
     skill.show()
+    skill.run("how many prime numbers in 107")
 
 
 def test_create_from_messages():
@@ -189,7 +190,12 @@ def test_run_skill_with_request2():
     result = skill.run("try n is 68")
     print(result)
 
+def test_create_from_request():
+    request = "create a game of 24 solver, input is a string with 4 interge range from 1-13 and seperated by space, output is a list of string with all possible solutions, the solution should be evaluated by the eval function and the result should be 24. If no solution, return empty list"
+    skill = creator.create(request=request)
+    creator.save(skill)
+
 if __name__ == "__main__":
-    test_create_from_user_request()
+    test_create_from_messages()
     # test_local_search()
 

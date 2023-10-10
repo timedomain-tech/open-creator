@@ -1,9 +1,8 @@
 from typing import List, Dict, Any, Optional
 import json
-import os
 
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
-from langchain.schema.messages import FunctionMessage
+from langchain.schema.messages import FunctionMessage, HumanMessage
 from langchain.prompts import ChatPromptTemplate
 from langchain.adapters.openai import convert_message_to_dict, convert_openai_messages
 from langchain.chains import LLMChain
@@ -17,7 +16,8 @@ from creator.utils import truncate_output, ask_run_code_confirm, get_user_info, 
 from creator.llm.llm_creator import create_llm
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "tester_agent_prompt.md"))
+_SYSTEM_TEMPLATE = load_system_prompt(config.tester_agent_prompt_path)
+DEBUGGING_TIPS = load_system_prompt(config.tips_for_testing_prompt_path)
 
 
 class CodeTesterAgent(LLMChain):
@@ -86,6 +86,10 @@ class CodeTesterAgent(LLMChain):
 
             function_message = FunctionMessage(name="run_code", content=json.dumps(tool_result, ensure_ascii=False))
             langchain_messages.append(function_message)
+            if len(tool_result.get("stderr", "")) > 0 and "error" in tool_result["stderr"].lower():  # add tips for debugging
+                langchain_messages.append(HumanMessage(content=DEBUGGING_TIPS))
+            elif len(output) > 100:  # tips for avoiding repeating the output of `run_code`
+                langchain_messages.append(HumanMessage(content="go on to next step if has, otherwise end."))
             current_try += 1
             if callback:
                 callback.on_chain_end()
@@ -107,8 +111,7 @@ def create_code_tester_agent(llm):
     )
     tool = CodeInterpreter()
     code_interpreter_function_schema = tool.to_function_schema()
-    path = os.path.join(os.path.dirname(__file__), "prompts", "testsummary_function_schema.json")
-    with open(path) as f:
+    with open(config.testsummary_function_schema_path) as f:
         test_summary_function_schema = json.load(f)
     chain = CodeTesterAgent(
         llm=llm,
@@ -122,5 +125,5 @@ def create_code_tester_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 code_tester_agent = create_code_tester_agent(llm=llm)

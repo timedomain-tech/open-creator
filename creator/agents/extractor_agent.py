@@ -6,13 +6,12 @@ from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.adapters.openai import convert_openai_messages
 from creator.config.library import config
 from creator.utils import convert_to_values_list, get_user_info, load_system_prompt
-import os
 import json
 
 from creator.llm import create_llm
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "extractor_agent_prompt.md"))
+_SYSTEM_TEMPLATE = load_system_prompt(config.extractor_agent_prompt_path)
 
 
 class SkillExtractorAgent(LLMChain):
@@ -56,8 +55,7 @@ class SkillExtractorAgent(LLMChain):
 
 def create_skill_extractor_agent(llm):
     # current file's parent as dir
-    path = os.path.join(os.path.dirname(__file__), "prompts", "codeskill_function_schema.json")
-    with open(path) as f:
+    with open(config.codeskill_function_schema_path) as f:
         code_skill_json_schema = json.load(f)
     function_schema = {
         "name": "extract_formmated_skill",
@@ -83,5 +81,5 @@ def create_skill_extractor_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 skill_extractor_agent = create_skill_extractor_agent(llm)

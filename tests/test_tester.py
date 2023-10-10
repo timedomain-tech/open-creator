@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 
 from creator.schema.skill import CodeSkill, BaseSkillMetadata
-from creator.utils import print
+import creator
 
 
 def create_skill():
@@ -51,7 +51,9 @@ def create_skill():
 def test_tester_agent():
     skill = create_skill()
     test_summary = skill.test()
+    print(repr(test_summary))
     test_summary.show()
+    creator.save(skill)
 
 
 if __name__ == "__main__":

@@ -17,11 +17,10 @@ from creator.utils import truncate_output, ask_run_code_confirm, load_system_pro
 
 from creator.llm.llm_creator import create_llm
 import creator
-import os
 
 
-_SYSTEM_TEMPLATE = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "creator_agent_prompt.md"))
-OPEN_CREATOR_API_DOC = load_system_prompt(os.path.join(os.path.dirname(__file__), "prompts", "api_doc.md"))
+_SYSTEM_TEMPLATE = load_system_prompt(config.creator_agent_prompt_path)
+OPEN_CREATOR_API_DOC = load_system_prompt(config.api_doc_path)
 
 
 def fix_arguments(function_call):
@@ -79,7 +78,6 @@ class CreatorAgent(LLMChain):
             llm_chain = prompt | llm_with_functions
             message = llm_chain.invoke(inputs)
             langchain_messages.append(message)
-            print(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
                 break
@@ -91,7 +89,6 @@ class CreatorAgent(LLMChain):
                 break
             
             function_call = fix_arguments(function_call)
-            print("function_call after fix", function_call)
             message.additional_kwargs["function_call"] = function_call
             langchain_messages[-1] = message
             arguments = parse_partial_json(function_call.get("arguments", "{}"))
@@ -146,5 +143,5 @@ def create_creator_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
 open_creator_agent = create_creator_agent(llm=llm)
