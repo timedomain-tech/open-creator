@@ -26,17 +26,32 @@ class CustomMessageBox:
         self.active_line = None
         self.arguments = ""
         self.name = ""
-        self.callbacks = {}
-    
+        self.start_callbacks = {}
+        self.update_callbacks = {}
+        self.end_callbacks = {}
+
+    def add_callback(self, type, func):
+        if type == "start":
+            self.start_callbacks[func.__name__] = func
+        elif type == "update":
+            self.update_callbacks[func.__name__] = func
+        elif type == "end":
+            self.end_callbacks[func.__name__] = func
+
+    def remove_callback(self, type, func_name):
+        if type == "start":
+            if func_name in self.start_callbacks:
+                del self.start_callbacks[func_name]
+        elif type == "update":
+            if func_name in self.update_callbacks:
+                del self.update_callbacks[func_name]
+        elif type == "end":
+            if func_name in self.end_callbacks:
+                del self.end_callbacks[func_name]
+        
     def start(self):
-        pass
-
-    def add_callback(self, func):
-        self.callbacks[func.__name__] = func
-
-    def remove_callback(self, func_name):
-        if func_name in self.callbacks:
-            del self.callbacks[func_name]
+        for callback in self.start_callbacks.values():
+            callback()
 
     def end(self) -> None:
         """Ends the live display."""
@@ -48,6 +63,8 @@ class CustomMessageBox:
         self.content=""
         self.code=""
         self.name=""
+        for callback in self.end_callbacks.values():
+            callback()
 
     def refresh_text(self, cursor: bool = True) -> None:
         """Refreshes the content display."""
@@ -64,9 +81,8 @@ class CustomMessageBox:
             content += "█"
         if inside_code_block:
             content += "\n```"
-        logger.debug(f"refresh_text: {len(self.callbacks)} {content}")
-        
-        for callback in self.callbacks.values():
+
+        for callback in self.update_callbacks.values():
             callback(content)
 
     def refresh_code(self, cursor: bool = True) -> None:
@@ -77,7 +93,7 @@ class CustomMessageBox:
             if self.code[-1] == "█":
                 self.code = self.code[:-1]
 
-        for callback in self.callbacks.values():
+        for callback in self.update_callbacks.values():
             callback(f"""```{self.code}```""")
 
     def refresh(self, cursor: bool = True, is_code: bool = True) -> None:
@@ -123,40 +139,17 @@ class CustomMessageBox:
 
 custom_message_box = None
 
-callbacks = {}
-
-def add_callback(func):
+def add_callback(type, func):
     global custom_message_box
-    global callbacks
-    callbacks[func.__name__] = func
+    if custom_message_box is None:
+        init_custom_message_box()
+    custom_message_box.add_callback(type, func)
+
+def remove_callback(type, func_name):
+    global custom_message_box
     if custom_message_box is not None:
-        custom_message_box.add_callback(func)
-
-def update_callback(func):
-    global custom_message_box
-    global callbacks
-    callbacks= {}
-    callbacks[func.__name__] = func
-    custom_message_box.callbacks = callbacks
-
-def remove_callback(func_name):
-    global custom_message_box
-    global callbacks
-    if func_name in callbacks:
-        del callbacks[func_name]
-    custom_message_box.callbacks = callbacks
+        custom_message_box.remove_callback(type, func_name)
 
 def init_custom_message_box():
     global custom_message_box
     custom_message_box = CustomMessageBox()
-    custom_message_box.callbacks = callbacks
-    return custom_message_box
-
-def set_custom_message_box(message_box, callbacks):
-    global custom_message_box
-    custom_message_box = message_box
-    
-
-def get_custom_message_box():
-    global custom_message_box
-    return custom_message_box
