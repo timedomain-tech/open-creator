@@ -1,4 +1,4 @@
-import creator
+from creator.core import creator
 from creator.schema.skill import CodeSkill
 
 
@@ -23,8 +23,8 @@ def save(skill: CodeSkill, huggingface_repo_id: str = None, skill_path: str = No
     >>> save(skill=skill, skill_path="/path/to/save") # save to local
     """
     if huggingface_repo_id is not None:
-        creator.save_to_hub(skill=skill, huggingface_repo_id=huggingface_repo_id)
+        creator.save(skill=skill, huggingface_repo_id=huggingface_repo_id)
     elif skill_path is not None:
-        creator.save_to_skill_path(skill=skill, skill_path=skill_path)
+        creator.save(skill=skill, skill_path=skill_path)
     else:
         creator.save(skill=skill)

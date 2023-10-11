@@ -8,6 +8,8 @@ from rich.box import MINIMAL
 import sys
 
 from langchain.output_parsers.json import parse_partial_json
+from .file_io import logger_file
+from creator.utils import print
 
 
 class MessageBox:
@@ -33,9 +35,10 @@ class MessageBox:
         self.active_line = None
         self.arguments = ""
         self.name = ""
-
-        self.code_live = Live(auto_refresh=False, console=Console(), vertical_overflow="visible")
-        self.text_live = Live(auto_refresh=False, console=Console())
+        # , vertical_overflow="visible")
+        # file=logger_file,
+        self.code_live = Live(auto_refresh=False, console=Console(force_terminal=True, soft_wrap=True), vertical_overflow="visible")
+        self.text_live = Live(auto_refresh=False, console=Console(force_terminal=True, soft_wrap=True))
         self.text_live.start()
         self.code_live.start()
         # self.use_rich = sys.stdout.isatty()
@@ -48,12 +51,13 @@ class MessageBox:
                 self.refresh(cursor=False, is_code=False)
             if self.code and self.language:
                 self.refresh(cursor=False, is_code=True)
-            self.text_live.stop()
-            self.code_live.stop()
-        else:
-            print(self.content)
-            print(self.code)
-            print(self.output)
+            # self.text_live.stop()
+            # self.code_live.stop()
+        
+        # else:
+        # print(self.content, file=logger_file)
+        # print(self.code, file=logger_file)
+        # print(self.output, file=logger_file)
 
     def refresh_text(self, cursor: bool = True) -> None:
         """Refreshes the content display."""
@@ -93,7 +97,6 @@ class MessageBox:
                 self.refresh_text(cursor=cursor)
 
     def update_from_chunk(self, chunk) -> None:
-        # print(chunk)
         """Updates message box from a given chunk."""
         content = "" if chunk.content is None else chunk.content
         function_call = chunk.additional_kwargs.get('function_call', {})

@@ -78,3 +78,19 @@ result = cs.not_allowed_method()
 
 # Run the tests
 unittest.TextTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TestSafePythonInterpreter))
+
+from creator.utils import load_system_prompt
+from creator.config import config
+import os
+
+code_interpreter = SafePythonInterpreter()
+    
+create_skill_code = load_system_prompt(os.path.join(config.build_in_skill_config["create"], "skill_code.py"))
+save_skill_code = load_system_prompt(os.path.join(config.build_in_skill_config["save"], "skill_code.py"))
+search_skill_code = load_system_prompt(os.path.join(config.build_in_skill_config["search"], "skill_code.py"))
+code = "\n\n".join([create_skill_code, save_skill_code, search_skill_code])
+code_interpreter.setup(code)
+
+result = code_interpreter.run("skill = create(request='given a 4 digit sequence and output the solution of Game of 24 and test it on 1 1 2 12')")
+
+print(result)

@@ -1,4 +1,4 @@
-import creator
+from creator.core import creator
 from creator.schema.skill import CodeSkill
 
 

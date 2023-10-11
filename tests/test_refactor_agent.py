@@ -211,12 +211,16 @@ def create_complex_skill():
     }
     skill = CodeSkill(**skill_json)
     skill.skill_metadata = BaseSkillMetadata()
+    skill.conversation_history = []
     return skill
+
 
 def test_refactor_decompose():
     skill = create_complex_skill()
-    decomposed_skill = skill < "I want to decompose this skill into two skills: one for visualizing the data using a bar chart, and one for calculating the average."
-    decomposed_skill.show()
+    decomposed_skills = skill < "I want to decompose this skill into two skills: one for visualizing the data using a bar chart, and one for calculating the average."
+    for decomposed_skill in decomposed_skills:
+        decomposed_skill.show()
+
 
 if __name__ == "__main__":
     test_refactor_decompose()
