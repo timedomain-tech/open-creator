@@ -28,13 +28,7 @@ class RichMessageBox(BaseMessageBox):
     """
 
     def __init__(self):
-        self.language = ""
-        self.content = ""
-        self.code = ""
-        self.output = ""
-        self.active_line = None
-        self.arguments = ""
-        self.name = ""
+        super().__init__()  
         self.code_live = Live(auto_refresh=False, console=Console(), vertical_overflow="visible")
         self.text_live = Live(auto_refresh=False, console=Console())
         
@@ -46,6 +40,7 @@ class RichMessageBox(BaseMessageBox):
 
     def end(self) -> None:
         """Ends the live display."""
+        super().end()
         if self.use_rich:
             if self.content:
                 self.refresh(cursor=False, is_code=False)

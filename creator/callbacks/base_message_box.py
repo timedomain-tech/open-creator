@@ -22,58 +22,19 @@ class BaseMessageBox:
         self.active_line = None
         self.arguments = ""
         self.name = ""
-        self.callbacks = {}
 
     def start(self):
         pass
 
-    def add_callback(self, func):
-        self.callbacks[func.__name__] = func
-
-    def remove_callback(self, func_name):
-        if func_name in self.callbacks:
-            del self.callbacks[func_name]
 
     def end(self) -> None:
-        """Ends the live display."""
-        if self.content:
-            self.refresh(cursor=False, is_code=False)
-        if self.code and self.language:
-            self.refresh(cursor=False, is_code=True)
-        self.arguments=""
-        self.content=""
-        self.code=""
-        self.name=""
+        pass
 
     def refresh_text(self, cursor: bool = True) -> None:
-        """Refreshes the content display."""
-        text = self.content
-        lines = text.split('\n')
-        inside_code_block = False
-        for line in lines:
-            # find the start of the code block
-            if line.startswith("```"):
-                inside_code_block = not inside_code_block
-
-        content = '\n'.join(lines)
-        if cursor:
-            content += "█"
-        if inside_code_block:
-            content += "\n```"
-        
-        for callback in self.callbacks.values():
-            callback(content)
+        pass
 
     def refresh_code(self, cursor: bool = True) -> None:
-        """Refreshes the code display."""
-        if cursor:
-            self.code += "█"
-        else:
-            if self.code[-1] == "█":
-                self.code = self.code[:-1]
-
-        for callback in self.callbacks.values():
-            callback(f"""```{self.code}```""")
+        pass
 
     def refresh(self, cursor: bool = True, is_code: bool = True) -> None:
         """General refresh method."""

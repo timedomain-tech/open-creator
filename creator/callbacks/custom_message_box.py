@@ -1,33 +1,16 @@
 from langchain.output_parsers.json import parse_partial_json
 
 from loguru import logger
+from creator.callbacks.base_message_box import BaseMessageBox
 
 
-class CustomMessageBox:
-    """
-    Represents a MessageBox for displaying code blocks and outputs in different languages.
-    
-    Attributes:
-        language (str): Language of the code.
-        content (str): Content of the message box.
-        code (str): Code content.
-        output (str): Output after code execution.
-        active_line (int): Line which is active or being executed.
-        arguments (str): Arguments passed to the function.
-        name (str): Name of the function.
-        live (Live): Instance for refreshing the display.
-    """
+class CustomMessageBox(BaseMessageBox):
 
     def __init__(self):
-        self.language = ""
-        self.content = ""
-        self.code = ""
-        self.output = ""
-        self.active_line = None
-        self.arguments = ""
-        self.name = ""
+        super().__init__()  
         self.start_callbacks = {}
         self.update_callbacks = {}
+        self.update_code_callbacks = {}
         self.end_callbacks = {}
 
     def add_callback(self, type, func):
@@ -35,6 +18,8 @@ class CustomMessageBox:
             self.start_callbacks[func.__name__] = func
         elif type == "update":
             self.update_callbacks[func.__name__] = func
+        elif type == "update_code":
+            self.update_code_callbacks[func.__name__] = func
         elif type == "end":
             self.end_callbacks[func.__name__] = func
 
@@ -45,16 +30,20 @@ class CustomMessageBox:
         elif type == "update":
             if func_name in self.update_callbacks:
                 del self.update_callbacks[func_name]
+        elif type == "update_code":
+            if func_name in self.update_code_callbacks:
+                del self.update_code_callbacks[func_name]
         elif type == "end":
             if func_name in self.end_callbacks:
                 del self.end_callbacks[func_name]
         
     def start(self):
+        super().start()
         for callback in self.start_callbacks.values():
             callback()
 
     def end(self) -> None:
-        """Ends the live display."""
+        super().end()
         if self.content:
             self.refresh(cursor=False, is_code=False)
         if self.code and self.language:
@@ -67,7 +56,6 @@ class CustomMessageBox:
             callback()
 
     def refresh_text(self, cursor: bool = True) -> None:
-        """Refreshes the content display."""
         text = self.content
         lines = text.split('\n')
         inside_code_block = False
@@ -77,23 +65,24 @@ class CustomMessageBox:
                 inside_code_block = not inside_code_block
 
         content = '\n'.join(lines)
-        if cursor:
-            content += "█"
-        if inside_code_block:
-            content += "\n```"
-
+        # if cursor:
+        #     content += "█"
+        # if inside_code_block:
+        #     content += "\n```"
         for callback in self.update_callbacks.values():
+            # print(f"update_callbacks {callback.__name__} {content}")
             callback(content)
 
     def refresh_code(self, cursor: bool = True) -> None:
         """Refreshes the code display."""
-        if cursor:
-            self.code += "█"
-        else:
-            if self.code[-1] == "█":
-                self.code = self.code[:-1]
+        # if cursor:
+        #     self.code += "█"
+        # else:
+        #     if self.code[-1] == "█":
+        #         self.code = self.code[:-1]
 
-        for callback in self.update_callbacks.values():
+        for callback in self.update_code_callbacks.values():
+            # print(f"update_callbacks {callback.__name__} {self.code}")
             callback(f"""```{self.code}```""")
 
     def refresh(self, cursor: bool = True, is_code: bool = True) -> None:
@@ -104,38 +93,7 @@ class CustomMessageBox:
             self.refresh_text(cursor=cursor)
 
     def update_from_chunk(self, chunk) -> None:
-        """Updates message box from a given chunk."""
-        content = "" if chunk.content is None else chunk.content
-        function_call = chunk.additional_kwargs.get('function_call', {})
-        name = function_call.get("name", "")
-        arguments = function_call.get("arguments", "")
-
-        if not name and not arguments and not content:
-            return
-
-        self.name = self.name + name
-        self.arguments = self.arguments + arguments
-        self.content = self.content + content
-        if content:
-            self.refresh(cursor=True, is_code=False)
-        elif arguments:
-            self.content = self.arguments
-            self.refresh(cursor=True, is_code=False)
-        if len(self.name) > 0:
-            if self.name == "run_code":
-                arguments_dict = parse_partial_json(self.arguments)
-                if arguments_dict is None:
-                    return
-                language = arguments_dict.get("language", "python")
-                code = arguments_dict.get("code", "")
-                if language:
-                    self.language = language
-                    self.code = code
-            else:
-                self.language = "json"
-                self.code = self.arguments
-            self.refresh(cursor=True, is_code=True)
-
+        super().update_from_chunk(chunk)
 
 custom_message_box = None
 
@@ -153,3 +111,9 @@ def remove_callback(type, func_name):
 def init_custom_message_box():
     global custom_message_box
     custom_message_box = CustomMessageBox()
+
+def get_custom_message_box():
+    global custom_message_box
+    if custom_message_box is None:
+        init_custom_message_box()
+    return custom_message_box
