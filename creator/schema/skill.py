@@ -3,10 +3,12 @@ from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 from creator.utils import remove_title
 from creator.config.library import config
-from creator.utils import generate_skill_doc, generate_install_command, print
+from creator.utils import generate_skill_doc, generate_install_command, print, generate_language_suffix
 from creator.agents import code_interpreter_agent, code_tester_agent, code_refactor_agent
+from creator.hub.huggingface import hf_repo_update, hf_push
 import json
 import getpass
+import os
 
 
 class BaseSkillMetadata(BaseModel):
@@ -138,7 +140,7 @@ When writing code, it's imperative to follow industry standards and best practic
     skill_dependencies: Optional[Union[CodeSkillDependency, List[CodeSkillDependency]]] = Field(None, description="List of dependencies the skill requires to run, typically packages but can also be other skill functions")
     skill_usage_example: str = Field(..., description="Example of how to use the skill")
 
-    conversation_history: Optional[List[Dict]] = Field(None, description="Conversation history that the skill was extracted from")
+    conversation_history: Optional[List[Dict]] = Field([], description="Conversation history that the skill was extracted from")
     test_summary: Optional[TestSummary] = Field(None, description="Test cases for the skill")
 
     class Config:
@@ -258,15 +260,15 @@ When writing code, it's imperative to follow industry standards and best practic
         params = json.dumps(inputs) if isinstance(inputs, dict) else inputs
         messages.append({"role": "function", "name": "run_code", "content": json.dumps(tool_result)})
         messages.append({"role": "user", "content": params})
-        previews_tool = code_interpreter_agent.tool
-        code_interpreter_agent.tool = config.code_interpreter
+        previews_tool = code_interpreter_agent.tools[0]
+        code_interpreter_agent.tools[0] = config.code_interpreter
         messages = code_interpreter_agent.run(
             {
                 "messages": messages,
                 "verbose": True,
             }
         )
-        code_interpreter_agent.tool = previews_tool
+        code_interpreter_agent.tools[0] = previews_tool
         return messages
 
     def test(self):
@@ -276,8 +278,8 @@ When writing code, it's imperative to follow industry standards and best practic
             print("> No code provided, cannot test", print_type="markdown")
             return
 
-        previews_tool = code_tester_agent.tool
-        code_tester_agent.tool = config.code_interpreter
+        previews_tool = code_tester_agent.tools[0]
+        code_tester_agent.tools[0] = config.code_interpreter
 
         self.check_and_install_dependencies()
         tool_input = {
@@ -298,7 +300,7 @@ When writing code, it's imperative to follow industry standards and best practic
                 "verbose": True,
             }
         )
-        code_tester_agent.tool = previews_tool
+        code_tester_agent.tools[0] = previews_tool
         if "test_summary" in test_result:
             self.test_summary = TestSummary(**{"test_cases": test_result["test_summary"]})
 
@@ -306,6 +308,9 @@ When writing code, it's imperative to follow industry standards and best practic
         return self.test_summary
 
     def refactor(self):
+        if self.conversation_history is None:
+            self.conversation_history = []
+        
         if not self.Config.refactorable:
             print("> This skill is not refactorable since it is not combined with other skills or add any user request", print_type="markdown")
             return
@@ -328,7 +333,9 @@ When writing code, it's imperative to follow industry standards and best practic
         )
         refactored_skills = []
         for refactored_skill_json in refactored_skill_jsons:
-            refactored_skill = self.__class__(**refactored_skill_json)
+            refactored_skill = CodeSkill(**refactored_skill_json)
+            refactored_skill.Config.refactorable = False
+            refactored_skill.Config.skills_to_combine = []
             refactored_skill.skill_metadata = BaseSkillMetadata()
             refactored_skills.append(refactored_skill)
         if len(refactored_skills) == 1:
@@ -373,3 +380,66 @@ When writing code, it's imperative to follow industry standards and best practic
 
     def show(self):
         print(self.__repr__(), print_type="markdown")
+
+    def save(self, skill_path=None, huggingface_repo_id=None):
+        if skill_path is None:
+            skill_path = os.path.join(config.local_skill_library_path, self.skill_name)
+
+        if skill_path is not None and not os.path.exists(skill_path):
+            os.makedirs(skill_path, exist_ok=True)
+
+        if huggingface_repo_id:
+            local_dir = os.path.join(config.remote_skill_library_path, huggingface_repo_id)
+            hf_repo_update(huggingface_repo_id, local_dir)
+            remote_skill_path = os.path.join(local_dir, self.skill_name)
+            skill_path = os.path.join(config.local_skill_library_path, self.skill_name)
+
+        if skill_path:
+            os.makedirs(os.path.dirname(skill_path), exist_ok=True)
+            # save json file
+            with open(os.path.join(skill_path, "skill.json"), "w") as f:
+                json.dump(self.model_dump(), f, ensure_ascii=False, indent=4)
+
+            # save function call
+            with open(os.path.join(skill_path, "function_call.json"), "w") as f:
+                json.dump(self.to_function_call(), f, ensure_ascii=False, indent=4)
+
+            # save dependencies
+            command_str = ""
+            if self.skill_dependencies:
+                command_str = generate_install_command(self.skill_program_language, self.skill_dependencies)
+                with open(os.path.join(skill_path, "install_dependencies.sh"), "w") as f:
+                    f.write(command_str)
+
+            # save code
+            if self.skill_program_language:
+                language_suffix = generate_language_suffix(self.skill_program_language)
+                with open(os.path.join(skill_path, "skill_code" + language_suffix), "w") as f:
+                    f.write(self.skill_code)
+
+            # save conversation history
+            if self.conversation_history:
+                with open(os.path.join(skill_path, "conversation_history.json"), "w") as f:
+                    f.write(json.dumps(self.conversation_history, ensure_ascii=False, indent=4))
+
+            # skill description
+            doc = generate_skill_doc(self)
+            with open(os.path.join(skill_path, "skill_doc.md"), "w") as f:
+                f.write(doc)
+
+            # embedding_text
+            embedding_text = "{skill.skill_name}\n{skill.skill_description}\n{skill.skill_usage_example}\n{skill.skill_tags}".format(skill=self)
+            with open(os.path.join(skill_path, "embedding_text.txt"), "w") as f:
+                f.write(embedding_text)
+
+            # save test code
+            if self.test_summary:
+                with open(os.path.join(skill_path, "test_summary.json"), "w") as f:
+                    json.dump(self.test_summary.model_dump(), f, ensure_ascii=False, indent=4)
+
+            if huggingface_repo_id:
+                # cp to local path
+                os.system(command=f"cp -r {skill_path} {remote_skill_path}")
+                hf_push(remote_skill_path)
+
+        print(f"> saved to {skill_path}", print_type="markdown")

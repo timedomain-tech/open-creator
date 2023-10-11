@@ -5,11 +5,11 @@ from .title_remover import remove_title
 from .output_truncate import truncate_output
 from .score_function import cosine_similarity
 from .ask_human import ask_run_code_confirm
-from .multiline_input import multiline_prompt
 from .dict2list import convert_to_values_list
 from .user_info import get_user_info
 from .load_prompt import load_system_prompt
 from .printer import print
+from .code_split import split_code_blocks
 
 
 __all__ = [
@@ -20,9 +20,9 @@ __all__ = [
     "truncate_output",
     "cosine_similarity",
     "ask_run_code_confirm",
-    "multiline_prompt",
     "convert_to_values_list",
     "get_user_info",
     "load_system_prompt",
-    "print"
+    "print",
+    "split_code_blocks"
 ]

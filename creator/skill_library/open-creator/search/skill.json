@@ -16,7 +16,7 @@
     ],
     "skill_usage_example": "skills = search('I want to extract some pages from a pdf')",
     "skill_program_language": "python",
-    "skill_code": "import creator\nfrom creator.schema.skill import CodeSkill\n\ndef search(query: str, top_k=1, threshold=0.8) -> list[CodeSkill]:\n    '''\n    Search skills by query.\n    \n    Parameters:\n    query: str, the query.\n    top_k: int, optional, the maximum number of skills to return.\n    threshold: float, optional, the minimum similarity score to return a skill.\n    Returns:\n    a list of CodeSkill objects.\n\n    Example:\n    >>> import creator\n    >>> skills = search('I want to extract some pages from a pdf')\n    '''\n\n    return creator.search(query=query, top_k=top_k, threshold=threshold)",
+    "skill_code": "from creator.core import creator\nfrom creator.schema.skill import CodeSkill\n\ndef search(query: str, top_k=1, threshold=0.8) -> list[CodeSkill]:\n    '''\n    Search skills by query.\n    \n    Parameters:\n    query: str, the query.\n    top_k: int, optional, the maximum number of skills to return.\n    threshold: float, optional, the minimum similarity score to return a skill.\n    Returns:\n    a list of CodeSkill objects.\n\n    Example:\n    >>> import creator\n    >>> skills = search('I want to extract some pages from a pdf')\n    '''\n\n    return creator.search(query=query, top_k=top_k, threshold=threshold)",
     "skill_parameters": [
         {
             "param_name": "query",

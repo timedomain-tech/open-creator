@@ -1,6 +1,7 @@
 import argparse
 from creator.utils.printer import print as rich_print
 from creator.config.open_config import open_user_config
+from creator.core import creator
 from rich.rule import Rule
 import json
 
@@ -149,7 +150,7 @@ arguments = [
 ]
 
 
-def cmd_client(creator):
+def cmd_client():
     parser = argparse.ArgumentParser(description='Open Creator CLI')
     subparsers = parser.add_subparsers(dest='command')
     subcommand_help_texts = []
@@ -179,6 +180,11 @@ def cmd_client(creator):
 
     if args.config:
         open_user_config()
+    
+    # if not args.command or args.interactive:
+
+    #     repl_client(creator=creator)
+    #     return
 
     if args.command == "create":
         skill = creator.create(

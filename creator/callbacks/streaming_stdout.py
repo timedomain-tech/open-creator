@@ -14,22 +14,7 @@ custom_messagebox = cmb_module.get_custom_message_box()
 message_boxes = [rich_messagebox, custom_messagebox]
 
 class FunctionCallStreamingStdOut(StreamingStdOutCallbackHandler):
-
-    def on_llm_start(
-        self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
-    ) -> None:
-        """Run when LLM starts running."""
-        logger.debug(f"on_llm_start: {serialized}\n{prompts}\nkwargs: {kwargs}")
-
-    def on_llm_end(self, response: LLMResult, **kwargs: Any) -> None:
-        """Run when LLM ends running."""
-        logger.debug(f"on_llm_end: kwargs: {kwargs}")
-        
-
-    def on_llm_error(self, error: BaseException, **kwargs: Any) -> None:
-        """Run when LLM errors."""
-        logger.debug(f"on_llm_error: error: {error}\nkwargs: {kwargs}")
-
+    message_box = None
 
     def on_chain_start(
         self, serialized: Dict[str, Any] = {}, inputs: Dict[str, Any] = {}, **kwargs: Any

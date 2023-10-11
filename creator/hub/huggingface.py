@@ -1,5 +1,4 @@
 import json
-from creator.schema.skill import CodeSkill
 from creator.config.library import config
 from huggingface_hub import hf_hub_download, duplicate_space, Repository
 import os
@@ -7,7 +6,7 @@ from loguru import logger
 import subprocess
 
 
-def hf_pull(repo_id, huggingface_skill_path, save_path) -> CodeSkill:
+def hf_pull(repo_id, huggingface_skill_path, save_path) -> dict:
     return_path = hf_hub_download(repo_id=repo_id, subfolder=huggingface_skill_path, filename="skill.json", repo_type="space")
     with open(return_path) as f:
         skill_json = json.load(f)
@@ -16,7 +15,7 @@ def hf_pull(repo_id, huggingface_skill_path, save_path) -> CodeSkill:
         os.makedirs(save_path)
     os.system(command=f"cp {return_path} {save_path}")
     logger.success(f"Successfully pulled skill {huggingface_skill_path} from repo {repo_id} to {save_path}.")
-    return CodeSkill(**skill_json)
+    return skill_json
 
 
 def hf_repo_update(repo_id, local_dir):
