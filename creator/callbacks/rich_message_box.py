@@ -29,8 +29,8 @@ class RichMessageBox(BaseMessageBox):
 
     def __init__(self):
         super().__init__()  
-        self.code_live = Live(auto_refresh=False, console=Console(), vertical_overflow="visible")
-        self.text_live = Live(auto_refresh=False, console=Console())
+        self.code_live = Live(auto_refresh=False, console=Console(force_terminal=True), vertical_overflow="visible")
+        self.text_live = Live(auto_refresh=False, console=Console(force_terminal=True))
         
     def start(self):
         self.text_live.start()

@@ -36,16 +36,13 @@ class SafePythonInterpreter(BaseTool):
     def is_allowed_function(self, node):
         # Check if the node represents a call to an allowed function
         return (
-            isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Name)
-            and node.func.id in self.ALLOWED_FUNCTIONS
+            isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in self.ALLOWED_FUNCTIONS
         )
 
     def is_allowed_method(self, node):
         # Check if the node represents a call to an allowed method of an allowed class
         return (
-            isinstance(node, ast.Call)
-            and any( allowed_method in ast.unparse(node.func) for allowed_method in self.ALLOW_METHODS)
+            isinstance(node, ast.Call) and any(allowed_method in ast.unparse(node.func) for allowed_method in self.ALLOW_METHODS)
         )
 
     def preprocess(self, query: str):
@@ -88,7 +85,7 @@ class SafePythonInterpreter(BaseTool):
             output_io.seek(0)
             output_io.truncate(0)
         return output
-    
+
     def execute_code_blocks(self, blocks):
         output_io = io.StringIO()
         sys.stdout = output_io
@@ -101,7 +98,7 @@ class SafePythonInterpreter(BaseTool):
             output_io.seek(0)
             output_io.truncate(0)
         return output
-    
+
     def run_code(self, query: str) -> dict:
         output = ""
         code_blocks = split_code_blocks(query)
@@ -112,7 +109,7 @@ class SafePythonInterpreter(BaseTool):
                 output += self.execute_code_blocks(code_blocks)
             if last_line:
                 output += self.execute_last_line(last_line)
-            
+
             self.namespace.pop("_stdout_info", None)
             if output:
                 self.namespace['_stdout_info'] = output

@@ -3,7 +3,6 @@ from creator.utils import truncate_output, is_valid_code
 from .constants import help_commands, prompt_prefix
 from prompt_toolkit.document import Document
 import json
-from loguru import logger
 
 
 class RequestHandler:
@@ -28,13 +27,13 @@ class RequestHandler:
 
         if request.startswith("%"):
             self.meta_prompt_handler(request, output_field)
-        elif is_valid_code(request):
+        elif is_valid_code(request, open_creator_agent.tools[0].namespace):
             self.expression_handler(request, output_field)
             self.update_history(request, output_field.text)
         else:
-            output = "<stderr>NOT IMPLEMENTED YET</stderr>"
-            self.show_output(request, output_field, output)
-            # return self.agent_handler(request, output_field)
+            # output = "<stderr>NOT IMPLEMENTED YET</stderr>"
+            # self.show_output(request, output_field, output)
+            self.agent_handler(request, output_field)
             self.update_history(request, output_field.text)
 
     def meta_prompt_handler(self, request, output_field):
@@ -143,6 +142,10 @@ class RequestHandler:
             }
         )
         self.messages = messages
+        for delta, output in open_creator_agent.iter(messages):
+            pre = output_field.text
+            output_field.text = pre + delta
+            self.show_output(request, output_field, output, add_prompt_prefix=False, add_request=False, add_newline=False)
 
     def show_output(self, request, output_field, output, add_prompt_prefix=True, add_request=True, add_newline=True):
         new_text = output_field.text

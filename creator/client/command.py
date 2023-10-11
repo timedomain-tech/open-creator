@@ -1,9 +1,11 @@
 import argparse
+from rich.rule import Rule
+import json
+
 from creator.utils.printer import print as rich_print
 from creator.config.open_config import open_user_config
 from creator.core import creator
-from rich.rule import Rule
-import json
+from .repl import repl_app
 
 
 arguments = [
@@ -136,7 +138,7 @@ arguments = [
     {
         "name": "quiet",
         "nickname": "q",
-        "help_text": "Quiet mode to enter interactive mode and not rich_print LOGO and help", 
+        "help_text": "Quiet mode to enter interactive mode and not rich_print LOGO and help",
         "command": False,
         "type": bool,
     },
@@ -196,16 +198,14 @@ def cmd_client():
     try:
         args = parser.parse_args()
     except Exception:
-        print(custom_help_text)
+        rich_print(custom_help_text, print_type="markdown")
         return
 
     if args.config:
         open_user_config()
     
-    # if not args.command or args.interactive:
-
-    #     repl_client(creator=creator)
-    #     return
+    if not args.command or args.interactive:
+        repl_app.run(args.quiet)
 
     if args.command == "create":
         skill = creator.create(
@@ -237,6 +237,7 @@ def cmd_client():
             threshold=args.threshold,
             remote=args.remote,
         )
+        rich_print("Searched {} skills:".format(len(skills)))
         rich_print(Rule(style="white"))
         for skill in skills:
             skill.show()

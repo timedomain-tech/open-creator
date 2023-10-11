@@ -4,9 +4,9 @@ from prompt_toolkit.lexers import Lexer
 
 
 TAG_PATTERNS = [
-    (re.compile(r'<stderr>(.*?)<\/stderr>'), 'class:stderr'),
-    (re.compile(r'<prompt>(.*?)<\/prompt>'), 'class:prompt'),
-    (re.compile(r'<system>(.*?)<\/system>'), 'class:system'),
+    (re.compile(r'<stderr>(.*?)<\/stderr>', re.DOTALL), 'class:stderr'),
+    (re.compile(r'<prompt>(.*?)<\/prompt>', re.DOTALL), 'class:prompt'),
+    (re.compile(r'<system>(.*?)<\/system>', re.DOTALL), 'class:system'),
 ]
 
 

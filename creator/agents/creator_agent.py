@@ -1,5 +1,6 @@
 
 import json
+from typing import Any, Dict
 
 from langchain.output_parsers.json import parse_partial_json
 
@@ -12,6 +13,9 @@ from creator.core import creator
 from .base import BaseAgent
 
 
+OPEN_CREATOR_API_DOC = load_system_prompt(config.api_doc_path)
+
+
 class CreatorAgent(BaseAgent):
     total_tries: int = 5
     allow_user_confirm: bool = config.run_human_confirm
@@ -20,6 +24,10 @@ class CreatorAgent(BaseAgent):
     def _chain_type(self):
         return "CreatorAgent"
 
+    def prep_inputs(self, inputs: Dict[str, Any] | Any) -> Dict[str, str]:
+        inputs["OPEN_CREATOR_API_DOC"] = OPEN_CREATOR_API_DOC
+        return inputs
+
     def postprocess_mesasge(self, message):
         function_call = message.additional_kwargs.get("function_call", None)
         if function_call is not None:
@@ -27,18 +35,24 @@ class CreatorAgent(BaseAgent):
             if arguments is None and function_call.get("arguments", None) is not None:
                 function_call = {
                     "name": "python",
-                    "arguments": json.dumps({
-                        "code": function_call.get("arguments")
-                    }, ensure_ascii=False)
+                    "arguments": json.dumps({"code": function_call.get("arguments")}, ensure_ascii=False)
                 }
                 message.additional_kwargs["function_call"] = function_call
         return message
 
+    def run_tool(self, function_call: Dict[str, Any]):
+        function_name = function_call.get("name", "")
+        arguments = parse_partial_json(function_call.get("arguments", "{}"))
+        code = arguments.get("code", "")
+        if code:
+            tool_result = self.tools[0].run(code)
+            tool_result = self.tool_result_to_str(tool_result)
+            self.update_tool_result_in_callbacks(tool_result)
+        return function_name, tool_result
+
 
 def create_creator_agent(llm):
     template = load_system_prompt(config.creator_agent_prompt_path)
-    api_doc = load_system_prompt(config.api_doc_path)
-    template = template.format(OPEN_CREATOR_API_DOC=api_doc)
 
     code_interpreter = SafePythonInterpreter()
 

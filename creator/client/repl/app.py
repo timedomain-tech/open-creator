@@ -25,8 +25,9 @@ class OpenCreatorREPL:
     def __init__(self, accept_callback=None):
         self.accept_callback = accept_callback
 
-    def run(self):
-        self.output_field = TextArea(text=help_text, height=Dimension(min=0, weight=1), focusable=True, read_only=True, focus_on_click=True, lexer=CustomLexer(), scrollbar=True)
+    def run(self, quiet=False):
+        output_text = "" if quiet else help_text
+        self.output_field = TextArea(text=output_text, height=Dimension(min=0, weight=1), focusable=True, read_only=True, focus_on_click=True, lexer=CustomLexer(), scrollbar=True)
         self.input_field = TextArea(
             height=Dimension(min=1, weight=100),
             prompt=prompt_message,
@@ -51,9 +52,11 @@ class OpenCreatorREPL:
         def _(event):
             " Pressing Ctrl-Q will exit the user interface. "
             event.app.exit()
-            for line in self.output_field.text.split("\n"):
-                tokens = parse_line(line)
-                print_formatted_text(FormattedText(tokens), style=style)
+            tokens = parse_line(self.output_field.text)
+            print_formatted_text(FormattedText(tokens), style=style)
+            # for line in self.output_field.text.split("\n"):
+            #     tokens = parse_line(line)
+            #     print_formatted_text(FormattedText(tokens), style=style)
             print_formatted_text(prompt_message, style=style)
 
         # emacs control + j new line keybindings
@@ -73,10 +76,6 @@ class OpenCreatorREPL:
             buffer = event.app.current_buffer
             self.input_field.accept_handler(buffer)
             event.app.current_buffer.reset()
-
-        # @kb.add(Keys.Up)
-        # def _(event):
-        #     event.current_buffer.auto_up(count=event.arg)
 
         container = HSplit(
             [
@@ -107,8 +106,8 @@ class OpenCreatorREPL:
                 show_stderr = False
             except Exception as e:
                 output = f"<stderr>{e}</stderr>"
-        
-        self.input_field.buffer.history.store_string(self.input_field.text)
+        if self.input_field.text.strip() != "":
+            self.input_field.buffer.history.store_string(self.input_field.text)
         if show_stderr:
             self.accept_callback.show_output(self.input_field.text, self.output_field, output)
         self.output_field.buffer.read_only = to_filter(True)
