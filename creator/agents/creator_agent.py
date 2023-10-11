@@ -14,7 +14,7 @@ from .base import BaseAgent
 
 class CreatorAgent(BaseAgent):
     total_tries: int = 5
-    allow_user_confirm: bool = config.allow_user_confirm
+    allow_user_confirm: bool = config.run_human_confirm
 
     @property
     def _chain_type(self):

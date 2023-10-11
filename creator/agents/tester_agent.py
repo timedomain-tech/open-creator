@@ -17,6 +17,7 @@ DEBUGGING_TIPS = load_system_prompt(config.tips_for_testing_prompt_path)
 class CodeTesterAgent(BaseAgent):
     total_tries: int = 10
     output_key: str = "output"
+    allow_user_confirm: bool = config.run_human_confirm
 
     @property
     def _chain_type(self):

@@ -1,5 +1,5 @@
 from creator.agents.creator_agent import open_creator_agent
-from creator.utils import truncate_output
+from creator.utils import truncate_output, is_valid_code
 from .constants import help_commands, prompt_prefix
 from prompt_toolkit.document import Document
 import json
@@ -28,7 +28,7 @@ class RequestHandler:
 
         if request.startswith("%"):
             self.meta_prompt_handler(request, output_field)
-        elif open_creator_agent.tool.is_expression(request):
+        elif is_valid_code(request):
             self.expression_handler(request, output_field)
             self.update_history(request, output_field.text)
         else:
@@ -65,6 +65,7 @@ class RequestHandler:
         if request.startswith("%undo"):
             if len(self.history) == 0 or len(self.message_states) == 0:
                 output = "<stderr>Nothing to undo!</stderr>"
+                output_field.text = ""
                 self.show_output(request, output_field, output)
                 return
 
@@ -99,13 +100,13 @@ class RequestHandler:
             str: The result of the executed expression or error message to be displayed in the output_field.
         """
 
-        tool_result = open_creator_agent.tool.run_with_return(request)
-        tool_result = truncate_output(tool_result)
+        tool_result = open_creator_agent.tools[0].run_with_return(request)
+        truncate_tool_result = truncate_output(tool_result)
         outputs = [tool_result["stdout"], tool_result["stderr"]]
         output = "\n".join([o for o in outputs if o != ""])
 
         self.messages.append({"role":"user", "content": request})
-        self.messages.append({"role":"function", "name": "user_executed_code_output","content": json.dumps(tool_result)})
+        self.messages.append({"role":"function", "name": "user_executed_code_output","content": json.dumps(truncate_tool_result)})
 
         self.show_output(request, output_field, output)
 

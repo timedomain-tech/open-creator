@@ -17,6 +17,7 @@ DEBUGGING_TIPS = load_system_prompt(config.tips_for_debugging_prompt_path)
 
 class CodeInterpreterAgent(BaseAgent):
     total_tries: int = 10
+    allow_user_confirm: bool = config.run_human_confirm
 
     @property
     def _chain_type(self):

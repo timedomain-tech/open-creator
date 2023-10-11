@@ -146,6 +146,27 @@ arguments = [
         "command": False,
         "help_text": "open config.yaml file in text editor",
         "type": bool,
+    },
+    {
+        "name": "server",
+        "nickname": "server",
+        "help_text": "Server mode",
+        "type": str,
+        "command": True,
+        "sub_arguments": [
+            {
+                "name": "ip",
+                "nickname": "ip",
+                "help_text": "IP address",
+                "type": str,
+            },
+            {
+                "name": "port",
+                "nickname": "p",
+                "help_text": "Port number",
+                "type": int,
+            }
+        ]
     }
 ]
 

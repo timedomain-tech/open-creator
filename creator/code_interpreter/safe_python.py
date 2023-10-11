@@ -1,7 +1,7 @@
 from langchain.tools import BaseTool, format_tool_to_openai_function
 from langchain.callbacks.manager import CallbackManagerForToolRun
 from pydantic import BaseModel, Field
-from creator.utils import remove_title, split_code_blocks
+from creator.utils import remove_title, split_code_blocks, is_expression
 from typing import Type, Optional
 import threading
 import traceback
@@ -71,19 +71,12 @@ class SafePythonInterpreter(BaseTool):
             # Save exception info in the namespace to retrieve it later in the main thread.
             self.namespace['_preprocess_info'] = (type(e), e, e.__traceback__)
             return ""
-        
-    def is_expression(self, code: str) -> bool:
-        try:
-            compile(code, "", "eval")
-            return True
-        except SyntaxError:
-            return False
 
     def execute_last_line(self, last_line):
         output_io = io.StringIO()
         sys.stdout = output_io  # Redirect stdout to capture print statements
         output = ""
-        if self.is_expression(last_line):
+        if is_expression(last_line):
             eval_output = eval(last_line, self.namespace)
             if eval_output is not None:
                 output += str(eval_output)

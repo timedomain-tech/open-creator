@@ -10,6 +10,7 @@ from .user_info import get_user_info
 from .load_prompt import load_system_prompt
 from .printer import print
 from .code_split import split_code_blocks
+from .valid_code import is_valid_code, is_expression
 
 
 __all__ = [
@@ -24,5 +25,7 @@ __all__ = [
     "get_user_info",
     "load_system_prompt",
     "print",
-    "split_code_blocks"
+    "split_code_blocks",
+    "is_valid_code",
+    "is_expression"
 ]
