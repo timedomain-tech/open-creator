@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from creator.callbacks.display import RichMessageBox
+from creator.callbacks.rich_message_box import RichMessageBox
 import traceback
 from creator.callbacks import custom_message_box as cmb_module
 from typing import Any, Dict, List
@@ -11,7 +11,7 @@ from langchain.schema import AgentAction, AgentFinish, LLMResult
 
 rich_messagebox = RichMessageBox()
 custom_messagebox = cmb_module.get_custom_message_box()
-message_boxes = [custom_messagebox]#rich_messagebox, 
+message_boxes = [rich_messagebox, custom_messagebox]
 
 class FunctionCallStreamingStdOut(StreamingStdOutCallbackHandler):
 

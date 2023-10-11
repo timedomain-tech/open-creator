@@ -45,7 +45,7 @@ def message_update(message):
 
         # new_content = message[prev_message_length:]
         # file.write(new_content)
-        logger.debug(f"message_update: {message}")
+        # logger.debug(f"message_update: {message}")
         # prev_message_length = len(message)
 
 def code_message_update(message):
