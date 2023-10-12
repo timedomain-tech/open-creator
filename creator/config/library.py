@@ -41,6 +41,9 @@ for path in [_skill_extract_agent_cache_path, _local_skill_library_path, _local_
     if not os.path.exists(path):
         os.makedirs(path)
 
+if not os.path.exists(_logger_cache_path):
+    open(os.path.join(_logger_cache_path, "output.log"), 'a').close()
+
 # Ensure the history file exists
 if not os.path.exists(_prompt_cache_history_path):
     open(os.path.join(_prompt_cache_history_path, "history.txt"), 'a').close()

@@ -1,6 +1,9 @@
 import sys
-sys.path.append("..")
-from creator.schema.skill import CodeSkill, TestSummary
+import os
+script_path = os.path.abspath(__file__)
+sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
+
+from creator.core.skill import CodeSkill, TestSummary
 import json
 
 

@@ -14,11 +14,14 @@ from .base import BaseAgent
 
 
 OPEN_CREATOR_API_DOC = load_system_prompt(config.api_doc_path)
+ALLOWED_FUNCTIONS = {"create", "save", "search", "CodeSkill"}
+ALLOW_METHODS = {".show", ".test", ".run", "__add__", "__gt__", "__lt__", "__annotations__"}
 
 
 class CreatorAgent(BaseAgent):
     total_tries: int = 5
     allow_user_confirm: bool = config.run_human_confirm
+    namespace: dict = {}
 
     @property
     def _chain_type(self):
@@ -26,6 +29,7 @@ class CreatorAgent(BaseAgent):
 
     def prep_inputs(self, inputs: Dict[str, Any] | Any) -> Dict[str, str]:
         inputs["OPEN_CREATOR_API_DOC"] = OPEN_CREATOR_API_DOC
+        inputs["NAMESPACE"] = self.namespace
         return inputs
 
     def postprocess_mesasge(self, message):
@@ -40,31 +44,22 @@ class CreatorAgent(BaseAgent):
                 message.additional_kwargs["function_call"] = function_call
         return message
 
-    def run_tool(self, function_call: Dict[str, Any]):
-        function_name = function_call.get("name", "")
-        arguments = parse_partial_json(function_call.get("arguments", "{}"))
-        code = arguments.get("code", "")
-        if code:
-            tool_result = self.tools[0].run(code)
-            tool_result = self.tool_result_to_str(tool_result)
-            self.update_tool_result_in_callbacks(tool_result)
-        return function_name, tool_result
-
 
 def create_creator_agent(llm):
     template = load_system_prompt(config.creator_agent_prompt_path)
 
-    code_interpreter = SafePythonInterpreter()
+    code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS)
 
     create_skill_obj = creator.create(skill_path=creator.config.build_in_skill_config["create"])
     save_skill_obj = creator.create(skill_path=creator.config.build_in_skill_config["save"])
     search_skill_obj = creator.create(skill_path=creator.config.build_in_skill_config["search"])
     code = "\n\n".join([create_skill_obj.skill_code, save_skill_obj.skill_code, search_skill_obj.skill_code])
     code_interpreter.setup(code)
-
+    namespace = {name:str(value) for name, value in code_interpreter.namespace.items() if name in ALLOWED_FUNCTIONS}
     chain = CreatorAgent(
         llm=llm,
         system_template=template,
+        namespace=namespace,
         tools=[code_interpreter],
         function_schemas=[code_interpreter.to_function_schema()],
         verbose=False,

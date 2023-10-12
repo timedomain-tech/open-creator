@@ -1,3 +1,5 @@
+import sys
+
 from rich.console import Console, Group
 from rich.live import Live
 from rich.panel import Panel
@@ -5,17 +7,15 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.markdown import Markdown
 from rich.box import MINIMAL
-import sys
-
-from creator.callbacks.base_message_box import BaseMessageBox
 
 from langchain.output_parsers.json import parse_partial_json
+from .base import OutputManager
 
 
-class RichMessageBox(BaseMessageBox):
+class RichOutputManager(OutputManager):
     """
     Represents a MessageBox for displaying code blocks and outputs in different languages.
-    
+
     Attributes:
         language (str): Language of the code.
         content (str): Content of the message box.
@@ -28,30 +28,56 @@ class RichMessageBox(BaseMessageBox):
     """
 
     def __init__(self):
-        super().__init__()  
-        self.code_live = Live(auto_refresh=False, console=Console(force_terminal=True), vertical_overflow="visible")
-        self.text_live = Live(auto_refresh=False, console=Console(force_terminal=True))
-        
-    def start(self):
+        self.setup()
+
+    def setup(self):
+        self.language = ""
+        self.content = ""
+        self.code = ""
+        self.tool_result = ""
+        self.active_line = None
+        self.arguments = ""
+        self.name = ""
+
+        self.use_rich = sys.stdout.isatty()
+
+        self.code_live = Live(auto_refresh=False, console=Console(force_terminal=self.use_rich), vertical_overflow="visible")
+        self.text_live = Live(auto_refresh=False, console=Console(force_terminal=self.use_rich))
+
+    def add(self, agent_name):
+        if not self.use_rich:
+            return
+        self.setup()
         self.text_live.start()
         self.code_live.start()
-        # self.use_rich = sys.stdout.isatty()
-        self.use_rich = True
 
-    def end(self) -> None:
+    def finish(self, message=None, err=None) -> None:
         """Ends the live display."""
-        super().end()
-        if self.use_rich:
-            if self.content:
-                self.refresh(cursor=False, is_code=False)
-            if self.code and self.language:
-                self.refresh(cursor=False, is_code=True)
-            self.text_live.stop()
-            self.code_live.stop()
-        else:
-            print(self.content)
-            print(self.code)
-            print(self.output)
+        if not self.use_rich:
+            return
+        if message is not None:
+            self.content = message.content
+            function_call = message.additional_kwargs.get('function_call', {})
+            self.name = function_call.get("name", "")
+            arguments = function_call.get("arguments", "")
+            if self.name in ("run_code", "python"):
+                arguments_dict = parse_partial_json(arguments)
+                language = arguments_dict.get("language", "python")
+                code = arguments_dict.get("code", "")
+                if language:
+                    self.language = language
+                    self.code = code
+            else:
+                self.language = "json"
+                self.code = arguments
+        if err is not None:
+            self.content = str(err)
+        if self.content:
+            self.refresh(cursor=False, is_code=False)
+        if self.code and self.language:
+            self.refresh(cursor=False, is_code=True)
+        self.text_live.stop()
+        self.code_live.stop()
 
     def refresh_text(self, cursor: bool = True) -> None:
         """Refreshes the content display."""
@@ -84,15 +110,23 @@ class RichMessageBox(BaseMessageBox):
 
     def refresh(self, cursor: bool = True, is_code: bool = True) -> None:
         """General refresh method."""
-        if self.use_rich:
-            if is_code:
-                self.refresh_code(cursor=cursor)
-            else:
-                self.refresh_text(cursor=cursor)
+        if not self.use_rich:
+            return
+        if is_code:
+            self.refresh_code(cursor=cursor)
+        else:
+            self.refresh_text(cursor=cursor)
 
-    def update_from_chunk(self, chunk) -> None:
-        # print(chunk)
+    def update_tool_result(self, chunk):
+        if not self.use_rich:
+            return
+        self.tool_result = chunk.content
+
+    def update(self, chunk) -> None:
         """Updates message box from a given chunk."""
+        if not self.use_rich:
+            return
+
         content = "" if chunk.content is None else chunk.content
         function_call = chunk.additional_kwargs.get('function_call', {})
         name = function_call.get("name", "")
@@ -131,7 +165,7 @@ class RichMessageBox(BaseMessageBox):
         if cursor:
             self.code += "█"
         else:
-            if self.code[-1] == "█":
+            if len(self.code) > 0 and self.code[-1] == "█":
                 self.code = self.code[:-1]
 
         code_lines = self.code.strip().split('\n')
@@ -153,6 +187,9 @@ class RichMessageBox(BaseMessageBox):
 
     def _create_output_panel(self) -> Panel:
         """Creates a panel for displaying the output."""
-        if not self.output or self.output == "None":
+        if not self.tool_result or self.tool_result == "None":
             return Panel("", box=MINIMAL, style="#FFFFFF on #3b3b37")
-        return Panel(self.output, box=MINIMAL, style="#FFFFFF on #3b3b37")
+        return Panel(self.tool_result, box=MINIMAL, style="#FFFFFF on #3b3b37")
+
+
+rich_output_manager = RichOutputManager()

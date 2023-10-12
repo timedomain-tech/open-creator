@@ -1,9 +1,10 @@
 import sys
-sys.path.append("../")
+import os
+script_path = os.path.abspath(__file__)
+sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 import creator
 from creator.agents.creator_agent import open_creator_agent
-import os
 
 
 def test_config_path():
@@ -16,6 +17,7 @@ def test_run_create_skill():
     create_codeskill_obj = creator.create(skill_path=creator.config.build_in_skill_config["create"])
     messages = create_codeskill_obj.run("create a skill that request is 'open the chrome and go to www.google.com in my mac'")
     print(messages)
+
 
 def test_run_creator_agent():
     messages = [
@@ -74,5 +76,11 @@ def test_run_creator_agent4():
     })
 
 
+def test_run_creator_agent5():
+    messages = {"messages": [{"role": "user", "content": "Could you Please help me create one skill can open Google Chrome and search for 'openai' and 'chatgpt'"}], "verbose": True}
+    res = open_creator_agent.run(messages)
+    print(res)
+
+
 if __name__ == "__main__":
-    test_run_creator_agent2()
+    test_run_creator_agent5()

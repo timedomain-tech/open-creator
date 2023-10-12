@@ -1,5 +1,5 @@
 import creator
-from creator.schema.skill import CodeSkill
+from creator.core.skill import CodeSkill
 
 def search(query: str, top_k=1, threshold=0.8) -> list[CodeSkill]:
     '''

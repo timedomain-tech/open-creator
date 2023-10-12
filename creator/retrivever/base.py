@@ -1,10 +1,12 @@
 import numpy as np
-from creator.llm import create_embedding
 from typing import List
-from creator.config.library import config
-from creator.utils import cosine_similarity
-import os
 import json
+import os
+
+from creator.llm import create_embedding
+from creator.config.library import config
+
+from .score_functions import cosine_similarity
 
 
 class BaseVectorStore:

@@ -1,5 +1,6 @@
 
 from typing import List, Dict, Any, Optional
+from threading import Thread
 import json
 
 from langchain.chains import LLMChain
@@ -11,9 +12,7 @@ from langchain.output_parsers.json import parse_partial_json
 from langchain.schema.messages import FunctionMessage
 
 from creator.utils import get_user_info, ask_run_code_confirm
-from creator.callbacks.buffer_menager import output_buffer_manager
-from threading import Thread
-from loguru import logger
+from creator.callbacks.buffer_manager import buffer_output_manager
 
 
 class BaseAgent(LLMChain):
@@ -50,14 +49,18 @@ class BaseAgent(LLMChain):
         for callback in self.get_callbacks():
             callback.on_chain_start(agent_name=self._chain_type)
 
-    def update_tool_result_in_callbacks(self, tool_result: str = ""):
+    def update_tool_result_in_callbacks(self, tool_result: FunctionMessage):
         if tool_result:
             for callback in self.get_callbacks():
-                callback.on_tool_end(output=tool_result)
+                callback.on_tool_end(chunk=tool_result)
 
-    def end_callbacks(self):
+    def end_callbacks(self, message):
         for callback in self.get_callbacks():
-            callback.on_chain_end()
+            callback.on_chain_end(message=message)
+
+    def error_callbacks(self, err):
+        for callback in self.get_callbacks():
+            callback.on_chain_error(error=err)
 
     def postprocess_mesasge(self, message):
         return message
@@ -76,9 +79,10 @@ class BaseAgent(LLMChain):
                 if self.human_confirm():
                     tool_result = tool.run(arguments)
                     tool_result = self.tool_result_to_str(tool_result)
+                    tool_result = FunctionMessage(name=function_name, content=tool_result)
                     self.update_tool_result_in_callbacks(tool_result)
                 break
-        return function_name, tool_result
+        return tool_result
 
     def human_confirm(self):
         can_run_tool = True
@@ -106,18 +110,17 @@ class BaseAgent(LLMChain):
             langchain_messages.append(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
-                self.end_callbacks()
+                self.end_callbacks(message)
                 break
 
-            name, result = self.run_tool(function_call)
-            if result is None:
-                self.end_callbacks()
+            tool_result = self.run_tool(function_call)
+            if tool_result is None:
+                self.end_callbacks(message)
                 break
-            function_message = FunctionMessage(name=name, content=result)
-            langchain_messages.append(function_message)
+            langchain_messages.append(tool_result)
             langchain_messages = self.messages_hot_fix(langchain_messages)
             current_try += 1
-            self.end_callbacks()
+            self.end_callbacks(message)
         openai_messages = list(map(convert_message_to_dict, langchain_messages))
         return openai_messages
 
@@ -129,8 +132,14 @@ class BaseAgent(LLMChain):
         inputs: Dict[str, Any],
         run_manager: Optional[CallbackManager] = None,
     ) -> Dict[str, Any]:
-        messages = self.run_workflow(inputs, run_manager)
-        return self.parse_output(messages)
+        output = {self.output_key: None}
+        try:
+            messages = self.run_workflow(inputs, run_manager)
+            output = self.parse_output(messages)
+        except Exception as e:
+            self.error_callbacks(e)
+            raise e
+        return output
 
     def iter(self, inputs):
         output_queue = []
@@ -142,7 +151,7 @@ class BaseAgent(LLMChain):
         task = Thread(target=task_target)
         task.start()
         while 1:
-            for e in output_buffer_manager:
+            for e in buffer_output_manager:
                 yield False, e
             if len(output_queue) > 0:
                 result = output_queue.pop()

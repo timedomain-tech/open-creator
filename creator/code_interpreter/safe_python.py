@@ -1,4 +1,4 @@
-from langchain.tools import BaseTool, format_tool_to_openai_function
+from langchain.tools import StructuredTool, format_tool_to_openai_function
 from langchain.callbacks.manager import CallbackManagerForToolRun
 from pydantic import BaseModel, Field
 from creator.utils import remove_title, split_code_blocks, is_expression
@@ -6,28 +6,24 @@ from typing import Type, Optional
 import threading
 import traceback
 import ast
-from loguru import logger
 import io
 import sys
-
-
-logger.add("tmp.log")
 
 
 class PythonInput(BaseModel):
     code: str = Field(description="The code to execute")
 
 
-class SafePythonInterpreter(BaseTool):
+class SafePythonInterpreter(StructuredTool):
     name: str = "python"
     description: str = "A python interpreter for safe run"
     args_schema: Type[BaseModel] = PythonInput
     namespace: dict = {}
     setup_done: bool = False
 
-    ALLOWED_FUNCTIONS = {"create", "save", "search", "CodeSkill"}
-    ALLOW_METHODS = {".show", ".test", ".run", "__add__", "__gt__", "__lt__", "__annotations__"}
-    TIMEOUT = 1200
+    allowed_functions: set = {}
+    allowed_methods: set = {}
+    timeout: float = 1200
 
     def setup(self, setup_code: str):
         self.run_code(setup_code)
@@ -36,13 +32,13 @@ class SafePythonInterpreter(BaseTool):
     def is_allowed_function(self, node):
         # Check if the node represents a call to an allowed function
         return (
-            isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in self.ALLOWED_FUNCTIONS
+            isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in self.allowed_functions
         )
 
     def is_allowed_method(self, node):
         # Check if the node represents a call to an allowed method of an allowed class
         return (
-            isinstance(node, ast.Call) and any(allowed_method in ast.unparse(node.func) for allowed_method in self.ALLOW_METHODS)
+            isinstance(node, ast.Call) and any(allowed_method in ast.unparse(node.func) for allowed_method in self.allowed_methods)
         )
 
     def preprocess(self, query: str):
@@ -52,9 +48,22 @@ class SafePythonInterpreter(BaseTool):
 
             # If setup is done, restrict the allowed nodes
             if getattr(self, "setup_done", False):
+                new_body = []
+                for node in tree.body:
+                    # Remove import nodes
+                    if not isinstance(node, (ast.Import, ast.ImportFrom)):
+                        new_body.append(node)
+                    else:
+                        # Check for disallowed imports
+                        import_tokens = set(ast.unparse(node).split(" "))
+                        # remove from, import, as
+                        import_tokens = import_tokens.difference({"from", "import", "as", ""})
+                        if len(import_tokens & self.allowed_functions) == 0:
+                            new_body.append(node)
+                tree.body = new_body
                 for node in ast.walk(tree):
                     # Check for unsafe nodes
-                    if isinstance(node, (ast.Import, ast.ImportFrom, ast.FunctionDef, ast.ClassDef)):
+                    if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
                         raise ValueError(f"Usage of {node.__class__.__name__} nodes is not allowed")
                     # Check for disallowed function/method calls
                     elif isinstance(node, ast.Call):
@@ -62,7 +71,7 @@ class SafePythonInterpreter(BaseTool):
                             raise ValueError("Usage of disallowed function/method: " + ast.unparse(node))
 
             # If all checks pass, return the original query
-            return query
+            return ast.unparse(tree)
 
         except Exception as e:
             # Save exception info in the namespace to retrieve it later in the main thread.
@@ -103,7 +112,7 @@ class SafePythonInterpreter(BaseTool):
         output = ""
         code_blocks = split_code_blocks(query)
         last_line = code_blocks.pop(-1) if len(code_blocks) > 0 else ""
-
+        original_stdout = sys.stdout
         try:
             if len(code_blocks) > 0:
                 output += self.execute_code_blocks(code_blocks)
@@ -117,13 +126,13 @@ class SafePythonInterpreter(BaseTool):
             # Save exception info in the namespace to retrieve it later in the main thread.
             self.namespace['_exec_info'] = (type(e), e, e.__traceback__)
         finally:
-            sys.stdout = sys.__stdout__
+            sys.stdout = original_stdout
 
     def run_with_return(self, query: str) -> dict[str, str]:
         # Run the code in a separate thread and wait for it to finish or to timeout.
         thread = threading.Thread(target=self.run_code, args=(query,))
         thread.start()
-        thread.join(timeout=self.TIMEOUT)
+        thread.join(timeout=self.timeout)
 
         stdout = self.namespace.get('_stdout_info', "")
         # If the thread is still alive after the timeout, it is stuck in a long-running operation (e.g., an infinite loop).
@@ -142,11 +151,11 @@ class SafePythonInterpreter(BaseTool):
         return {"status": "success", "stdout": stdout, "stderr": ""}
 
     def _run(self,
-             query: str,
+             code: str,
              run_manager: Optional[CallbackManagerForToolRun] = None
              ) -> dict[str, str]:
         # Preprocess the query
-        query = self.preprocess(query)
+        query = self.preprocess(code)
 
         # If there was an error in preprocessing, retrieve and return the exception info.
         preprocess_info = self.namespace.pop('_preprocess_info', None)

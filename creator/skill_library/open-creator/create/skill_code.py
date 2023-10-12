@@ -1,5 +1,5 @@
 from creator.core import creator
-from creator.schema.skill import CodeSkill
+from creator.core.skill import CodeSkill
 from typing import Optional, List
 
 

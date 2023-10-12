@@ -1,5 +1,7 @@
 import sys
-sys.path.append("..")
+import os
+script_path = os.path.abspath(__file__)
+sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 from creator.config.library import config
 import creator

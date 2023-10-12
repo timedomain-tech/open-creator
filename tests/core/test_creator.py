@@ -1,5 +1,8 @@
 import sys
-sys.path.append("..")
+import os
+script_path = os.path.abspath(__file__)
+sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
+
 import creator
 import os
 
@@ -31,7 +34,7 @@ def test_create_from_messages():
 
 
 def test_create_from_messages_json_path():
-    skill = creator.create(messages_json_path="./messages_example.json")
+    skill = creator.create(messages_json_path="../data/messages_example.json")
     creator.save(skill=skill)
     skill.show()
 
@@ -91,7 +94,7 @@ skill = creator.create(request=request)
     creator.save(skill=skill)
 
 def test_create_from_file_path():
-    skill = creator.create(file_path="../creator/utils/ask_human.py")
+    skill = creator.create(file_path="../data/creator/utils/ask_human.py")
     creator.save(skill=skill)
 
 def test_create_from_huggingface():
@@ -110,7 +113,7 @@ def test_save_to_skill_path():
     skill_json_path = skill_json_path = os.path.expanduser("~") + "/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json"
     skill = creator.create(skill_json_path=skill_json_path)
     skill.show()
-    skill_path = "../build-in-skill_library/ask_run_code_confirm"
+    skill_path = "../../build-in-skill_library/ask_run_code_confirm"
     skill.show()
     creator.save(skill=skill, skill_path=skill_path)
 
@@ -180,7 +183,7 @@ output: 'Ich liebe Programmieren.'
 """
     skill = creator.create(file_content=doc_content)
     skill.show()
-    creator.save(skill, skill_path="./")
+    creator.save(skill, skill_path="../data/")
 
 
 def test_run_skill_with_request2():

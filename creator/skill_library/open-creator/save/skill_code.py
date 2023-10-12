@@ -1,5 +1,5 @@
 from creator.core import creator
-from creator.schema.skill import CodeSkill
+from creator.core.skill import CodeSkill
 
 
 def save(skill: CodeSkill, huggingface_repo_id: str = None, skill_path: str = None):
