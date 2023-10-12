@@ -135,9 +135,10 @@ def trim(
 
         # Check if model is valid
         if model not in MODEL_MAX_TOKENS:
-            raise ValueError(f"Invalid model: {model}. Specify max_tokens instead")
-
-        max_tokens = int(MODEL_MAX_TOKENS[model] * trim_ratio)
+            # use default config
+            max_tokens = MODEL_MAX_TOKENS["gpt-3.5-turbo"]
+        else:
+            max_tokens = int(MODEL_MAX_TOKENS[model] * trim_ratio)
 
     # Deduct the system message tokens from the max_tokens if system message exists
     if system_message:
