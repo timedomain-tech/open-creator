@@ -10,7 +10,6 @@ from langchain.output_parsers.json import parse_partial_json
 from langchain.callbacks.streamlit.mutable_expander import MutableExpander
 from langchain.adapters.openai import convert_message_to_dict
 from loguru import logger
-import time
 
 
 st.title("OpenCreator Web Demo")
@@ -20,7 +19,7 @@ container = st.container()
 
 def setup_slidebar():
     with st.sidebar:
-        if st.button("New Chat", key="new_session"):
+        if st.button("➕    New Chat", key="new_session"):
             add_session()
 
         for session in st.session_state["sessions"]:
@@ -64,17 +63,18 @@ def render_message(message, message_box, last_expander, last_str, last_expander_
     code = ""
     if not name and not arguments and not content:
         return message_box, last_expander, last_str, last_expander_idx, content_box_index
-    if name in ("run_code", "python"):
-        arguments_dict = parse_partial_json(arguments)
-        language = arguments_dict.get("language", "python")
-        code = arguments_dict.get("code", "")
-    else:
-        language = "json"
-        code = arguments
+    if len(name) > 0:
+        if name in ("run_code", "python"):
+            arguments_dict = parse_partial_json(arguments)
+            if arguments_dict is not None:
+                language = arguments_dict.get("language", "python")
+                code = arguments_dict.get("code", "")
+        else:
+            language = "json"
+            code = arguments
 
     render_content = content
-    if not is_function_result and not language and not code:
-        print("render content box", render_content)
+    if not is_function_result and not code:
         content_box_index = content_box.markdown(body=render_content, index=content_box_index)
         return message_box, last_expander, last_str, last_expander_idx, content_box_index
 
@@ -102,16 +102,14 @@ def render_conversation_history(container, messages):
     content_box = None
     content_box_index = None
     for message in messages:
-        print("current render message", message)
-        time.sleep(2)
         role = message["role"]
         if role == "user":
             message_box = container.chat_message("user")
-            content_box = MutableExpander(message_box, label="user", expanded=False)
+            content_box = MutableExpander(message_box, label="user", expanded=True)
             content_box_index = None
         elif role == "assistant":
             message_box = container.chat_message("assistant")
-            content_box = MutableExpander(message_box, label="assistant", expanded=False)
+            content_box = MutableExpander(message_box, label="assistant", expanded=True)
             content_box_index = None
         else:
             message_box = last_message_box
@@ -127,8 +125,6 @@ def stream_render(agent, messages, container):
     content_box_index = None
     index = 0
     for stop, (agent_name, (delta, full)) in agent.iter({"messages": messages}):
-        print(stop, (agent_name, (delta, full)))
-        time.sleep(2)
         if stop:
             # due to cache no stream output
             if index == 0:
@@ -140,7 +136,7 @@ def stream_render(agent, messages, container):
             last_str = ""
             last_expander_idx = None
             message_box = container.chat_message("assistant")
-            content_box = MutableExpander(message_box, label=agent_name, expanded=False)
+            content_box = MutableExpander(message_box, label=agent_name, expanded=True)
             content_box_index = None
             continue
         message = convert_message_to_dict(full)

@@ -1,5 +1,5 @@
 import os
-from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler, StreamlitStreamingHandler
+from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.embeddings import OpenAIEmbeddings
 from .chatopenai_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
@@ -12,8 +12,6 @@ def create_llm(config):
     temperature = config.temperature
     streaming = config.use_stream_callback
     callbacks = [OutputBufferStreamingHandler()]
-    if config.use_streamlit:
-        callbacks.append(StreamlitStreamingHandler())
     if config.use_rich:
         callbacks.append(RichTerminalStreamingHandler())
     if config.use_file_logger:
@@ -23,12 +21,14 @@ def create_llm(config):
             deployment_name=model_name,
             callback_manager=CallbackManager(handlers=callbacks) if streaming else None,
             temperature=temperature,
+            streaming=streaming
         )
     else:
         llm = ChatOpenAIWithTrim(
             model_name=model_name,
             callback_manager=CallbackManager(handlers=callbacks) if streaming else None,
             temperature=temperature,
+            streaming=streaming
         )
     return llm
 

@@ -88,5 +88,12 @@ def test_run_creator_agent6():
     print(res)
 
 
+def test_run_creator_agent7():
+    import datetime
+    messages = {"messages": [{"role": "user", "content": "what can you do for me? output in markdown table"}]}
+    for e in open_creator_agent.iter(messages):
+        print(datetime.datetime.now(), e)
+
+
 if __name__ == "__main__":
-    test_run_creator_agent6()
+    test_run_creator_agent7()

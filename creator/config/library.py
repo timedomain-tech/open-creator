@@ -89,7 +89,6 @@ class LibraryConfig(BaseModel):
 
     use_rich: bool = True
     use_file_logger: bool = False
-    use_streamlit: bool = False
 
 
 config = LibraryConfig()

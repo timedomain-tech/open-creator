@@ -38,7 +38,7 @@ class BufferOutputManager(OutputManager):
             agent_name = self.agent_names.get()
             while 1:
                 try:
-                    item = self.stack_buffer.get(timeout=5)
+                    item = self.stack_buffer.get()
                 except Empty:
                     item = None
                 if item is None:
