@@ -70,5 +70,5 @@ def create_code_refactor_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(config)
 code_refactor_agent = create_code_refactor_agent(llm)

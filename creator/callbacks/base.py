@@ -8,6 +8,8 @@ class OutputManager:
     def update(self, chunk):
         pass
 
-    def finish(self):
+    def update_tool_result(self, chunk):
         pass
 
+    def finish(self):
+        pass

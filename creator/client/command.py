@@ -157,19 +157,29 @@ arguments = [
         "command": True,
         "sub_arguments": [
             {
-                "name": "ip",
-                "nickname": "ip",
+                "name": "host",
+                "nickname": "host",
                 "help_text": "IP address",
                 "type": str,
+                "default": "localhost"
             },
             {
                 "name": "port",
                 "nickname": "p",
                 "help_text": "Port number",
                 "type": int,
+                "default": 8000
             }
         ]
-    }
+    },
+    {
+        "name": "ui",
+        "nickname": "ui",
+        "help_text": "streamlit ui mode",
+        "type": str,
+        "command": True,
+        "sub_arguments": []
+    },
 ]
 
 
@@ -203,9 +213,11 @@ def cmd_client():
 
     if args.config:
         open_user_config()
+        return
     
     if not args.command or args.interactive:
         repl_app.run(args.quiet)
+        return
 
     if args.command == "create":
         skill = creator.create(
@@ -220,6 +232,7 @@ def cmd_client():
         skill.show()
         if args.save:
             creator.save(skill=skill)
+        return
     
     if args.command == "save":
         skill = None
@@ -229,6 +242,7 @@ def cmd_client():
             skill_json_path=args.skill_json_path,
             huggingface_repo_id=args.huggingface_repo_id,
         )
+        return
 
     if args.command == "search":
         skills = creator.search(
@@ -242,8 +256,21 @@ def cmd_client():
         for skill in skills:
             skill.show()
             rich_print(Rule(style="white"))
+        return
+
+    if args.command == "server":
+        from creator.app.server import run_server
+        run_server(host=args.host, port=args.port)
+        return
+
+    if args.command == "ui":
+        import os
+        import subprocess
+        streamlit_app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../app", "streamlit_app.py")
+        env = os.environ.copy()
+        subprocess.Popen(["streamlit", "run", streamlit_app_path], env=env)
+        return
 
 
 if __name__ == "__main__":
     cmd_client()
-

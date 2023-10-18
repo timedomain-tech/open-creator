@@ -11,43 +11,34 @@ def extract_variable_names(code: str) -> list:
         tree = ast.parse(code, mode="eval")
     except SyntaxError:
         return []
-    
     return [node.id for node in ast.walk(tree) if isinstance(node, ast.Name)]
 
 
-def is_code_with_assignment(code: str, namespace: set) -> bool:
+def is_code_with_assignment(code: str) -> bool:
     if "=" not in code:
         return False
-    
+
     left, right = code.split("=", 1)
-    
-    if not is_valid_variable_name(left.strip()):
-        return False
-    
+    return is_valid_variable_name(left.strip()) and is_compilable(right.strip(), "eval")
+
+
+def is_compilable(code: str, mode: str) -> bool:
     try:
-        compile(right.strip(), "", "eval")
+        compile(code, "", mode)
+        return True
     except SyntaxError:
         return False
 
 
 def is_valid_code(code: str, namespace: dict) -> bool:
-
-    if is_expression(code):
-        return is_code_with_assignment(code, namespace)
-    return is_executable(code)
-
-
-def is_expression(code: str) -> bool:
-    try:
-        compile(code, "", "eval")
-        return True
-    except SyntaxError:
+    variables = extract_variable_names(code)
+    if not all(is_valid_variable_name(variable) for variable in variables):
         return False
 
+    return (is_compilable(code, "eval") or
+            is_code_with_assignment(code) or
+            is_compilable(code, "exec"))
 
-def is_executable(code: str) -> bool:
-    try:
-        compile(code, "", "exec")
-        return True
-    except SyntaxError:
-        return False
+
+def is_expression(code: str):
+    return is_compilable(code, "eval")

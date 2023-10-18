@@ -378,6 +378,9 @@ When writing code, it's imperative to follow industry standards and best practic
         else:
             return generate_skill_doc(self)
 
+    def __str__(self):
+        return self.__repr__()
+
     def show(self):
         print(self.__repr__(), print_type="markdown")
 

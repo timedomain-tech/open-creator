@@ -14,46 +14,6 @@ Generates a `CodeSkill` instance using different input sources.
 #### Returns:
 - `CodeSkill`: The created skill.
 
-#### Usage:
-1. Creating Skill using a Request String:
-```python
-skill = create(request="filter how many prime numbers are in 201")
-```
-2. Creating Skill using Messages:
-- Directly:
-```python
-skill = create(messages=[{"role": "user", "content": "write a program..."}])
-```
-- Via JSON Path:
-```python
-skill = create(messages_json_path="./messages_example.json")
-```
-
-3. Creating Skill using File Content or File Path:
-- Direct Content:
-```python
-skill = create(file_content="def example_function(): pass")
-```
-- File Path:
-```python
-skill = create(file_path="../creator/utils/example.py")
-```
-
-4. Creating Skill using Skill Path or Skill JSON Path:
-- JSON Path:
-```python
-skill = create(skill_json_path="~/.cache/open_creator/skill_library/create/skill.json")
-```
-- Skill Path:
-```python
-skill = create(skill_path="~/.cache/open_creator/skill_library/create")
-```
-
-5. Creating Skill using Huggingface Repository ID and Skill Path:
-If a skill is hosted in a Huggingface repository, you can create it by specifying the repository ID and the skill path within the repository.
-```python
-skill = create(huggingface_repo_id="YourRepo/skill-library", huggingface_skill_path="specific_skill")
-```
 
 #### Notes:
 - Ensure to provide accurate and accessible file paths.
@@ -74,22 +34,8 @@ Stores a `CodeSkill` instance either to a local path or a Huggingface repository
 #### Returns:
 - None
 
-#### Usage:
-The `save` function allows for the persistent storage of a `CodeSkill` instance by saving it either locally or to a specified Huggingface repository. 
-
-1. **Save to Huggingface Repository:**
-```python
-save(skill=skill, huggingface_repo_id="YourRepo/skill_library")
-```
-
-2. **Save Locally:**
-```python
-save(skill=skill, skill_path="/path/to/save")
-```
-
 #### Notes:
-- At least one of `huggingface_repo_id` or `skill_path` must be provided to execute the function, otherwise a `ValueError` will be raised.
-- Ensure provided paths and repository identifiers are accurate and accessible.
+- use `skill.save()` or `save(skill)` as the default path is already set.
 
 
 ### Function: `search`
@@ -103,27 +49,11 @@ Retrieve skills related to a specified query from the available pool of skills.
 #### Returns:
 - List[CodeSkill]: A list of retrieved `CodeSkill` objects that match the query.
 
-#### Usage:
-The `search` function allows users to locate skills related to a particular query string. This is particularly useful for identifying pre-existing skills within a skill library that may fulfill a requirement or for exploring available functionalities.
-
-1. **Basic Search:**
-```python
-skills = search("extract pages from a pdf")
-```
-
-2. **Refined Search:**
-```python
-skills = search("extract pages from a pdf", top_k=3, threshold=0.85)
-```
-
 #### Notes:
 - The `query` should be descriptive to enhance the accuracy of retrieved results.
 - Adjust `top_k` and `threshold` to balance between specificity and breadth of results.
 - Ensure to check the length of the returned list to validate the presence of results before usage.
 
-Certainly, let's refine the "Skill object method" section for enhanced clarity and structure:
-
---- 
 
 ### Skill Object Methods and Operator Overloading
 
@@ -133,7 +63,6 @@ Explore the functionalities and modifications of a skill object through methods 
 Show a skill name, description, parameters, returns, usage examples and etc
 - **Example Usage**:
 ```python
-skill = create(request="create a skill that request is 'open the chrome and go to www.google.com in my mac'")
 skill.show()
 ```
 
@@ -153,7 +82,7 @@ if skills:
     }
     print(skill.run(input_args))
 ```
-  
+
 #### Method: `test`
 Validate a skill using a tester agent.
 

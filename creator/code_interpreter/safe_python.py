@@ -80,7 +80,7 @@ class SafePythonInterpreter(StructuredTool):
 
     def execute_last_line(self, last_line):
         output_io = io.StringIO()
-        sys.stdout = output_io  # Redirect stdout to capture print statements
+        # sys.stdout = output_io  # Redirect stdout to capture print statements
         output = ""
         if is_expression(last_line):
             eval_output = eval(last_line, self.namespace)
@@ -97,7 +97,7 @@ class SafePythonInterpreter(StructuredTool):
 
     def execute_code_blocks(self, blocks):
         output_io = io.StringIO()
-        sys.stdout = output_io
+        # sys.stdout = output_io
         output = ""
         for block in blocks:
             exec(block, self.namespace)

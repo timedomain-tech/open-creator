@@ -85,6 +85,11 @@ class LibraryConfig(BaseModel):
     testsummary_function_schema_path: str = os.path.join(project_dir, "prompts", "testsummary_function_schema.json")
     tips_for_debugging_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_debugging_prompt.md")
     tips_for_testing_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_testing_prompt.md")
+    tips_for_veryfy_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_veryfy_prompt.md")
+
+    use_rich: bool = True
+    use_file_logger: bool = False
+    use_streamlit: bool = False
 
 
 config = LibraryConfig()

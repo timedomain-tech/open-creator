@@ -56,5 +56,5 @@ def create_skill_extractor_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(config)
 skill_extractor_agent = create_skill_extractor_agent(llm)

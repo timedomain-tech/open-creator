@@ -39,7 +39,8 @@ class RichOutputManager(OutputManager):
         self.arguments = ""
         self.name = ""
 
-        self.use_rich = sys.stdout.isatty()
+        # self.use_rich = sys.stdout.isatty()
+        self.use_rich = True
 
         self.code_live = Live(auto_refresh=False, console=Console(force_terminal=self.use_rich), vertical_overflow="visible")
         self.text_live = Live(auto_refresh=False, console=Console(force_terminal=self.use_rich))
@@ -92,6 +93,9 @@ class RichOutputManager(OutputManager):
         content = '\n'.join(lines)
         if cursor:
             content += "█"
+        else:
+            if content.endswith("█"):
+                content = content[:-1]
         if inside_code_block:
             content += "\n```"
         markdown = Markdown(content.strip())

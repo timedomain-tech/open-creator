@@ -1,18 +1,18 @@
 import json
 
-from langchain.schema.messages import HumanMessage
+from langchain.schema.messages import SystemMessage
 from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter, language_map
 from creator.config.library import config
-from creator.utils import load_system_prompt
+from creator.utils import load_system_prompt, remove_tips
 from creator.llm.llm_creator import create_llm
 
 from .base import BaseAgent
-from loguru import logger
 
 
 DEBUGGING_TIPS = load_system_prompt(config.tips_for_debugging_prompt_path)
+VERIFY_TIPS = load_system_prompt(config.tips_for_veryfy_prompt_path)
 
 
 class CodeInterpreterAgent(BaseAgent):
@@ -37,14 +37,15 @@ class CodeInterpreterAgent(BaseAgent):
                 }
                 message.additional_kwargs["function_call"] = function_call
         return message
-    
+
     def messages_hot_fix(self, langchain_messages):
+        langchain_messages = remove_tips(langchain_messages)
         tool_result = langchain_messages[-1].content
         tool_result = parse_partial_json(tool_result)
         if len(tool_result.get("stderr", "")) > 0 and "error" in tool_result["stderr"].lower():  # add tips for debugging
-            langchain_messages.append(HumanMessage(content=DEBUGGING_TIPS))
-        elif len(str(tool_result)) > 100:  # tips for avoiding repeating the output of `run_code`
-            langchain_messages.append(HumanMessage(content="go on to next step if has, otherwise end."))
+            langchain_messages.append(SystemMessage(content=DEBUGGING_TIPS))
+        else:
+            langchain_messages.append(SystemMessage(content=VERIFY_TIPS))
         return langchain_messages
 
 
@@ -62,5 +63,5 @@ def create_code_interpreter_agent(llm):
     return chain
 
 
-llm = create_llm(temperature=config.temperature, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(config)
 code_interpreter_agent = create_code_interpreter_agent(llm=llm)

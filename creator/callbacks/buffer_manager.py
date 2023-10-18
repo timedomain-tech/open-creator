@@ -9,7 +9,7 @@ class BufferOutputManager(OutputManager):
         self.last_delta: ChatMessageChunk = None
         self.last_output: ChatMessageChunk = None
         self.agent_names:Queue = Queue()
-    
+
     def add(self, agent_name: str):
         self.agent_names.put(agent_name)
         self.stack_buffer.put((None, None))
@@ -20,12 +20,13 @@ class BufferOutputManager(OutputManager):
         self.last_delta, self.last_output = chunk, new_output
 
     def update_tool_result(self, chunk):
-        self.stack_buffer.put((chunk, chunk))
         self.last_delta, self.last_output = chunk, chunk
 
     def finish(self, message=None, err=None):
-        if message is not None and self.last_output is None:
+        if message is not None:
             self.stack_buffer.put((message, message))
+        if self.last_output is not None:
+            self.stack_buffer.put((self.last_delta, self.last_output))
         self.last_delta = None
         self.last_output = None
         if err is not None:

@@ -11,7 +11,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers.json import parse_partial_json
 from langchain.schema.messages import FunctionMessage
 
-from creator.utils import get_user_info, ask_run_code_confirm
+from creator.utils import get_user_info, ask_run_code_confirm, remove_tips
 from creator.callbacks.buffer_manager import buffer_output_manager
 
 
@@ -22,7 +22,7 @@ class BaseAgent(LLMChain):
     output_key: str = "messages"
     system_template: str = ""
     allow_user_confirm: bool = False
-    prompt: ChatPromptTemplate = None
+    prompt: ChatPromptTemplate = ChatPromptTemplate.from_messages(messages=["system", ""])
 
     @property
     def _chain_type(self):
@@ -47,7 +47,7 @@ class BaseAgent(LLMChain):
 
     def start_callbacks(self):
         for callback in self.get_callbacks():
-            callback.on_chain_start(agent_name=self._chain_type)
+            callback.on_chain_start(inputs=None, serialized=None, run_id=1, agent_name=self._chain_type)
 
     def update_tool_result_in_callbacks(self, tool_result: FunctionMessage):
         if tool_result:
@@ -56,11 +56,11 @@ class BaseAgent(LLMChain):
 
     def end_callbacks(self, message):
         for callback in self.get_callbacks():
-            callback.on_chain_end(message=message)
+            callback.on_chain_end(message=message, outputs=message, run_id=1)
 
     def error_callbacks(self, err):
         for callback in self.get_callbacks():
-            callback.on_chain_error(error=err)
+            callback.on_chain_error(error=err, run_id=1)
 
     def postprocess_mesasge(self, message):
         return message
@@ -121,6 +121,7 @@ class BaseAgent(LLMChain):
             langchain_messages = self.messages_hot_fix(langchain_messages)
             current_try += 1
             self.end_callbacks(message)
+        langchain_messages = remove_tips(langchain_messages)
         openai_messages = list(map(convert_message_to_dict, langchain_messages))
         return openai_messages
 
@@ -146,8 +147,9 @@ class BaseAgent(LLMChain):
 
         def task_target():
             result = self.run(inputs)
-            output_queue.append(result)
-            
+            m = (self._chain_type, (result, result))
+            output_queue.append(m)
+
         task = Thread(target=task_target)
         task.start()
         while 1:

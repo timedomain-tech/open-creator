@@ -16,4 +16,3 @@ def test_interpreter_agent():
 
 if __name__ == "__main__":
     test_interpreter_agent()
-

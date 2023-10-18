@@ -1,3 +1,4 @@
+=== Tips
 ### 🔄 **Iterative Testing Approach:**
 1. **Adopt Humility Towards Expectations**: Recognize the potential presence of illusory phenomena and accept that initial expectations might be incorrect because your nature is a Large Language Model.
 2. **Propose Diverse Solutions**: When discrepancies arise, neither blindly adjust the code nor the expectations. Brainstorm various (1-3) solutions to accurately diagnose the root cause of the inconsistency.

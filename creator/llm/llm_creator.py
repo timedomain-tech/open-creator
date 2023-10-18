@@ -1,26 +1,34 @@
 import os
-from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler
+from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler, StreamlitStreamingHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.embeddings import OpenAIEmbeddings
 from .chatopenai_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
 
 
-def create_llm(**kwargs):
+def create_llm(config):
     use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
 
-    streaming = kwargs.get("streaming", True)
-    model_name = kwargs.pop("model", None)
+    model_name = config.model
+    temperature = config.temperature
+    streaming = config.use_stream_callback
+    callbacks = [OutputBufferStreamingHandler()]
+    if config.use_streamlit:
+        callbacks.append(StreamlitStreamingHandler())
+    if config.use_rich:
+        callbacks.append(RichTerminalStreamingHandler())
+    if config.use_file_logger:
+        callbacks.append(FileLoggerStreamingHandler())
     if use_azure:
         llm = AzureChatOpenAIWithTrim(
-            deployment_name=model_name, 
-            callback_manager=CallbackManager(handlers=[OutputBufferStreamingHandler(), RichTerminalStreamingHandler(), FileLoggerStreamingHandler()]) if streaming else None,
-            **kwargs
+            deployment_name=model_name,
+            callback_manager=CallbackManager(handlers=callbacks) if streaming else None,
+            temperature=temperature,
         )
     else:
         llm = ChatOpenAIWithTrim(
             model_name=model_name,
-            callback_manager=CallbackManager(handlers=[OutputBufferStreamingHandler(), RichTerminalStreamingHandler(), FileLoggerStreamingHandler()]) if streaming else None,
-            **kwargs
+            callback_manager=CallbackManager(handlers=callbacks) if streaming else None,
+            temperature=temperature,
         )
     return llm
 
@@ -35,5 +43,5 @@ def create_embedding(**kwargs):
         embedding = OpenAIEmbeddings(deployment=azure_model, model=azure_model)
     else:
         embedding = OpenAIEmbeddings()
- 
+
     return embedding

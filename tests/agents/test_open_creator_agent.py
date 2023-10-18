@@ -77,10 +77,16 @@ def test_run_creator_agent4():
 
 
 def test_run_creator_agent5():
-    messages = {"messages": [{"role": "user", "content": "Could you Please help me create one skill can open Google Chrome and search for 'openai' and 'chatgpt'"}], "verbose": True}
+    messages = {"messages": [{"role": "user", "content": "Could you Please help me create one skill can open Google Chrome and search for 'openai' and 'chatgpt'"}]}
+    res = open_creator_agent.run(messages)
+    print(res)
+
+
+def test_run_creator_agent6():
+    messages = {"messages": [{"role": "user", "content": "hello"}]}
     res = open_creator_agent.run(messages)
     print(res)
 
 
 if __name__ == "__main__":
-    test_run_creator_agent5()
+    test_run_creator_agent6()

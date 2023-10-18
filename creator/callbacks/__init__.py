@@ -1,8 +1,14 @@
-from .streaming_stdout import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler
+from .streaming_stdout import (
+    OutputBufferStreamingHandler,
+    RichTerminalStreamingHandler,
+    FileLoggerStreamingHandler,
+    StreamlitStreamingHandler
+)
 
 
 __all__ = [
     "OutputBufferStreamingHandler",
     "RichTerminalStreamingHandler",
-    "FileLoggerStreamingHandler"
+    "FileLoggerStreamingHandler",
+    "StreamlitStreamingHandler"
 ]
