@@ -130,37 +130,40 @@ Explore the functionalities and modifications of a skill object through methods 
 Execute a skill with provided arguments or request.
 
 - **Example Usage**:
-  ```python
+
+```python
 skills = search("pdf extract section")
 if skills:
-    skill = skills[0]
-    input_args = {
-        "pdf_path": "creator.pdf",
-        "start_page": 3,
-        "end_page": 8,
-        "output_path": "creator3-8.pdf"
-    }
-    print(skill.run(input_args))
-  ```
+  skill = skills[0]
+  input_args = {
+      "pdf_path": "creator.pdf",
+      "start_page": 3,
+      "end_page": 8,
+      "output_path": "creator3-8.pdf"
+  }
+  print(skill.run(input_args))
+```
   
 #### Method: `test`
 Validate a skill using a tester agent.
 
 - **Example Usage**:
-  ```python
+
+```python
 skill = create(request="filter prime numbers in a range, e.g., filter_prime_numbers(2, 201)")
 test_summary = skill.test()
 print(test_summary)
 print(skill.conversation_history)
-  ```
+```
   
 #### Overloaded Operators: 
 Modify and refine skills using operator overloading.
 
 1. **Combining Skills**: Utilize the `+` operator to chain or execute skills in parallel, detailing the coordination with the `>` operator.
-   ```python
-   new_skill = skillA + skillB > "Explanation of how skills A and B operate together"
-   ```
+
+```python
+new_skill = skillA + skillB > "Explanation of how skills A and B operate together"
+```
    
 2. **Refactoring Skills**: Employ the `>` operator to enhance or modify existing skills.
    ```python

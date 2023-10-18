@@ -58,20 +58,19 @@ class PythonInterpreter(BaseInterpreter):
             modified_code_lines.append(code_chunk)
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.For, ast.AsyncFor, ast.While, ast.If)):
                 # Add an extra newline after function and class definitions, and loop/if statements
-                modified_code_lines.append("\n")
+                modified_code_lines.append("\n\n")
             elif isinstance(node, ast.Return):
                 modified_code_lines.append("\n")
 
         # # Join all code chunks into the final modified code
         modified_code = "\n".join(modified_code_lines)
-        # return modified_code
         return modified_code
-    
+
     def postprocess(self, response):
         def clean_string(s):
             return '\n'.join([line for line in s.split('\n') if not re.match(r'^(\s*>>>\s*|\s*\.\.\.\s*)', line)])
-        
+
         # clean up stdout and stderr
         response['stdout'] = clean_string(response.get('stdout', ''))
         response['stderr'] = clean_string(response.get('stderr', ''))
-        return response    
+        return response
