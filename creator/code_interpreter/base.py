@@ -2,6 +2,7 @@ import subprocess
 import traceback
 import threading
 import time
+import os
 
 
 class BaseInterpreter:
@@ -29,7 +30,8 @@ class BaseInterpreter:
             stderr=subprocess.PIPE,
             text=True,
             bufsize=0,
-            universal_newlines=True
+            universal_newlines=True,
+            env=os.environ.copy(),
         )
 
     def detect_program_end(self, line):

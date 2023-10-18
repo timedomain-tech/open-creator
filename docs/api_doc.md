@@ -121,9 +121,6 @@ skills = search("extract pages from a pdf", top_k=3, threshold=0.85)
 - Adjust `top_k` and `threshold` to balance between specificity and breadth of results.
 - Ensure to check the length of the returned list to validate the presence of results before usage.
 
-Certainly, let's refine the "Skill object method" section for enhanced clarity and structure:
-
---- 
 
 ### Skill Object Methods and Operator Overloading
 

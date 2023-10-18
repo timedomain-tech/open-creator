@@ -1,7 +1,7 @@
 import json
 import sys
-from rich import print as rich_print
 from rich.markdown import Markdown
+from rich.console import Console
 from rich.json import JSON
 import io
 
@@ -18,7 +18,10 @@ def to_str(s):
 class Printer:
     def __init__(self):
         self.callbacks = {}
-        self.use_rich = sys.stdout.isatty()  # Check if stdout is a terminal
+        console = Console()
+        self.is_terminal = console.is_terminal
+        self.is_jupyter = console.is_jupyter
+        self.use_rich = self.is_terminal or self.is_jupyter
         self.output_capture = io.StringIO()  # Moved inside the class as an instance variable
 
     def add_callback(self, func):
@@ -43,12 +46,10 @@ class Printer:
 
     def add_default_callback(self):
         if self.use_rich:
-            def default_print(message, end='\n', file=None, flush=False, output_option='both'):
+            def default_print(message, end='\n', file=None, flush=False, output_option='stdout'):
                 target_file = file or self.output_capture
-                if output_option in ['stdout', 'both']:
-                    rich_print(message, end=end, file=target_file, flush=flush)
-                if output_option in ['terminal', 'both'] and target_file is not sys.stdout:
-                    rich_print(message, end=end, file=sys.stdout, flush=flush)
+                console = Console(force_jupyter=self.is_jupyter, force_terminal=self.is_terminal, file=target_file)
+                console.print(message, end=end)
         else:
             def default_print(message, end='\n', file=None, flush=False, output_option='both'):
                 target_file = file or self.output_capture

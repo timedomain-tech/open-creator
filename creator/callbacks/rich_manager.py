@@ -1,5 +1,3 @@
-import sys
-
 from rich.console import Console, Group
 from rich.live import Live
 from rich.panel import Panel
@@ -39,11 +37,13 @@ class RichOutputManager(OutputManager):
         self.arguments = ""
         self.name = ""
 
-        # self.use_rich = sys.stdout.isatty()
-        self.use_rich = True
+        is_terminal = Console().is_terminal
+        is_jupyter = Console().is_jupyter
 
-        self.code_live = Live(auto_refresh=False, console=Console(force_terminal=self.use_rich), vertical_overflow="visible")
-        self.text_live = Live(auto_refresh=False, console=Console(force_terminal=self.use_rich))
+        self.use_rich = is_terminal or is_jupyter
+
+        self.code_live = Live(auto_refresh=False, console=Console(force_jupyter=is_jupyter, force_terminal=is_terminal), vertical_overflow="visible")
+        self.text_live = Live(auto_refresh=False, console=Console(force_jupyter=is_jupyter, force_terminal=is_terminal))
 
     def add(self, agent_name):
         if not self.use_rich:
