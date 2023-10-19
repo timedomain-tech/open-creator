@@ -7,7 +7,7 @@ build:
 
 python:
   install:
-    - method: poetry
+    - method: pip
       path: .
 
 mkdocs:
