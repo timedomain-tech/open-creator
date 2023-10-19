@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 import streamlit as st
 from creator.agents.creator_agent import open_creator_agent
+from creator.agents import code_interpreter_agent
 from creator import config
 from langchain.callbacks.streamlit.streamlit_callback_handler import _convert_newlines
 from langchain.output_parsers.json import parse_partial_json
@@ -30,13 +31,22 @@ def setup_slidebar():
         config.model = model
         temperature = st.slider("Temperature", 0.0, 1.0, 0.0, 0.05, key="temperature")
         config.temperature = temperature
+        agent_list = ["creator_agent", "interpreter_agent"]
+        agent = st.selectbox("Agent", agent_list, key="agent")
+        if "agent" not in st.session_state:
+            st.session_state["agent"] = agent
 
         if st.button("➕    New Chat", key="new_session"):
             add_session()
 
 
 def add_session():
-    session = {"title": "untitled", "messages": [], "agent": open_creator_agent}
+    agent_name = "creator_agent"
+    if "agent" in st.session_state:
+        agent_name = st.session_state["agent"]
+    agent = open_creator_agent if agent_name == "creator_agent" else code_interpreter_agent
+
+    session = {"title": "untitled", "messages": [], "agent": agent}
     st.session_state["sessions"].append(session)
 
 
