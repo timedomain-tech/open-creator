@@ -42,7 +42,7 @@ class CodeRefactorAgent(BaseAgent):
 def create_code_refactor_agent(llm):
     template = load_system_prompt(config.refactor_agent_prompt_path)
     path = os.path.join(config.codeskill_function_schema_path)
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         code_skill_json_schema = json.load(f)
 
     function_schema = {

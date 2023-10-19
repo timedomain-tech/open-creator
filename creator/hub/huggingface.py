@@ -8,7 +8,7 @@ import subprocess
 
 def hf_pull(repo_id, huggingface_skill_path, save_path) -> dict:
     return_path = hf_hub_download(repo_id=repo_id, subfolder=huggingface_skill_path, filename="skill.json", repo_type="space")
-    with open(return_path) as f:
+    with open(return_path, encoding="utf-8") as f:
         skill_json = json.load(f)
     # copy to local skill library
     if not os.path.exists(save_path):
@@ -27,7 +27,7 @@ def hf_repo_update(repo_id, local_dir):
         except Exception as e:
             logger.warning(f"Failed to create repo {repo_id} with error {e}.")
             repo_url = f"https://huggingface.co/spaces/{repo_id}"
-        
+
         Repository(local_dir=local_dir, clone_from=repo_url).git_pull()
         logger.success(f"Successfully cloned repo {repo_id} to {local_dir}.")
     else:

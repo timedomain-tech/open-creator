@@ -109,7 +109,7 @@ class Creator:
     @classmethod
     def _create_from_skill_json_path(cls, skill_json_path) -> CodeSkill:
         """Load skill from a given path."""
-        with open(skill_json_path, mode="r") as f:
+        with open(skill_json_path, mode="r", encoding="utf-8") as f:
             skill = CodeSkill.model_validate_json(f.read())
             if not isinstance(skill.skill_metadata.created_at, str):
                 skill.skill_metadata.created_at = skill.skill_metadata.created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -150,11 +150,11 @@ class Creator:
             })
 
         if messages_json_path:
-            with open(messages_json_path) as f:
+            with open(messages_json_path, encoding="utf-8") as f:
                 messages = json.load(f)
 
         if file_path:
-            with open(file_path) as f:
+            with open(file_path, encoding="utf-8") as f:
                 file_content = "### file name: " + os.path.basename(file_path) + "\n---" + f.read()
 
         if file_content:

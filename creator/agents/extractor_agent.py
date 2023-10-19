@@ -39,7 +39,7 @@ class SkillExtractorAgent(BaseAgent):
 def create_skill_extractor_agent(llm):
     template = load_system_prompt(config.extractor_agent_prompt_path)
     # current file's parent as dir
-    with open(config.codeskill_function_schema_path) as f:
+    with open(config.codeskill_function_schema_path, encoding="utf-8") as f:
         code_skill_json_schema = json.load(f)
     function_schema = {
         "name": "extract_formmated_skill",

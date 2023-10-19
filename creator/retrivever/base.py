@@ -28,12 +28,12 @@ class BaseVectorStore:
             self.query_cache_path = self.vectordb_path + "/query_cache.json"
             self.vectordb_path = self.vectordb_path + "/vector_db.json"
             if os.path.exists(self.query_cache_path):
-                with open(self.query_cache_path, "r") as f:
+                with open(self.query_cache_path, mode="r", encoding="utf-8") as f:
                     self.query_cache = json.load(f)
 
         if os.path.exists(self.vectordb_path):
             # load vectordb
-            with open(self.vectordb_path, "r") as f:
+            with open(self.vectordb_path, mode="r", encoding="utf-8") as f:
                 self.vector_store = json.load(f)
         
         self.update_index()
@@ -46,11 +46,11 @@ class BaseVectorStore:
             for file in files:
                 if root not in self.vector_store and file == "embedding_text.txt":
                     embedding_text_path = os.path.join(root, file)
-                    with open(embedding_text_path, "r") as f:
+                    with open(embedding_text_path, mode="r", encoding="utf-8") as f:
                         embedding_text = f.read()
                     
                     skill_path = os.path.join(root, "skill.json")
-                    with open(skill_path) as f:
+                    with open(skill_path, encoding="utf-8") as f:
                         skill_json = json.load(f)
                     skill_json["skill_id"] = root
                     skill_json["embedding_text"] = embedding_text
@@ -74,11 +74,11 @@ class BaseVectorStore:
             embeddings.append(self.vector_store[key]["embedding"])
         self.embeddings = np.array(embeddings)
         # save to vectordb
-        with open(self.vectordb_path, "w") as f:
+        with open(self.vectordb_path, "w", encoding="utf-8") as f:
             json.dump(self.vector_store, f)
 
     def save_query_cache(self):
-        with open(self.query_cache_path, "w") as f:
+        with open(self.query_cache_path, "w", encoding="utf-8") as f:
             json.dump(self.query_cache, f)
         
     def search(self, query: str, top_k: int = 3, threshold=0.8) -> List[dict]:

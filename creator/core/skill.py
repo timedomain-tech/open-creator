@@ -406,44 +406,44 @@ runner = unittest.TextTestRunner(stream=stream)
         if skill_path:
             os.makedirs(os.path.dirname(skill_path), exist_ok=True)
             # save json file
-            with open(os.path.join(skill_path, "skill.json"), "w") as f:
+            with open(os.path.join(skill_path, "skill.json"), mode="w", encoding="utf-8") as f:
                 json.dump(self.model_dump(), f, ensure_ascii=False, indent=4)
 
             # save function call
-            with open(os.path.join(skill_path, "function_call.json"), "w") as f:
+            with open(os.path.join(skill_path, "function_call.json"), mode="w", encoding="utf-8") as f:
                 json.dump(self.to_function_call(), f, ensure_ascii=False, indent=4)
 
             # save dependencies
             command_str = ""
             if self.skill_dependencies:
                 command_str = generate_install_command(self.skill_program_language, self.skill_dependencies)
-                with open(os.path.join(skill_path, "install_dependencies.sh"), "w") as f:
+                with open(os.path.join(skill_path, "install_dependencies.sh"), mode="w", encoding="utf-8") as f:
                     f.write(command_str)
 
             # save code
             if self.skill_program_language:
                 language_suffix = generate_language_suffix(self.skill_program_language)
-                with open(os.path.join(skill_path, "skill_code" + language_suffix), "w") as f:
+                with open(os.path.join(skill_path, "skill_code" + language_suffix), mode="w", encoding="utf-8") as f:
                     f.write(self.skill_code)
 
             # save conversation history
             if self.conversation_history:
-                with open(os.path.join(skill_path, "conversation_history.json"), "w") as f:
+                with open(os.path.join(skill_path, "conversation_history.json"), mode="w", encoding="utf-8") as f:
                     f.write(json.dumps(self.conversation_history, ensure_ascii=False, indent=4))
 
             # skill description
             doc = generate_skill_doc(self)
-            with open(os.path.join(skill_path, "skill_doc.md"), "w") as f:
+            with open(os.path.join(skill_path, "skill_doc.md"), mode="w", encoding="utf-8") as f:
                 f.write(doc)
 
             # embedding_text
             embedding_text = "{skill.skill_name}\n{skill.skill_description}\n{skill.skill_usage_example}\n{skill.skill_tags}".format(skill=self)
-            with open(os.path.join(skill_path, "embedding_text.txt"), "w") as f:
+            with open(os.path.join(skill_path, "embedding_text.txt"), mode="w", encoding="utf-8") as f:
                 f.write(embedding_text)
 
             # save test code
             if self.test_summary:
-                with open(os.path.join(skill_path, "test_summary.json"), "w") as f:
+                with open(os.path.join(skill_path, "test_summary.json"), mode="w", encoding="utf-8") as f:
                     json.dump(self.test_summary.model_dump(), f, ensure_ascii=False, indent=4)
 
             if huggingface_repo_id:

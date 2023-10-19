@@ -71,7 +71,7 @@ def create_code_tester_agent(llm):
     tool = CodeInterpreter()
 
     code_interpreter_function_schema = tool.to_function_schema()
-    with open(config.testsummary_function_schema_path) as f:
+    with open(config.testsummary_function_schema_path, encoding="utf-8") as f:
         test_summary_function_schema = json.load(f)
 
     chain = CodeTesterAgent(

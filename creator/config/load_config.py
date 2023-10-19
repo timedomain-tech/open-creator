@@ -36,8 +36,8 @@ def load_yaml_config():
         shutil.copy(project_config_path, user_config_path)
 
     # Load YAML config file using the new path
-    with open(user_config_path, 'r') as file:
-        yaml_config = yaml.safe_load(file)
+    with open(user_config_path, mode='r', encoding="utf-8") as f:
+        yaml_config = yaml.safe_load(f)
     
     # env vs yaml, yaml first if not empty
     for key, value in yaml_config.items():
