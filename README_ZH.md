@@ -29,7 +29,7 @@
 - [x] **反射代理**：自动结构化和分类您的函数调用。
 - [x] **通过使用存储在 `~/.cache/open_creator/llm_cache/.langchain.db` 的SQLite缓存聊天LLM运行**：通过重用以前的运行节省时间和金钱。
 - [x] **流**：流式处理您的函数调用
-- [x] **社区中心**：分享并利用来自更广泛社区的技能。支持 `huggingface_hub`。`langchain_hub` 还未支持。
+- [x] **社区中心**：分享并利用来自更广泛社区的技能。支持 [huggingface_hub](docs/skill-library-hub.md)。`langchain_hub` 还未支持。
 
 # Updates
 - [x] **2023-10-01**: 修复一些bugs，以及支持测试和重构代理agent
@@ -171,8 +171,27 @@ creator.save(skill, skill_path="path/to/your/skill/directory")
 creator.save(skill, huggingface_repo_id="YourRepoID")
 ```
 
+```
+注意：在保存到huggingface之前，需要设置huggingface的身份验证方式。
+推荐使用用户访问令牌的身份验证方式，请按照以下步骤操作：
+
+1. 登录到你的Huggingface账号。
+2. 在右上角的用户菜单中，选择"Settings"。
+3. 在左侧导航栏中，选择"API Tokens"。
+4. 点击"New Token"按钮创建一个新的访问令牌。
+5. 输入一个描述性的名称，以便于识别该令牌的用途。
+6. 选择适当的访问权限，确保你有足够的权限来上传和管理技能。
+7. 点击"Create"按钮生成令牌。
+8. 复制生成的访问令牌，并妥善保存。
+9. 在Terminal中输入huggingface-cli login 
+10. 输入上面复制的访问令牌，点击回车
+现在你可以使用这个访问令牌来进行身份验证，以便在保存和上传技能时使用。确保在调用save函数之前，将访问令牌设置为环境变量HUGGINGFACE_TOKEN，这样API将能够使用该令牌进行身份验证。
+```
+
+
 
 ## 3. 搜索技能
+
 - [x] 3.1 本地搜索
 ```python
 skills = creator.search("your_search_query")

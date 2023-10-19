@@ -29,7 +29,7 @@
 - [x] **Reflection Agent**: Automatically structures and categorizes your function calls.
 - [x] **cache Chat LLM runs by using SQLite which is stored in `~/.cache/open_creator/llm_cache/.langchain.db`**: Save time and money by reusing previous runs.
 - [x] **Sreaming**: Stream your function calls
-- [x] **Community Hub**: Share and utilize skills from the wider community. Support `huggingface_hub`. `langchain_hub` not yet
+- [x] **Community Hub**: Share and utilize skills from the wider community. Support [huggingface_hub](docs/skill-library-hub.md). `langchain_hub` not yet
 
 # Updates
 - [x] **2023-10-01**: Fix bugs and support tester agent and refactor agent
@@ -182,7 +182,27 @@ creator.save(skill, skill_path="path/to/your/skill/directory")
 creator.save(skill, huggingface_repo_id="YourRepoID")
 ```
 
+```
+Note: Before saving to Huggingface, you need to set up the authentication method for Huggingface.
+It is recommended to use the user access token for authentication. Please follow the steps below:
+
+1. Log in to your Huggingface account.
+2. In the user menu in the top right corner, select "Settings".
+3. In the left sidebar, select "API Tokens".
+4. Click the "New Token" button to create a new access token.
+5. Enter a descriptive name to help identify the purpose of this token.
+6. Choose the appropriate access permissions, ensuring you have sufficient rights to upload and manage skills.
+7. Click the "Create" button to generate the token.
+8. Copy the generated access token and store it safely.
+9. In the Terminal, enter: huggingface-cli login
+10. Paste the access token you copied earlier and hit enter.
+Now you can use this access token for authentication when saving and uploading skills. Ensure that before invoking the save function, set the access token as the environment variable HUGGINGFACE_TOKEN, so the API can use this token for authentication.
+```
+
+
+
 ## 3. Search skills
+
 - [x] 3.1 Local Search
 
 3.1 Local Search
