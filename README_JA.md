@@ -8,6 +8,10 @@
     <a href="README_ZH.md"><img src="https://img.shields.io/badge/文档-中文版-white.svg" alt="ZH doc"/></a>
     <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=white&style=flat" alt="License"/>
     <a href="docs/tech_report/open-creator.pdf"><img src="https://img.shields.io/badge/arXiv-Paper-blue.svg" alt="paper"></a>
+    <a href="https://huggingface.co/spaces/timedomain/skill-library-hub"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Skills%20Library%20Hub-yellow" alt="huggingface"></a>
+    <a href="docs/api_doc.md"><img src="https://readthedocs.org/projects/keytotext/badge/?version=latest" alt="docs"></a>
+    <a href="[docs/api_doc.md](https://pepy.tech/project/open-creator)"><img src="https://static.pepy.tech/badge/open-creator" alt="downloads"></a>
+    <a href="https://colab.research.google.com/github/timedomain-tech/open-creator/blob/main/docs/examples/08_creator_agent.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="colab"></a>
     <br><br>
     <b>カスタマイズされたスキルライブラリを構築</b><br>
     ツールを作成するためのオープンソースのLLMツール<br>
@@ -32,7 +36,7 @@
 - [x] **2023-10-19**: バグの修正とプロジェクトの構造変更を行いました。新たに以下のサポートを追加しました：
   - クリエーターツールのインポート：`from creator.agents.creator_agent import open_creator_agent`
   - コマンドライン操作：詳しくは`creator -h`を参照。サーバーモードでの起動：`creator server`、アクセスは `http://localhost:8000/docs`。Streamlitデモの表示：`creator ui`、アクセスは `http://localhost:8501/`
-  - 豊富なドキュメンテーション： [ノートブックサンプル](examples/01_skills_create.ipyn) と [APIのドキュメント](docs/api_doc.md)
+  - 豊富なドキュメンテーション： [ノートブックサンプル](docs/examples/01_skills_create.ipyn) と [APIのドキュメント](docs/api_doc.md)
 
 
 # インストール

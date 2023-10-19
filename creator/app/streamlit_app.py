@@ -5,11 +5,13 @@ sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 import streamlit as st
 from creator.agents.creator_agent import open_creator_agent
+from creator import config
 from langchain.callbacks.streamlit.streamlit_callback_handler import _convert_newlines
 from langchain.output_parsers.json import parse_partial_json
 from langchain.callbacks.streamlit.mutable_expander import MutableExpander
 from langchain.adapters.openai import convert_message_to_dict
 from loguru import logger
+import os
 
 
 st.title("OpenCreator Web Demo")
@@ -19,12 +21,18 @@ container = st.container()
 
 def setup_slidebar():
     with st.sidebar:
+        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
+        "[View the source code](https://github.com/timedomain-tech/open-creator/tree/main/creator/app/streamlit_app.py)"
+        os.environ["OPENAI_API_KEY"] = openai_api_key
+        model_list = ["gpt-3.5-turbo-16k", "gpt-3.5-turbo", "gpt-4"]
+        model = st.selectbox("Model", model_list, key="model")
+        config.model = model
+        temperature = st.slider("Temperature", 0.0, 1.0, 0.0, 0.05, key="temperature")
+        config.temperature = temperature
+
         if st.button("➕    New Chat", key="new_session"):
             add_session()
-
-        for session in st.session_state["sessions"]:
-            st.title(session["title"])
-            st.divider()
 
 
 def add_session():

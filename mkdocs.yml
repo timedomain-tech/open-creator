@@ -1,0 +1,28 @@
+site_name: Open-Creator
+site_url: https://open-creator.github.io
+nav:
+  - Getting Start:
+    - Overview: index.md
+    - Installation: installation.md
+  - Examples:
+    - 01 Skills Create: examples/01_skills_create.ipynb
+    - 02 Skills Lirabry: examples/02_skills_library.ipynb
+    - 03 Skills Search: examples/03_skills_search.ipynb
+    - 04 Skills Run: examples/04_skills_run.ipynb
+    - 05 Skills Test: examples/05_skills_test.ipynb
+    - 06 Skills Refactor: examples/06_skills_refactor.ipynb
+    - 07 Skills Auto Optimize: examples/07_skills_auto_optimize.ipynb
+    - 08 Creator Agent: examples/08_creator_agent.ipynb
+  - API:
+    - API Docs: api_doc.md
+    - Commands: commands.md
+    - Configurations: configurations.md
+
+theme: readthedocs
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      kernel_name: python3
+      ignore_h1_titles: true
+      include_requirejs: true
