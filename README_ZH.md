@@ -36,7 +36,7 @@
 - [x] **2023-10-19**: 我们已修复了一些问题并对项目进行了优化。现在新增以下功能：
   - 创作者智能代理agent接口：`from creator.agents.creator_agent import open_creator_agent`
   - 命令行工具：详情请查阅：`creator -h`；启动服务器模式：`creator server`，之后访问 `http://localhost:8000/docs`；查看Streamlit界面演示：`creator ui`，然后访问 `http://localhost:8501/`
-  - 更丰富的文档资料： [示例教程](docs/examples/01_skills_create.ipyn) 以及 [API参考手册](docs/api_doc.md)
+  - 更丰富的文档资料： [示例教程](docs/examples/01_skills_create.ipynb) 以及 [API参考手册](docs/api_doc.md)
 
 
 # 安装

@@ -36,7 +36,7 @@
 - [x] **2023-10-19**: バグの修正とプロジェクトの構造変更を行いました。新たに以下のサポートを追加しました：
   - クリエーターツールのインポート：`from creator.agents.creator_agent import open_creator_agent`
   - コマンドライン操作：詳しくは`creator -h`を参照。サーバーモードでの起動：`creator server`、アクセスは `http://localhost:8000/docs`。Streamlitデモの表示：`creator ui`、アクセスは `http://localhost:8501/`
-  - 豊富なドキュメンテーション： [ノートブックサンプル](docs/examples/01_skills_create.ipyn) と [APIのドキュメント](docs/api_doc.md)
+  - 豊富なドキュメンテーション： [ノートブックサンプル](docs/examples/01_skills_create.ipynb) と [APIのドキュメント](docs/api_doc.md)
 
 
 # インストール

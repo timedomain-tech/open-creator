@@ -36,7 +36,7 @@
 - [x] **2023-10-19**: Fix bugs and refact the project. Support
   - creator agent: `from creator.agents.creator_agent import open_creator_agent`
   - command lines: see help: `creator -h`; run as server: `creator server` and open `http://localhost:8000/docs`; streamlit demo: `creator ui` and open `http://localhost:8501/`
-  - more documents:  [notebooks examples](docs/examples/01_skills_create.ipyn) and [API_DOC](docs/api_doc.md)
+  - more documents:  [notebooks examples](docs/examples/01_skills_create.ipynb) and [API_DOC](docs/api_doc.md)
 
 
 # Installation
