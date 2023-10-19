@@ -1,0 +1,59 @@
+{
+    "skill_name": "save",
+    "skill_description": "Save a skill to a local path or a huggingface repo.",
+    "skill_metadata": {
+        "created_at": "2023-10-04 09:54:43",
+        "author": "gongjunmin",
+        "updated_at": "2023-10-04 09:54:43",
+        "usage_count": 0,
+        "version": "1.0.0",
+        "additional_kwargs": {}
+    },
+    "skill_tags": [
+        "save",
+        "skill",
+        "huggingface",
+        "local path"
+    ],
+    "skill_usage_example": "save(skill=skill, huggingface_repo_id='ChuxiJ/skill_library') or save(skill=skill, skill_path='/path/to/save')",
+    "skill_program_language": "python",
+    "skill_code": "from creator.core import creator\nfrom creator.core.skill import CodeSkill\n\n\ndef save(skill: CodeSkill, huggingface_repo_id: str = None, skill_path: str = None):\n    \"\"\"\n    Save a skill to a local path or a huggingface repo.\n    \n    Parameters:\n    skill: CodeSkill object, the skill to be saved.\n    huggingface_repo_id: str, optional, the ID of the huggingface repo. If provided, the skill will be saved to this repo.\n    skill_path: str, optional, the local path. If provided, the skill will be saved to this path.\n    \n    Returns:\n    None\n    \n    Example:\n    >>> import creator\n    >>> import os\n    >>> skill_json_path = os.path.expanduser(\"~\") + \"/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json\"\n    >>> skill = creator.create(skill_json_path=skill_json_path)\n    >>> save(skill=skill, huggingface_repo_id=\"ChuxiJ/skill_library\") # save to remote\n    >>> save(skill=skill, skill_path=\"/path/to/save\") # save to local\n    \"\"\"\n    if huggingface_repo_id is not None:\n        creator.save(skill=skill, huggingface_repo_id=huggingface_repo_id)\n    elif skill_path is not None:\n        creator.save(skill=skill, skill_path=skill_path)\n    else:\n        creator.save(skill=skill)",
+    "skill_parameters": [
+        {
+            "param_name": "skill",
+            "param_type": "object",
+            "param_description": "CodeSkill object, the skill to be saved.",
+            "param_required": true,
+            "param_default": null
+        },
+        {
+            "param_name": "huggingface_repo_id",
+            "param_type": "string",
+            "param_description": "optional, the ID of the huggingface repo. If provided, the skill will be saved to this repo.",
+            "param_required": false,
+            "param_default": null
+        },
+        {
+            "param_name": "skill_path",
+            "param_type": "string",
+            "param_description": "optional, the local path. If provided, the skill will be saved to this path.",
+            "param_required": false,
+            "param_default": null
+        }
+    ],
+    "skill_return": null,
+    "skill_dependencies": [
+        {
+            "dependency_name": "open-creator",
+            "dependency_version": "latest",
+            "dependency_type": "package"
+        }
+    ],
+    "conversation_history": [
+        {
+            "role": "user",
+            "content": "# file name: save.py\nimport creator\nfrom creator.schema.skill import CodeSkill\n\n\ndef save(skill: CodeSkill, huggingface_repo_id: str = None, skill_path: str = None):\n    \"\"\"\n    Save a skill to a local path or a huggingface repo.\n    \n    Parameters:\n    skill: CodeSkill object, the skill to be saved.\n    huggingface_repo_id: str, optional, the ID of the huggingface repo. If provided, the skill will be saved to this repo.\n    skill_path: str, optional, the local path. If provided, the skill will be saved to this path.\n    \n    Returns:\n    None\n    \n    Usage examples:\n    ```python\n    >>> import creator\n    >>> import os\n    >>> skill_json_path = os.path.expanduser(\"~\") + \"/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json\"\n    >>> skill = creator.create(skill_json_path=skill_json_path)\n    >>> creator.save(skill=skill, huggingface_repo_id=\"ChuxiJ/skill_library\")\n    ```\n    or\n    ```python\n    >>> import creator\n    >>> import os\n    >>> skill_json_path = os.path.expanduser(\"~\") + \"/.cache/open_creator/skill_library/ask_run_code_confirm/skill.json\"\n    >>> skill = creator.create(skill_json_path=skill_json_path)\n    >>> creator.save(skill=skill, skill_path=\"/path/to/save\")\n    ```\n    \"\"\"\n    if huggingface_repo_id is not None:\n        creator.save_to_hub(skill=skill, huggingface_repo_id=huggingface_repo_id)\n    elif skill_path is not None:\n        creator.save_to_skill_path(skill=skill, skill_path=skill_path)\n    else:\n        raise ValueError(\"Either huggingface_repo_id or skill_path must be provided.\")\n    \n"
+        }
+    ],
+    "test_summary": null
+}

@@ -1,0 +1,46 @@
+{
+    "name": "create",
+    "description": "Create a skill from various sources.\n\nskill = creator.create(request=\"filter how many prime numbers are in 201\")",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "request": {
+                "type": "string",
+                "description": "Request string."
+            },
+            "messages": {
+                "type": "array",
+                "description": "Messages in list of dict format."
+            },
+            "messages_json_path": {
+                "type": "string",
+                "description": "Path to messages JSON file."
+            },
+            "skill_path": {
+                "type": "string",
+                "description": "Path to skill directory."
+            },
+            "skill_json_path": {
+                "type": "string",
+                "description": "Path to skill JSON file."
+            },
+            "file_content": {
+                "type": "string",
+                "description": "File content."
+            },
+            "file_path": {
+                "type": "string",
+                "description": "Path to file."
+            },
+            "huggingface_repo_id": {
+                "type": "string",
+                "description": "Huggingface repo ID."
+            },
+            "huggingface_skill_path": {
+                "type": "string",
+                "description": "Huggingface skill path."
+            }
+        },
+        "required": []
+    }
+}

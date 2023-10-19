@@ -1,0 +1,64 @@
+{
+    "skill_name": "search",
+    "skill_description": "This skill allows users to search for skills by query.",
+    "skill_metadata": {
+        "created_at": "2023-10-04 14:51:53",
+        "author": "gongjunmin",
+        "updated_at": "2023-10-04 14:51:53",
+        "usage_count": 0,
+        "version": "1.0.0",
+        "additional_kwargs": {}
+    },
+    "skill_tags": [
+        "search",
+        "query",
+        "CodeSkill"
+    ],
+    "skill_usage_example": "skills = search('I want to extract some pages from a pdf')",
+    "skill_program_language": "python",
+    "skill_code": "from creator.core import creator\nfrom creator.core.skill import CodeSkill\n\ndef search(query: str, top_k=1, threshold=0.8) -> list[CodeSkill]:\n    '''\n    Search skills by query.\n    \n    Parameters:\n    query: str, the query.\n    top_k: int, optional, the maximum number of skills to return.\n    threshold: float, optional, the minimum similarity score to return a skill.\n    Returns:\n    a list of CodeSkill objects.\n\n    Example:\n    >>> import creator\n    >>> skills = search('I want to extract some pages from a pdf')\n    '''\n\n    return creator.search(query=query, top_k=top_k, threshold=threshold)",
+    "skill_parameters": [
+        {
+            "param_name": "query",
+            "param_type": "string",
+            "param_description": "The query to search for skills.",
+            "param_required": true,
+            "param_default": null
+        },
+        {
+            "param_name": "top_k",
+            "param_type": "integer",
+            "param_description": "The maximum number of skills to return.",
+            "param_required": false,
+            "param_default": 1
+        },
+        {
+            "param_name": "threshold",
+            "param_type": "float",
+            "param_description": "The minimum similarity score to return a skill.",
+            "param_required": false,
+            "param_default": 0.8
+        }
+    ],
+    "skill_return": {
+        "param_name": "skills",
+        "param_type": "array",
+        "param_description": "A list of CodeSkill objects.",
+        "param_required": true,
+        "param_default": null
+    },
+    "skill_dependencies": [
+        {
+            "dependency_name": "open-creator",
+            "dependency_version": "latest",
+            "dependency_type": "package"
+        }
+    ],
+    "conversation_history": [
+        {
+            "role": "user",
+            "content": "# file name: search.py\nimport creator\nfrom creator.schema.skill import CodeSkill\n\n\ndef search(query: str, top_k=1, threshold=0.8) -> list[CodeSkill]:\n    \"\"\"\n    Search skills by query.\n    \n    Parameters:\n    query: str, the query.\n    top_k: int, optional, the maximum number of skills to return.\n    threshold: float, optional, the minimum similarity score to return a skill.\n    Returns:\n    a list of CodeSkill objects.\n\n    Example:\n    >>> import creator\n    >>> skills = search(\"I want to extract some pages from a pdf\")\n    \"\"\"\n\n    return creator.search(query=query, top_k=top_k, threshold=threshold)\n\n"
+        }
+    ],
+    "test_summary": null
+}

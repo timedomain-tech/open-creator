@@ -8,6 +8,10 @@
     <a href="README_ZH.md"><img src="https://img.shields.io/badge/文档-中文版-white.svg" alt="ZH doc"/></a>
     <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=white&style=flat" alt="License"/>
     <a href="docs/tech_report/open-creator.pdf"><img src="https://img.shields.io/badge/arXiv-Paper-blue.svg" alt="paper"></a>
+    <a href="https://huggingface.co/spaces/timedomain/skill-library-hub"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Skills%20Library%20Hub-yellow" alt="huggingface"></a>
+    <a href="docs/api_doc.md"><img src="https://readthedocs.org/projects/keytotext/badge/?version=latest" alt="docs"></a>
+    <a href="[docs/api_doc.md](https://pepy.tech/project/open-creator)"><img src="https://static.pepy.tech/badge/open-creator" alt="downloads"></a>
+    <a href="https://colab.research.google.com/github/timedomain-tech/open-creator/blob/main/docs/examples/08_creator_agent.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="colab"></a>
     <br><br>
     <b>カスタマイズされたスキルライブラリを構築</b><br>
     ツールを作成するためのオープンソースのLLMツール<br>
@@ -16,6 +20,9 @@
 <br>
 
 `open-creator` は、既存の会話や要求からスキルを抽出し、それらを保存し、必要に応じて取得するために設計された革新的なパッケージです。これは、コードの洗練されたバージョンを統合し、アーカイブするシームレスな方法を提供し、それらを即座に使用可能なスキルセットに変えることで、[open-interpreter](https://github.com/KillianLucas/open-interpreter) の力を強化します。
+
+![](docs/tech_report/figures/framework.png)
+
 
 # 特徴
 - [x] **スキルライブラリ**：効率的に構造化された関数呼び出しを保存および取得。
@@ -26,6 +33,10 @@
 
 # Updates
 - [x] **2023-10-01**: いくつかのバグを修正し、エージェントエージェントのテストとリファクタリングをサポートします
+- [x] **2023-10-19**: バグの修正とプロジェクトの構造変更を行いました。新たに以下のサポートを追加しました：
+  - クリエーターツールのインポート：`from creator.agents.creator_agent import open_creator_agent`
+  - コマンドライン操作：詳しくは`creator -h`を参照。サーバーモードでの起動：`creator server`、アクセスは `http://localhost:8000/docs`。Streamlitデモの表示：`creator ui`、アクセスは `http://localhost:8501/`
+  - 豊富なドキュメンテーション： [ノートブックサンプル](docs/examples/01_skills_create.ipyn) と [APIのドキュメント](docs/api_doc.md)
 
 
 # インストール
@@ -174,7 +185,6 @@ for skill in skills:
 ## 4. スキルを使用
 - [x] 4.1 スキルを使用
 ```python
-from rich.markdown import Markdown
 from rich import print
 skill = creator.search("pdf extract section")[0]
 input_args = {
@@ -183,7 +193,7 @@ input_args = {
     "end_page": 8,
     "output_path": "creator3-8.pdf"
 }
-print(Markdown(repr(skill)))
+skill.show()
 resp = skill.run(input_args)
 print(resp)
 ```
@@ -195,7 +205,7 @@ resp = skill.run(request)
 ```
 
 # 貢献
-コミュニティからの貢献を歓迎します！バグ修正、新機能、ライブラリに追加するスキルなど、あなたの貢献は価値があります。ガイドラインについては、[貢献ガイドライン](CONTRIBUTING.md) をご覧ください。
+コミュニティからの貢献を歓迎します！バグ修正、新機能、ライブラリに追加するスキルなど、あなたの貢献は価値があります。ガイドラインについては、[貢献ガイドライン](CONTRIBUTING_JA.md) をご覧ください。
 
 ## ライセンス
 

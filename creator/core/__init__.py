@@ -1,4 +1,5 @@
 from .core import Creator
 
+creator = Creator()
 
-__all__ = ["Creator"]
+__all__ = ["creator"]

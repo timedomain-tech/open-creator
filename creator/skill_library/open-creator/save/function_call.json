@@ -1,0 +1,24 @@
+{
+    "name": "save",
+    "description": "Save a skill to a local path or a huggingface repo.\n\nsave(skill=skill, huggingface_repo_id='xxxx/skill_library') or save(skill=skill, skill_path='/path/to/save')",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "skill": {
+                "type": "object",
+                "description": "CodeSkill object, the skill to be saved."
+            },
+            "huggingface_repo_id": {
+                "type": "string",
+                "description": "optional, the ID of the huggingface repo. If provided, the skill will be saved to this repo."
+            },
+            "skill_path": {
+                "type": "string",
+                "description": "optional, the local path. If provided, the skill will be saved to this path."
+            }
+        },
+        "required": [
+            "skill"
+        ]
+    }
+}

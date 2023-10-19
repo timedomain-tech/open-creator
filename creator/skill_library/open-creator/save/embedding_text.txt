@@ -1,0 +1,5 @@
+save
+Save a skill to a local path or a huggingface repo.
+Usage examples:
+save(skill=skill) or save(skill=skill, huggingface_repo_id='xxxx/skill_library') or save(skill=skill, skill_path='/path/to/save')
+['save', 'skill', 'huggingface', 'local path']

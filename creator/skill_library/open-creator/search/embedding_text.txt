@@ -1,0 +1,4 @@
+search
+This skill allows users to search for skills by query.
+skills = search('I want to extract some pages from a pdf')
+['search', 'query', 'CodeSkill']

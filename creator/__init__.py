@@ -1,9 +1,17 @@
-from .config.library import config as _config
-from .core import Creator
-import sys
+from .core import creator
+from .client import cmd_client
+from .__version__ import __version__
 
+create = creator.create
+save = creator.save
+search = creator.search
+config = creator.config
 
-# to save a step, we can directly `import creator` and use its interface
-sys.modules["creator"] = Creator()
-
-config = _config
+__all__ = [
+    "cmd_client",
+    "create",
+    "save",
+    "search",
+    "config",
+    "__version__"
+]

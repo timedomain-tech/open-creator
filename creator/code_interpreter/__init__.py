@@ -6,6 +6,7 @@ from .R import RInterpreter
 from .html import HTMLInterpreter
 from .javascript import JSInterpreter
 from .shell import ShellInterpreter
+from .safe_python import SafePythonInterpreter
 from langchain.tools import StructuredTool, format_tool_to_openai_function
 from typing import Type, Optional, Any
 from pydantic import BaseModel, Field
@@ -31,7 +32,8 @@ language_map = {
     'applescript': AppleScriptInterpreter,
     'bash': ShellInterpreter,
     'julia': JuliaInterpreter,
-    'python': PythonInterpreter,
+    # 'python': PythonInterpreter,
+    'python': SafePythonInterpreter,
     'r': RInterpreter,
     'html': HTMLInterpreter,
     'javascript': JSInterpreter,
@@ -61,7 +63,7 @@ class CodeInterpreter(StructuredTool):
         code = re.sub(r'(```|`)$', '', code)
         code = code.strip()
         code += "\n\n"
-        # replace tab to 4 
+        # replace tab to 4
         return code
 
     def _run(
@@ -71,8 +73,9 @@ class CodeInterpreter(StructuredTool):
         run_manager: Optional[CallbackManagerForToolRun] = None,
         **kwargs: Any,
     ) -> dict[str, str]:
+        language = language.lower()
         if language not in language_map:
-            return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported"}
+            return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported, Only support {list(language_map.keys())}"}
         if language not in self.interpreters:
             self.add_interpreter(language=language)
         code = self.clean_code(code)
@@ -87,4 +90,3 @@ class CodeInterpreter(StructuredTool):
         function_schema = format_tool_to_openai_function(self)
         function_schema["parameters"] = remove_title(function_schema["parameters"])
         return function_schema
-

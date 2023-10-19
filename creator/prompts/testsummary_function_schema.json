@@ -1,0 +1,53 @@
+{
+    "name": "test_summary",
+    "description": "A method to be invoked once all test cases have been successfully completed. This function provides a comprehensive summary of each test case, detailing their input, execution command, expected results, actual results, and pass status.",
+    "parameters": {
+        "$defs": {
+            "TestCase": {
+                "properties": {
+                    "test_input": {
+                        "description": "The input data or conditions used for the test.",
+                        "type": "string"
+                    },
+                    "run_command": {
+                        "description": "The command or function that was executed for the test.",
+                        "type": "string"
+                    },
+                    "expected_result": {
+                        "description": "The expected outcome or result of the test.",
+                        "type": "string"
+                    },
+                    "actual_result": {
+                        "description": "The actual outcome or result observed after the test was executed.",
+                        "type": "string"
+                    },
+                    "is_passed": {
+                        "description": "A boolean indicating whether the test passed or failed.",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "test_input",
+                    "run_command",
+                    "expected_result",
+                    "actual_result",
+                    "is_passed"
+                ],
+                "type": "object"
+            }
+        },
+        "properties": {
+            "test_cases": {
+                "description": "Extract a list of test cases that were run.",
+                "items": {
+                    "$ref": "#/$defs/TestCase"
+                },
+                "type": "array"
+            }
+        },
+        "required": [
+            "test_cases"
+        ],
+        "type": "object"
+    }
+}

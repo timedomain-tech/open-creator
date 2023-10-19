@@ -8,6 +8,10 @@
     <a href="README_ZH.md"><img src="https://img.shields.io/badge/文档-中文版-white.svg" alt="ZH doc"/></a>
     <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=white&style=flat" alt="License"/>
     <a href="docs/tech_report/open-creator.pdf"><img src="https://img.shields.io/badge/arXiv-Paper-blue.svg" alt="paper"></a>
+    <a href="https://huggingface.co/spaces/timedomain/skill-library-hub"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Skills%20Library%20Hub-yellow" alt="huggingface"></a>
+    <a href="docs/api_doc.md"><img src="https://readthedocs.org/projects/keytotext/badge/?version=latest" alt="docs"></a>
+    <a href="[docs/api_doc.md](https://pepy.tech/project/open-creator)"><img src="https://static.pepy.tech/badge/open-creator" alt="downloads"></a>
+    <a href="https://colab.research.google.com/github/timedomain-tech/open-creator/blob/main/docs/examples/08_creator_agent.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="colab"></a>
     <br><br>
     <b>Build your costomized skill library</b><br>
     An open-source LLM tool for extracting repeatable tasks from your conversations, and saving them into a customized skill library for retrieval.<br>
@@ -16,6 +20,9 @@
 <br>
 
 `open-creator` is an innovative package designed to extract skills from existing conversations or a requirement, save them, and retrieve them when required. It offers a seamless way to consolidate and archive refined versions of codes, turning them into readily usable skill sets, thereby enhancing the power of the [open-interpreter](https://github.com/KillianLucas/open-interpreter).
+
+![](docs/tech_report/figures/framework.png)
+
 
 # Features
 - [x] **Skill Library**: Efficiently save and retrieve structured function calls.
@@ -26,6 +33,11 @@
 
 # Updates
 - [x] **2023-10-01**: Fix bugs and support tester agent and refactor agent
+- [x] **2023-10-19**: Fix bugs and refact the project. Support
+  - creator agent: `from creator.agents.creator_agent import open_creator_agent`
+  - command lines: see help: `creator -h`; run as server: `creator server` and open `http://localhost:8000/docs`; streamlit demo: `creator ui` and open `http://localhost:8501/`
+  - more documents:  [notebooks examples](docs/examples/01_skills_create.ipyn) and [API_DOC](docs/api_doc.md)
+
 
 # Installation
 ```shell
@@ -33,6 +45,7 @@ pip install -U open-creator
 ```
 
 # Usage
+
 ```python
 import creator
 ```
@@ -182,7 +195,6 @@ for skill in skills:
 ## 4. Use a skill
 - [x] 4.1 Use a skill by input args
 ```python
-from rich.markdown import Markdown
 from rich import print
 skill = creator.search("pdf extract section")[0]
 input_args = {
@@ -191,7 +203,7 @@ input_args = {
     "end_page": 8,
     "output_path": "creator3-8.pdf"
 }
-print(Markdown(repr(skill)))
+skill.show()
 resp = skill.run(input_args)
 print(resp)
 ```
@@ -231,3 +243,9 @@ If you find our work useful, please consider citing us!
   url = {https://github.com/timedomain-tech/open-creator/blob/main/docs/tech_report/open-creator.pdf},
 }
 ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=timedomain-tech/open-creator&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=timedomain-tech/open-creator&type=Date" />
+  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=timedomain-tech/open-creator&type=Date" />
+</picture>

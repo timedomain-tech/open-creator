@@ -1,95 +1,60 @@
-from typing import Any, Dict, List, Optional
-from langchain.chains.llm import LLMChain
-from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
+from typing import Dict, Any
 from langchain.prompts import ChatPromptTemplate
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.adapters.openai import convert_openai_messages
+from langchain.output_parsers.json import parse_partial_json
+
 from creator.config.library import config
-from creator.utils import convert_to_values_list
-import os
+from creator.utils import convert_to_values_list, get_user_info, load_system_prompt
 import json
 
 from creator.llm import create_llm
+from .base import BaseAgent
 
 
-_SYSTEM_TEMPLATE = """Extract one skill object from above conversation history, which is a list of messages.
-Follow the guidelines below:
-1. Only extract all the required properties mentioned in the 'extract_formmated_skill' function
-2. When write the code for the skill, only write one function or one class object
-[User Info]
-Name: {username}
-CWD: {current_working_directory}
-OS: {operating_system}
-"""
+class SkillExtractorAgent(BaseAgent):
+    output_key: str = "extracted_skill"
 
-
-class SkillExtractorAgent(LLMChain):
     @property
     def _chain_type(self):
         return "SkillExtractorAgent"
 
-    @property
-    def input_keys(self) -> List[str]:
-        return ["username", "current_working_directory", "operating_system", "messages"]
+    def construct_prompt(self, langchain_messages: Dict[str, Any]):
+        prompt = ChatPromptTemplate.from_messages(messages=[
+            *langchain_messages,
+            ("system", self.system_template + get_user_info())
+        ])
+        return prompt
+    
+    def parse_output(self, messages):
+        function_call = messages[-1].get("function_call", None)
 
-    def _call(
-        self,
-        inputs: Dict[str, Any],
-        run_manager: Optional[CallbackManagerForChainRun] = None,
-    ) -> Dict[str, Any]:
-        callback = None
-        if self.llm.callbacks is not None:
-            callback = self.llm.callbacks.handlers[0]
-        if callback:
-            callback.on_chain_start()
-
-        messages = inputs.pop("messages")
-        chat_messages = convert_openai_messages(messages)
-        chat_messages.append(("system", _SYSTEM_TEMPLATE))
-        prompt = ChatPromptTemplate.from_messages(chat_messages)
-        self.prompt = prompt
-
-        response = self.generate([inputs], run_manager=run_manager)
-
-        extracted_skill = self.create_outputs(response)[0]["extracted_skill"]
-        extracted_skill["conversation_history"] = messages
-        extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"]) if "skill_parameters" in extracted_skill else None
-        extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"]) if "skill_return" in extracted_skill else None
-        if callback:
-            callback.on_chain_end()
-        return {
-            "extracted_skill": extracted_skill
-        }
+        if function_call is not None:
+            extracted_skill = parse_partial_json(function_call.get("arguments", "{}"))
+            extracted_skill["conversation_history"] = messages[:-1]
+            extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"]) if "skill_parameters" in extracted_skill else None
+            extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"]) if "skill_return" in extracted_skill else None
+            return {"extracted_skill": extracted_skill}
+        return {"extracted_skill": None}
 
 
 def create_skill_extractor_agent(llm):
+    template = load_system_prompt(config.extractor_agent_prompt_path)
     # current file's parent as dir
-    path = os.path.join(os.path.dirname(__file__), ".", "codeskill_function_schema.json")
-    with open(path) as f:
+    with open(config.codeskill_function_schema_path, encoding="utf-8") as f:
         code_skill_json_schema = json.load(f)
     function_schema = {
         "name": "extract_formmated_skill",
         "description": "a function that extracts a skill from a conversation history",
         "parameters": code_skill_json_schema
     }
-    llm_kwargs = {"functions": [function_schema], "function_call": {"name": function_schema["name"]}}
-    output_parser = JsonOutputFunctionsParser()
-    # dummy prompt
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", _SYSTEM_TEMPLATE),
-        ]
-    )
+
     chain = SkillExtractorAgent(
         llm=llm,
-        prompt=prompt,
-        llm_kwargs=llm_kwargs,
-        output_parser=output_parser,
-        output_key="extracted_skill",
+        system_template=template,
+        function_schemas=[function_schema],
         verbose=False
     )
     return chain
 
 
-llm = create_llm(temperature=0, model=config.model, streaming=config.use_stream_callback, verbose=True)
+llm = create_llm(config)
 skill_extractor_agent = create_skill_extractor_agent(llm)
