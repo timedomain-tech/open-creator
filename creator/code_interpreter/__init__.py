@@ -75,7 +75,7 @@ class CodeInterpreter(StructuredTool):
     ) -> dict[str, str]:
         language = language.lower()
         if language not in language_map:
-            return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported"}
+            return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported, Only support {list(language_map.keys())}"}
         if language not in self.interpreters:
             self.add_interpreter(language=language)
         code = self.clean_code(code)

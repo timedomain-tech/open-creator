@@ -17,6 +17,9 @@
 
 `open-creator` は、既存の会話や要求からスキルを抽出し、それらを保存し、必要に応じて取得するために設計された革新的なパッケージです。これは、コードの洗練されたバージョンを統合し、アーカイブするシームレスな方法を提供し、それらを即座に使用可能なスキルセットに変えることで、[open-interpreter](https://github.com/KillianLucas/open-interpreter) の力を強化します。
 
+![](docs/tech_report/figures/framework.png)
+
+
 # 特徴
 - [x] **スキルライブラリ**：効率的に構造化された関数呼び出しを保存および取得。
 - [x] **リフレクションエージェント**：あなたの関数呼び出しを自動的に構造化し、カテゴリ分けします。
@@ -26,6 +29,10 @@
 
 # Updates
 - [x] **2023-10-01**: いくつかのバグを修正し、エージェントエージェントのテストとリファクタリングをサポートします
+- [x] **2023-10-19**: バグの修正とプロジェクトの構造変更を行いました。新たに以下のサポートを追加しました：
+  - クリエーターツールのインポート：`from creator.agents.creator_agent import open_creator_agent`
+  - コマンドライン操作：詳しくは`creator -h`を参照。サーバーモードでの起動：`creator server`、アクセスは `http://localhost:8000/docs`。Streamlitデモの表示：`creator ui`、アクセスは `http://localhost:8501/`
+  - 豊富なドキュメンテーション： [ノートブックサンプル](examples/01_skills_create.ipyn) と [APIのドキュメント](docs/api_doc.md)
 
 
 # インストール

@@ -17,6 +17,9 @@
 
 `open-creator` 是一个创新的包，设计用于从现有对话或需求中提取技能，保存它们，并在需要时检索它们。它提供了一种无缝的方法来整合和存档代码的精炼版本，将它们转化为随时可用的技能集，从而增强 [open-interpreter](https://github.com/KillianLucas/open-interpreter) 的功能。
 
+![](docs/tech_report/figures/framework.png)
+
+
 # 特点
 - [x] **技能库**：高效地保存和检索结构化函数调用。
 - [x] **反射代理**：自动结构化和分类您的函数调用。
@@ -26,6 +29,10 @@
 
 # Updates
 - [x] **2023-10-01**: 修复一些bugs，以及支持测试和重构代理agent
+- [x] **2023-10-19**: 我们已修复了一些问题并对项目进行了优化。现在新增以下功能：
+  - 创作者智能代理agent接口：`from creator.agents.creator_agent import open_creator_agent`
+  - 命令行工具：详情请查阅：`creator -h`；启动服务器模式：`creator server`，之后访问 `http://localhost:8000/docs`；查看Streamlit界面演示：`creator ui`，然后访问 `http://localhost:8501/`
+  - 更丰富的文档资料： [示例教程](examples/01_skills_create.ipyn) 以及 [API参考手册](docs/api_doc.md)
 
 
 # 安装

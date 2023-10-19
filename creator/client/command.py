@@ -161,7 +161,7 @@ arguments = [
                 "nickname": "host",
                 "help_text": "IP address",
                 "type": str,
-                "default": "localhost"
+                "default": "0.0.0.0"
             },
             {
                 "name": "port",

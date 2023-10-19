@@ -17,6 +17,9 @@
 
 `open-creator` is an innovative package designed to extract skills from existing conversations or a requirement, save them, and retrieve them when required. It offers a seamless way to consolidate and archive refined versions of codes, turning them into readily usable skill sets, thereby enhancing the power of the [open-interpreter](https://github.com/KillianLucas/open-interpreter).
 
+![](docs/tech_report/figures/framework.png)
+
+
 # Features
 - [x] **Skill Library**: Efficiently save and retrieve structured function calls.
 - [x] **Reflection Agent**: Automatically structures and categorizes your function calls.
@@ -26,6 +29,11 @@
 
 # Updates
 - [x] **2023-10-01**: Fix bugs and support tester agent and refactor agent
+- [x] **2023-10-19**: Fix bugs and refact the project. Support
+  - creator agent: `from creator.agents.creator_agent import open_creator_agent`
+  - command lines: see help: `creator -h`; run as server: `creator server` and open `http://localhost:8000/docs`; streamlit demo: `creator ui` and open `http://localhost:8501/`
+  - more documents:  [notebooks examples](examples/01_skills_create.ipyn) and [API_DOC](docs/api_doc.md)
+
 
 # Installation
 ```shell
@@ -33,7 +41,6 @@ pip install -U open-creator
 ```
 
 # Usage
-More details see [API_DOC](docs/api_doc.md)
 
 ```python
 import creator
