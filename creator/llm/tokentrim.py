@@ -114,6 +114,7 @@ def trim_single_message(message: Dict[str, Any], to_trim_tokens: int) -> None:
     content = message["content"]
     function_call = message.get("function_call", None)
     if content:
+        to_trim_tokens += 8  # for the ellipsis and the <content-trimmed> tag
         half_length = len(content) // 2
         left_half = content[:half_length-to_trim_tokens//2]
         right_half = content[half_length+to_trim_tokens//2:]
@@ -127,6 +128,7 @@ def trim_single_message(message: Dict[str, Any], to_trim_tokens: int) -> None:
         new_arguments = left_half + "...<arguments-trimmed>..." + right_half
         function_call["arguments"] = new_arguments
         message["function_call"] = function_call
+    return message
 
 
 def trim(
@@ -167,7 +169,7 @@ def trim(
                 curr_tokens -= msg_tokens
             else:
                 to_trim_tokens = max_tokens - (curr_tokens - msg_tokens)
-                trim_single_message(message, to_trim_tokens)
+                message = trim_single_message(message, to_trim_tokens)
                 trimmed_messages.append(message)
                 trimmed_messages.extend(messages[idx+1:])
                 break
@@ -187,7 +189,7 @@ def trim(
             idx += 1
         else:
             to_trim_tokens = msg_tokens - (available_tokens - msg_tokens)
-            trim_single_message(messages[idx], to_trim_tokens)
+            messages[idx] = trim_single_message(messages[idx], to_trim_tokens)
             idx += 1
             break
 

@@ -39,11 +39,12 @@ class RichOutputManager(OutputManager):
 
         is_terminal = Console().is_terminal
         is_jupyter = Console().is_jupyter
+        is_interactive = Console().is_interactive
 
-        self.use_rich = is_terminal or is_jupyter
+        self.use_rich = is_terminal or is_jupyter or is_interactive
 
-        self.code_live = Live(auto_refresh=False, console=Console(force_jupyter=is_jupyter, force_terminal=is_terminal), vertical_overflow="visible")
-        self.text_live = Live(auto_refresh=False, console=Console(force_jupyter=is_jupyter, force_terminal=is_terminal))
+        self.code_live = Live(auto_refresh=False, console=Console(force_jupyter=is_jupyter, force_terminal=is_terminal, force_interactive=is_interactive), vertical_overflow="visible")
+        self.text_live = Live(auto_refresh=False, console=Console(force_jupyter=is_jupyter, force_terminal=is_terminal, force_interactive=is_interactive))
 
     def add(self, agent_name):
         if not self.use_rich:

@@ -44,8 +44,10 @@ def validate_create_params(func):
         provided_params = [param for param in params if kwargs.get(param)]
 
         if len(provided_params) != 1 and len(huggingface_provided_params) == 0:
-            print(f"[red]Warning[/red]: [yellow]Only one parameter can be provided. You provided: {provided_params}[/yellow]")
-            return None
+            can_construct_skill = "request" in provided_params and ("file_content" in provided_params or "file_path" in provided_params)
+            if not can_construct_skill:
+                print(f"[red]Warning[/red]: [yellow]Only one parameter can be provided. You provided: {provided_params}[/yellow]")
+                return None
 
         # Return the original function with the validated parameters
         return func(cls, **kwargs)

@@ -58,7 +58,7 @@ class PythonInterpreter(BaseInterpreter):
             modified_code_lines.append(code_chunk)
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.For, ast.AsyncFor, ast.While, ast.If)):
                 # Add an extra newline after function and class definitions, and loop/if statements
-                modified_code_lines.append("\n\n")
+                modified_code_lines.append("\n")
             elif isinstance(node, ast.Return):
                 modified_code_lines.append("\n")
 

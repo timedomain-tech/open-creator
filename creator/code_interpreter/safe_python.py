@@ -24,9 +24,12 @@ class SafePythonInterpreter(StructuredTool):
     allowed_functions: set = {}
     allowed_methods: set = {}
     timeout: float = 1200
+    redirect_output: bool = True
 
     def setup(self, setup_code: str):
         self.run_code(setup_code)
+        # allowed_functions add build-ins
+        self.allowed_functions |= set(self.namespace["__builtins__"].keys())
         self.setup_done = True
 
     def is_allowed_function(self, node):
@@ -80,7 +83,8 @@ class SafePythonInterpreter(StructuredTool):
 
     def execute_last_line(self, last_line):
         output_io = io.StringIO()
-        # sys.stdout = output_io  # Redirect stdout to capture print statements
+        if self.redirect_output:
+            sys.stdout = output_io  # Redirect stdout to capture print statements
         output = ""
         if is_expression(last_line):
             eval_output = eval(last_line, self.namespace)
@@ -97,7 +101,8 @@ class SafePythonInterpreter(StructuredTool):
 
     def execute_code_blocks(self, blocks):
         output_io = io.StringIO()
-        # sys.stdout = output_io
+        if self.redirect_output:
+            sys.stdout = output_io
         output = ""
         for block in blocks:
             exec(block, self.namespace)

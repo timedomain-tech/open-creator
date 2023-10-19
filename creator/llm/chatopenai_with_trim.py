@@ -9,7 +9,7 @@ class TrimMixin:
         self, messages: List[BaseMessage], stop: Optional[List[str]]
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         message_dicts, params = super()._create_message_dicts(messages, stop)
-        message_dicts = trim(messages=message_dicts, model=self.model_name)
+        message_dicts = trim(messages=message_dicts, model=self.model_name, max_tokens=self.max_tokens)
         return message_dicts, params
 
 

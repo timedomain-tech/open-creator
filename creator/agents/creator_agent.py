@@ -18,11 +18,11 @@ from .base import BaseAgent
 OPEN_CREATOR_API_DOC = load_system_prompt(config.api_doc_path)
 VERIFY_TIPS = load_system_prompt(config.tips_for_veryfy_prompt_path)
 ALLOWED_FUNCTIONS = {"create", "save", "search", "CodeSkill"}
-ALLOW_METHODS = {".show", ".test", ".run", "__add__", "__gt__", "__lt__", "__annotations__"}
+ALLOW_METHODS = {".show", ".show_code", ".test", ".run", ".save", "__add__", "__gt__", "__lt__", "__annotations__"}
 IMPORT_CODE = (
     "from creator.core import creator\n"
     "from creator.core.skill import CodeSkill\n"
-    "create, save, search = creator.create, creator.search, creator.search\n\n"
+    "create, save, search = creator.create, creator.save, creator.search\n\n"
 )
 
 
@@ -71,7 +71,7 @@ class CreatorAgent(BaseAgent):
 def create_creator_agent(llm):
     template = load_system_prompt(config.creator_agent_prompt_path)
 
-    code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS)
+    code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS, redirect_output=True)
     code_interpreter.setup(IMPORT_CODE)
 
     chain = CreatorAgent(

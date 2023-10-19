@@ -59,11 +59,13 @@ Retrieve skills related to a specified query from the available pool of skills.
 
 Explore the functionalities and modifications of a skill object through methods and overloaded operators.
 
-#### Method: `show`
+#### Method: `show` and `show_code`
 Show a skill name, description, parameters, returns, usage examples and etc
+Show the skill code
 - **Example Usage**:
 ```python
 skill.show()
+skill.show_code()
 ```
 
 #### Method: `run`

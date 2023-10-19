@@ -39,26 +39,22 @@ class CodeSkillParameter(BaseModel):
 
     @classmethod
     def construct_with_aliases(cls, **data):
-        if 'parameter_name' in data and 'param_name' not in data:
-            data['param_name'] = data.pop('parameter_name')
-        if 'parameter_type' in data and 'param_type' not in data:
-            data['param_type'] = data.pop('parameter_type')
-        if 'parameter_description' in data and 'param_description' not in data:
-            data['param_description'] = data.pop('parameter_description')
-        if 'parameter_required' in data and 'param_required' not in data:
-            data['param_required'] = data.pop('parameter_required')
-        if 'parameter_default' in data and 'param_default' not in data:
-            data['param_default'] = data.pop('parameter_default')
-        if 'return_name' in data and 'param_name' not in data:
-            data['param_name'] = data.pop('return_name')
-        if 'return_type' in data and 'param_type' not in data:
-            data['param_type'] = data.pop('return_type')
-        if 'return_description' in data and 'param_description' not in data:
-            data['param_description'] = data.pop('return_description')
-        if 'return_required' in data and 'param_required' not in data:
-            data['param_required'] = data.pop('return_required')
-        if 'return_default' in data and 'param_default' not in data:
-            data['param_default'] = data.pop('return_default')
+        keys = {
+            "name": "param_name",
+            "type": "param_type",
+            "description": "param_description",
+            "required": "param_required",
+            "default": "param_default"
+        }
+
+        actual_keys = list(data.keys())
+        for actual_key in actual_keys:
+            for key_alias, expected_key in keys.items():
+                if key_alias in actual_key:
+                    data[expected_key] = data.pop(actual_key)
+                    break
+        if "param_name" not in data and "param_description" in data:
+            data["param_name"] = "_".join(data["param_description"].split(" ")).lower()[0:20]
         return data
 
     def to_json_schema(self):
@@ -282,9 +278,15 @@ When writing code, it's imperative to follow industry standards and best practic
         code_tester_agent.tools[0] = config.code_interpreter
 
         self.check_and_install_dependencies()
+        extra_import = """\n\n
+import io
+import unittest
+stream = io.StringIO()
+runner = unittest.TextTestRunner(stream=stream)
+"""
         tool_input = {
             "language": self.skill_program_language,
-            "code": self.skill_code
+            "code": self.skill_code + extra_import
         }
         tool_result = config.code_interpreter.run(tool_input)
         messages = [
@@ -310,7 +312,7 @@ When writing code, it's imperative to follow industry standards and best practic
     def refactor(self):
         if self.conversation_history is None:
             self.conversation_history = []
-        
+
         if not self.Config.refactorable:
             print("> This skill is not refactorable since it is not combined with other skills or add any user request", print_type="markdown")
             return
@@ -383,6 +385,10 @@ When writing code, it's imperative to follow industry standards and best practic
 
     def show(self):
         print(self.__repr__(), print_type="markdown")
+    
+    def show_code(self):
+        code = f"""```{self.skill_program_language}\n{self.skill_code}\n```"""
+        print(code, print_type="markdown")
 
     def save(self, skill_path=None, huggingface_repo_id=None):
         if skill_path is None:
