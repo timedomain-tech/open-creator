@@ -19,8 +19,11 @@ st.title("OpenCreator Web Demo")
 
 container = st.container()
 
+agent_name = "interpreter_agent"
+
 
 def setup_slidebar():
+    global agent_name
     with st.sidebar:
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
@@ -32,21 +35,16 @@ def setup_slidebar():
         temperature = st.slider("Temperature", 0.0, 1.0, 0.0, 0.05, key="temperature")
         config.temperature = temperature
         agent_list = ["creator_agent", "interpreter_agent"]
-        agent = st.selectbox("Agent", agent_list, key="agent")
-        if "agent" not in st.session_state:
-            st.session_state["agent"] = agent
-
+        selected_agent = st.selectbox("Agent", agent_list, key="agent")
+        if agent_name != selected_agent:
+            agent_name = selected_agent
+            add_session()
         if st.button("➕    New Chat", key="new_session"):
             add_session()
 
 
 def add_session():
-    agent_name = "creator_agent"
-    if "agent" in st.session_state:
-        agent_name = st.session_state["agent"]
-    agent = open_creator_agent if agent_name == "creator_agent" else code_interpreter_agent
-
-    session = {"title": "untitled", "messages": [], "agent": agent}
+    session = {"title": "untitled", "messages": []}
     st.session_state["sessions"].append(session)
 
 
@@ -62,6 +60,8 @@ def setup_state():
     if "langugae" not in st.session_state:
         st.session_state["language"] = "English"
 
+    if "agent" not in st.session_state:
+        st.session_state["agent"] = "interpreter_agent"
 
 def disable():
     st.session_state["disabled"] = True
@@ -171,7 +171,8 @@ def handle_input():
         messages.append({"role": "user", "content": prompt})
         print("current input messages", messages)
         render_conversation_history(container, messages)
-        agent = current_session["agent"]
+        agent = open_creator_agent if agent_name == "creator_agent" else code_interpreter_agent
+
         return_messages = stream_render(agent, messages, container)
         current_session["messages"] = return_messages
 
