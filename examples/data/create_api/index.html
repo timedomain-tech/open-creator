@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://open-creator.github.io/examples/data/create_api/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Create api - Open-Creator</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Create api";
+        var mkdocs_page_input_path = "examples/data/create_api.md";
+        var mkdocs_page_url = "/examples/data/create_api/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Open-Creator
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Start</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../..">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../01_skills_create/">01 Skills Create</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../02_skills_library/">02 Skills Lirabry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../03_skills_search/">03 Skills Search</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../04_skills_run/">04 Skills Run</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../05_skills_test/">05 Skills Test</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../06_skills_refactor/">06 Skills Refactor</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../07_skills_auto_optimize/">07 Skills Auto Optimize</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../08_creator_agent/">08 Creator Agent</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../api_doc/">API Docs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../commands/">Commands</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../configurations/">Configurations</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Open-Creator</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Create api</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="open-creator-api-documentation">Open-Creator API Documentation</h2>
+<h3 id="function-create">Function: <code>create</code></h3>
+<p>Generates a <code>CodeSkill</code> instance using different input sources.</p>
+<h4 id="parameters">Parameters:</h4>
+<ul>
+<li><code>request</code>: String detailing the skill functionality.</li>
+<li><code>messages</code> or <code>messages_json_path</code>: Messages as a list of dictionaries or a path to a JSON file containing messages.</li>
+<li><code>file_content</code> or <code>file_path</code>: String of file content or path to a code/API doc file.</li>
+<li><code>skill_path</code> or <code>skill_json_path</code>: Directory path with skill name as stem or file path with <code>skill.json</code> as stem.</li>
+<li><code>huggingface_repo_id</code>: Identifier for a Huggingface repository.</li>
+<li><code>huggingface_skill_path</code>: Path to the skill within the Huggingface repository.</li>
+</ul>
+<h4 id="returns">Returns:</h4>
+<ul>
+<li><code>CodeSkill</code>: The created skill.</li>
+</ul>
+<h4 id="installation">Installation</h4>
+<pre><code class="language-shell">pip install -U open-creator
+</code></pre>
+<p>open-creator: "^0.1.2"</p>
+<h4 id="usage">Usage:</h4>
+<pre><code class="language-python">from creator import create
+</code></pre>
+<h4 id="notes">Notes:</h4>
+<ul>
+<li>Ensure to provide accurate and accessible file paths.</li>
+<li>At least one parameter must be specified to generate a skill.</li>
+<li>Parameters’ functionality does not overlap; specify the most relevant one for clarity.</li>
+<li>Use absolute paths where possible to avoid relative path issues.</li>
+<li>Ensure the repository ID and skill path are accurate and that you have the necessary access permissions to retrieve the skill from the repository.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

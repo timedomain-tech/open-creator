@@ -1,0 +1,107 @@
+\begin{thebibliography}{10}
+
+\bibitem{wei2022chain}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed~Chi, Quoc~V. Le, Denny Zhou, et~al.
+\newblock Chain-of-thought prompting elicits reasoning in large language models.
+\newblock {\em Advances in Neural Information Processing Systems}, 35:24824--24837, 2022.
+
+\bibitem{xu2023rewoo}
+Binfeng Xu, Zhiyuan Peng, Bowen Lei, Subhabrata Mukherjee, Yuchen Liu, and Dongkuan Xu.
+\newblock Rewoo: Decoupling reasoning from observations for efficient augmented language models, 2023.
+
+\bibitem{wang2023selfconsistency}
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed~Chi, Sharan Narang, Aakanksha Chowdhery, and Denny Zhou.
+\newblock Self-consistency improves chain of thought reasoning in language models, 2023.
+
+\bibitem{yao2023tree}
+Shunyu Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran, Thomas~L. Griffiths, Yuan Cao, and Karthik Narasimhan.
+\newblock Tree of thoughts: Deliberate problem solving with large language models, 2023.
+
+\bibitem{schick2023toolformer}
+Timo Schick, Jane Dwivedi-Yu, Roberto Dessì, Roberta Raileanu, Maria Lomeli, Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom.
+\newblock Toolformer: Language models can teach themselves to use tools, 2023.
+
+\bibitem{li2023apibank}
+Minghao Li, Feifan Song, Bowen Yu, Haiyang Yu, Zhoujun Li, Fei Huang, and Yongbin Li.
+\newblock Api-bank: A benchmark for tool-augmented llms, 2023.
+
+\bibitem{openinterpreter}
+KillianLucas.
+\newblock Open interpreter, 2023.
+
+\bibitem{skreta2023errors}
+Marta Skreta, Naruki Yoshikawa, Sebastian Arellano-Rubach, Zhi Ji, Lasse~Bjørn Kristensen, Kourosh Darvish, Alán Aspuru-Guzik, Florian Shkurti, and Animesh Garg.
+\newblock Errors are useful prompts: Instruction guided task programming with verifier-assisted iterative prompting.
+\newblock {\em arXiv preprint arXiv: Arxiv-2303.14100}, 2023.
+
+\bibitem{yao2022react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao.
+\newblock React: Synergizing reasoning and acting in language models.
+\newblock {\em arXiv preprint arXiv: Arxiv-2210.03629}, 2022.
+
+\bibitem{wang2023voyager}
+Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu, Linxi Fan, and Anima Anandkumar.
+\newblock Voyager: An open-ended embodied agent with large language models, 2023.
+
+\bibitem{song2023llmplanner}
+Chan~Hee Song, Jiaman Wu, Clayton Washington, Brian~M. Sadler, Wei-Lun Chao, and Yu~Su.
+\newblock Llm-planner: Few-shot grounded planning for embodied agents with large language models, 2023.
+
+\bibitem{hong2023metagpt}
+Sirui Hong, Xiawu Zheng, Jonathan Chen, Yuheng Cheng, Jinlin Wang, Ceyao Zhang, Zili Wang, Steven Ka~Shing Yau, Zijuan Lin, Liyang Zhou, Chenyu Ran, Lingfeng Xiao, and Chenglin Wu.
+\newblock Metagpt: Meta programming for multi-agent collaborative framework, 2023.
+
+\bibitem{qian2023communicative}
+Chen Qian, Xin Cong, Wei Liu, Cheng Yang, Weize Chen, Yusheng Su, Yufan Dang, Jiahao Li, Juyuan Xu, Dahai Li, Zhiyuan Liu, and Maosong Sun.
+\newblock Communicative agents for software development, 2023.
+
+\bibitem{GPTEngineer}
+Anton Osika et~al.
+\newblock Gpt engineer, 2023.
+
+\bibitem{GPTeam}
+101dotxyz.
+\newblock Gpteam: Collaborative ai agents, 2023.
+
+\bibitem{bairi2023codeplan}
+Ramakrishna Bairi, Atharv Sonwane, Aditya Kanade, Vageesh~D C, Arun Iyer, Suresh Parthasarathy, Sriram Rajamani, B.~Ashok, and Shashank Shet.
+\newblock Codeplan: Repository-level coding using llms and planning, 2023.
+
+\bibitem{wang2023survey}
+Lei Wang, Chen Ma, Xueyang Feng, Zeyu Zhang, Hao Yang, Jingsen Zhang, Zhiyuan Chen, Jiakai Tang, Xu~Chen, Yankai Lin, Wayne~Xin Zhao, Zhewei Wei, and Ji-Rong Wen.
+\newblock A survey on large language model based autonomous agents, 2023.
+
+\bibitem{qian2023creator}
+Cheng Qian, Chi Han, Yi~R. Fung, Yujia Qin, Zhiyuan Liu, and Heng Ji.
+\newblock Creator: Disentangling abstract and concrete reasonings of large language models through tool creation, 2023.
+
+\bibitem{GPTCache}
+zilliztech.
+\newblock Gptcache : A library for creating semantic cache for llm queries, 2023.
+
+\bibitem{Schmidhuber_2015}
+Jürgen Schmidhuber.
+\newblock Deep learning in neural networks: An overview.
+\newblock {\em Neural Networks}, 61:85--117, jan 2015.
+
+\bibitem{dong2023survey}
+Qingxiu Dong, Lei Li, Damai Dai, Ce~Zheng, Zhiyong Wu, Baobao Chang, Xu~Sun, Jingjing Xu, Lei Li, and Zhifang Sui.
+\newblock A survey on in-context learning, 2023.
+
+\bibitem{lewis2021retrievalaugmented}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen tau Yih, Tim Rocktäschel, Sebastian Riedel, and Douwe Kiela.
+\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks, 2021.
+
+\bibitem{li2022survey}
+Huayang Li, Yixuan Su, Deng Cai, Yan Wang, and Lemao Liu.
+\newblock A survey on retrieval-augmented text generation, 2022.
+
+\bibitem{mialon2023augmented}
+Grégoire Mialon, Roberto Dessì, Maria Lomeli, Christoforos Nalmpantis, Ram Pasunuru, Roberta Raileanu, Baptiste Rozière, Timo Schick, Jane Dwivedi-Yu, Asli Celikyilmaz, Edouard Grave, Yann LeCun, and Thomas Scialom.
+\newblock Augmented language models: a survey, 2023.
+
+\bibitem{langchain}
+langchain team.
+\newblock Hwchase17/langchain: building applications with llms through composability, 2023.
+
+\end{thebibliography}

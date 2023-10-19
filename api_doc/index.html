@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://open-creator.github.io/api_doc/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API Docs - Open-Creator</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API Docs";
+        var mkdocs_page_input_path = "api_doc.md";
+        var mkdocs_page_url = "/api_doc/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Open-Creator
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Start</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/01_skills_create/">01 Skills Create</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/02_skills_library/">02 Skills Lirabry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/03_skills_search/">03 Skills Search</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/04_skills_run/">04 Skills Run</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/05_skills_test/">05 Skills Test</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/06_skills_refactor/">06 Skills Refactor</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/07_skills_auto_optimize/">07 Skills Auto Optimize</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/08_creator_agent/">08 Creator Agent</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">API Docs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#function-create">Function: create</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#returns">Returns:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage">Usage:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes">Notes:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#function-save">Function: save</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#parameters_1">Parameters:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#returns_1">Returns:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage_1">Usage:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_1">Notes:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#function-search">Function: search</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#parameters_2">Parameters:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#returns_2">Returns:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage_2">Usage:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_2">Notes:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#skill-object-methods-and-operator-overloading">Skill Object Methods and Operator Overloading</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#method-run">Method: run</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-test">Method: test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#overloaded-operators">Overloaded Operators:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_3">Notes:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configurations/">Configurations</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Open-Creator</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API</li>
+      <li class="breadcrumb-item active">API Docs</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="open-creator-api-documentation">Open-Creator API Documentation</h2>
+<h3 id="function-create">Function: <code>create</code></h3>
+<p>Generates a <code>CodeSkill</code> instance using different input sources.</p>
+<h4 id="parameters">Parameters:</h4>
+<ul>
+<li><code>request</code>: String detailing the skill functionality.</li>
+<li><code>messages</code> or <code>messages_json_path</code>: Messages as a list of dictionaries or a path to a JSON file containing messages.</li>
+<li><code>file_content</code> or <code>file_path</code>: String of file content or path to a code/API doc file.</li>
+<li><code>skill_path</code> or <code>skill_json_path</code>: Directory path with skill name as stem or file path with <code>skill.json</code> as stem.</li>
+<li><code>huggingface_repo_id</code>: Identifier for a Huggingface repository.</li>
+<li><code>huggingface_skill_path</code>: Path to the skill within the Huggingface repository.</li>
+</ul>
+<h4 id="returns">Returns:</h4>
+<ul>
+<li><code>CodeSkill</code>: The created skill.</li>
+</ul>
+<h4 id="usage">Usage:</h4>
+<ol>
+<li>Creating Skill using a Request String:</li>
+</ol>
+<pre><code class="language-python">skill = create(request=&quot;filter how many prime numbers are in 201&quot;)
+</code></pre>
+<ol>
+<li>Creating Skill using Messages:</li>
+<li>Directly:</li>
+</ol>
+<pre><code class="language-python">skill = create(messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;write a program...&quot;}])
+</code></pre>
+<ul>
+<li>Via JSON Path:</li>
+</ul>
+<pre><code class="language-python">skill = create(messages_json_path=&quot;./messages_example.json&quot;)
+</code></pre>
+<ol>
+<li>Creating Skill using File Content or File Path:</li>
+<li>Direct Content:</li>
+</ol>
+<pre><code class="language-python">skill = create(file_content=&quot;def example_function(): pass&quot;)
+</code></pre>
+<ul>
+<li>File Path:</li>
+</ul>
+<pre><code class="language-python">skill = create(file_path=&quot;../creator/utils/example.py&quot;)
+</code></pre>
+<ol>
+<li>Creating Skill using Skill Path or Skill JSON Path:</li>
+<li>JSON Path:</li>
+</ol>
+<pre><code class="language-python">skill = create(skill_json_path=&quot;~/.cache/open_creator/skill_library/create/skill.json&quot;)
+</code></pre>
+<ul>
+<li>Skill Path:</li>
+</ul>
+<pre><code class="language-python">skill = create(skill_path=&quot;~/.cache/open_creator/skill_library/create&quot;)
+</code></pre>
+<ol>
+<li>Creating Skill using Huggingface Repository ID and Skill Path:
+If a skill is hosted in a Huggingface repository, you can create it by specifying the repository ID and the skill path within the repository.</li>
+</ol>
+<pre><code class="language-python">skill = create(huggingface_repo_id=&quot;YourRepo/skill-library&quot;, huggingface_skill_path=&quot;specific_skill&quot;)
+</code></pre>
+<h4 id="notes">Notes:</h4>
+<ul>
+<li>Ensure to provide accurate and accessible file paths.</li>
+<li>At least one parameter must be specified to generate a skill.</li>
+<li>Parameters’ functionality does not overlap; specify the most relevant one for clarity.</li>
+<li>Use absolute paths where possible to avoid relative path issues.</li>
+<li>Ensure the repository ID and skill path are accurate and that you have the necessary access permissions to retrieve the skill from the repository.</li>
+</ul>
+<h3 id="function-save">Function: <code>save</code></h3>
+<p>Stores a <code>CodeSkill</code> instance either to a local path or a Huggingface repository. In default just use <code>save(skill)</code> and it will store the skill into the default path. Only save the skill when the user asks to do so.</p>
+<h4 id="parameters_1">Parameters:</h4>
+<ul>
+<li><code>skill</code> (CodeSkill): The skill instance to be saved.</li>
+<li><code>huggingface_repo_id</code> (Optional[str]): Identifier for a Huggingface repository.</li>
+<li><code>skill_path</code> (Optional[str]): Local path where the skill should be saved.</li>
+</ul>
+<h4 id="returns_1">Returns:</h4>
+<ul>
+<li>None</li>
+</ul>
+<h4 id="usage_1">Usage:</h4>
+<p>The <code>save</code> function allows for the persistent storage of a <code>CodeSkill</code> instance by saving it either locally or to a specified Huggingface repository. </p>
+<ol>
+<li><strong>Save to Huggingface Repository:</strong></li>
+</ol>
+<pre><code class="language-python">save(skill=skill, huggingface_repo_id=&quot;YourRepo/skill_library&quot;)
+</code></pre>
+<ol>
+<li><strong>Save Locally:</strong></li>
+</ol>
+<pre><code class="language-python">save(skill=skill, skill_path=&quot;/path/to/save&quot;)
+</code></pre>
+<h4 id="notes_1">Notes:</h4>
+<ul>
+<li>At least one of <code>huggingface_repo_id</code> or <code>skill_path</code> must be provided to execute the function, otherwise a <code>ValueError</code> will be raised.</li>
+<li>Ensure provided paths and repository identifiers are accurate and accessible.</li>
+</ul>
+<h3 id="function-search">Function: <code>search</code></h3>
+<p>Retrieve skills related to a specified query from the available pool of skills.</p>
+<h4 id="parameters_2">Parameters:</h4>
+<ul>
+<li><code>query</code> (str): Search query string.</li>
+<li><code>top_k</code> (Optional[int]): Maximum number of skills to return. Default is 1.</li>
+<li><code>threshold</code> (Optional[float]): Minimum similarity score to return a skill. Default is 0.8.</li>
+</ul>
+<h4 id="returns_2">Returns:</h4>
+<ul>
+<li>List[CodeSkill]: A list of retrieved <code>CodeSkill</code> objects that match the query.</li>
+</ul>
+<h4 id="usage_2">Usage:</h4>
+<p>The <code>search</code> function allows users to locate skills related to a particular query string. This is particularly useful for identifying pre-existing skills within a skill library that may fulfill a requirement or for exploring available functionalities.</p>
+<ol>
+<li><strong>Basic Search:</strong></li>
+</ol>
+<pre><code class="language-python">skills = search(&quot;extract pages from a pdf&quot;)
+</code></pre>
+<ol>
+<li><strong>Refined Search:</strong></li>
+</ol>
+<pre><code class="language-python">skills = search(&quot;extract pages from a pdf&quot;, top_k=3, threshold=0.85)
+</code></pre>
+<h4 id="notes_2">Notes:</h4>
+<ul>
+<li>The <code>query</code> should be descriptive to enhance the accuracy of retrieved results.</li>
+<li>Adjust <code>top_k</code> and <code>threshold</code> to balance between specificity and breadth of results.</li>
+<li>Ensure to check the length of the returned list to validate the presence of results before usage.</li>
+</ul>
+<h3 id="skill-object-methods-and-operator-overloading">Skill Object Methods and Operator Overloading</h3>
+<p>Explore the functionalities and modifications of a skill object through methods and overloaded operators.</p>
+<h4 id="method-run">Method: <code>run</code></h4>
+<p>Execute a skill with provided arguments or request.</p>
+<ul>
+<li><strong>Example Usage</strong>:</li>
+</ul>
+<pre><code class="language-python">skills = search(&quot;pdf extract section&quot;)
+if skills:
+  skill = skills[0]
+  input_args = {
+      &quot;pdf_path&quot;: &quot;creator.pdf&quot;,
+      &quot;start_page&quot;: 3,
+      &quot;end_page&quot;: 8,
+      &quot;output_path&quot;: &quot;creator3-8.pdf&quot;
+  }
+  print(skill.run(input_args))
+</code></pre>
+<h4 id="method-test">Method: <code>test</code></h4>
+<p>Validate a skill using a tester agent.</p>
+<ul>
+<li><strong>Example Usage</strong>:</li>
+</ul>
+<pre><code class="language-python">skill = create(request=&quot;filter prime numbers in a range, e.g., filter_prime_numbers(2, 201)&quot;)
+test_summary = skill.test()
+print(test_summary)
+print(skill.conversation_history)
+</code></pre>
+<h4 id="overloaded-operators">Overloaded Operators:</h4>
+<p>Modify and refine skills using operator overloading.</p>
+<ol>
+<li><strong>Combining Skills</strong>: Utilize the <code>+</code> operator to chain or execute skills in parallel, detailing the coordination with the <code>&gt;</code> operator.</li>
+</ol>
+<pre><code class="language-python">new_skill = skillA + skillB &gt; &quot;Explanation of how skills A and B operate together&quot;
+</code></pre>
+<ol>
+<li>
+<p><strong>Refactoring Skills</strong>: Employ the <code>&gt;</code> operator to enhance or modify existing skills.
+   <code>python
+   refactored_skill = skill &gt; "Descriptive alterations or enhancements"</code></p>
+</li>
+<li>
+<p><strong>Decomposing Skills</strong>: Use the <code>&lt;</code> operator to break down a skill into simpler components.
+   <code>python
+   simpler_skills = skill &lt; "Description of how the skill should be decomposed"</code></p>
+</li>
+</ol>
+<h4 id="notes_3">Notes:</h4>
+<ul>
+<li>Ensure accurate descriptions when using overloaded operators to ensure skill modifications are clear and understandable.</li>
+<li>Validate skills with <code>test</code> method to ensure functionality post-modification.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../examples/08_creator_agent/" class="btn btn-neutral float-left" title="08 Creator Agent"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../commands/" class="btn btn-neutral float-right" title="Commands">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../examples/08_creator_agent/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../commands/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
