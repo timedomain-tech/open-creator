@@ -41,11 +41,12 @@ class BaseInterpreter:
         """Reads from a stream and appends data to either stdout_data or stderr_data."""
         start_time = time.time()
         for line in stream:
+            if self.done.is_set():
+                break
             if self.detect_program_end(line):
-                start_time = time.time()
+                self.done.set()
                 break
             if time.time() - start_time > self.timeout:
-                start_time = time.time()
                 self.output_cache["stderr"] += f"\nsession timeout ({self.timeout}) s\n"
                 break
             if line:
@@ -67,6 +68,15 @@ class BaseInterpreter:
         self.stderr_thread = threading.Thread(target=self.handle_stream_output, args=(self.process.stderr, True), daemon=True)
         self.stdout_thread.start()
         self.stderr_thread.start()
+
+    def join(self, timeout):
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            if self.done.is_set():
+                break
+        self.stdout_thread.join(0.1)
+        self.stderr_thread.join(0.1)
 
     def preprocess(self, code):
         return code
@@ -92,7 +102,7 @@ class BaseInterpreter:
                 query = self.add_program_end_detector(query)
                 self.process.stdin.write(query + "\n")
                 self.process.stdin.flush()
-                
+
                 time.sleep(0.2)
             except subprocess.TimeoutExpired:
                 self.process.kill()
@@ -101,7 +111,7 @@ class BaseInterpreter:
         except BrokenPipeError:
             stderr = traceback.format_exc()
             return {"status": "error", "stdout": "", "stderr": stderr}
-
+        self.join(self.timeout)
         return self.postprocess({"status": "success", **self.output_cache})
 
     def __del__(self):
