@@ -152,15 +152,28 @@ When writing code, it's imperative to follow industry standards and best practic
             if isinstance(data["skill_parameters"], list):
                 self.skill_parameters = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**param)) for param in data["skill_parameters"]]
             elif isinstance(data["skill_parameters"], dict):
-                self.skill_parameters = CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_parameters"]))
+                if self.skill_parameters.param_name in ("null", "None") or self.skill_parameters.param_type in ("null", "None"):
+                    self.skill_parameters = []
+                else:
+                    self.skill_parameters = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_parameters"]))]
 
         if "skill_return" in data and data["skill_return"]:
             if isinstance(data["skill_return"], list):
                 self.skill_return = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**param)) for param in data["skill_return"]]
             elif isinstance(data["skill_return"], dict):
-                self.skill_return = CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_return"]))
                 if self.skill_return.param_name in ("null", "None") or self.skill_return.param_type in ("null", "None"):
-                    self.skill_return = None
+                    self.skill_return = []
+                else:
+                    self.skill_return = [CodeSkillParameter(**CodeSkillParameter.construct_with_aliases(**data["skill_return"]))]
+
+        if "skill_dependencies" in data and data["skill_dependencies"] is not None:
+            if isinstance(data["skill_dependencies"], list):
+                self.skill_dependencies = [CodeSkillDependency(**dependency) for dependency in data["skill_dependencies"]]
+            elif isinstance(data["skill_dependencies"], dict):
+                if self.skill_dependencies.dependency_name in ("null", "None") or self.skill_dependencies.dependency_name in ("null", "None"):
+                    self.skill_dependencies = []
+                else:
+                    self.skill_dependencies = [CodeSkillDependency(**data["skill_dependencies"])]
 
     def to_function_call(self):
         parameters = {
