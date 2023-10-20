@@ -199,15 +199,20 @@ When writing code, it's imperative to follow industry standards and best practic
 
         return code_skill_json_schema
 
-    def check_and_install_dependencies(self):
+    def install(self):
         if self.skill_dependencies is None:
             return
-        install_script = generate_install_command(self.skill_program_language, self.skill_dependencies)
-        result = config.code_interpreter.run({
-            "language": "shell",
-            "code": install_script,
-        })
-        print(result, print_type="json")
+        try:
+            install_script = generate_install_command(self.skill_program_language, self.skill_dependencies)
+            print("> Installing dependencies", print_type="markdown")
+            print(f"```bash\n{install_script}\n```\n", print_type="markdown")
+            result = config.code_interpreter.run({
+                "language": "shell",
+                "code": install_script,
+            })
+            print(f"> Install dependencies result: {result}", print_type="markdown")
+        except Exception as e:
+            print(f"> Error when installing dependencies: {e}", print_type="markdown")
         return
 
     def __add__(self, other_skill):
@@ -242,7 +247,7 @@ When writing code, it's imperative to follow industry standards and best practic
         return self.refactor()
 
     def run(self, inputs: Union[str, dict[str, Any]]):
-        self.check_and_install_dependencies()
+        self.install()
         messages = [
             {"role": "assistant", "content": "ok I will run your code", "function_call": {
                 "name": self.skill_name,
@@ -277,7 +282,7 @@ When writing code, it's imperative to follow industry standards and best practic
         previews_tool = code_tester_agent.tools[0]
         code_tester_agent.tools[0] = config.code_interpreter
 
-        self.check_and_install_dependencies()
+        self.install()
         extra_import = """\n\n
 import io
 import unittest
