@@ -47,6 +47,7 @@ class BaseInterpreter:
                 self.done.set()
                 break
             if time.time() - start_time > self.timeout:
+                self.done.set()
                 self.output_cache["stderr"] += f"\nsession timeout ({self.timeout}) s\n"
                 break
             if line:
