@@ -86,6 +86,7 @@ class LibraryConfig(BaseModel):
     tips_for_debugging_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_debugging_prompt.md")
     tips_for_testing_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_testing_prompt.md")
     tips_for_veryfy_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_veryfy_prompt.md")
+    expertise_prompt_agent_prompt_path: str = os.path.join(project_dir, "prompts", "expertise_prompt_agent_prompt.md")
 
     use_rich: bool = True
     use_file_logger: bool = False
