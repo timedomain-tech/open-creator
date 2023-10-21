@@ -101,6 +101,9 @@ class Creator:
             "messages": messages,
             "verbose": True,
         })
+        if skill_json is None:
+            print("> No skill was generated.", print_type="markdown")
+            return None
         skill = CodeSkill(**skill_json)
         if skill.skill_metadata is None:
             skill.skill_metadata = BaseSkillMetadata()

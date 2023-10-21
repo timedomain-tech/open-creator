@@ -2,7 +2,7 @@ import os
 from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.embeddings import OpenAIEmbeddings
-from .chatopenai_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
+from .chatllm_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
 
 
 def create_llm(config):
