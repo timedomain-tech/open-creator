@@ -3,7 +3,7 @@ name = "open-creator"
 packages = [
     {include = "creator"},
 ]
-version = "0.1.2"
+version = "0.1.3"
 description = "Build your costomized skill library"
 authors = ["JunminGONG <junmingong@qq.com>"]
 readme = "README.md"

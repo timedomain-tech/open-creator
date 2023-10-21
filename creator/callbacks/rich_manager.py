@@ -84,19 +84,18 @@ class RichOutputManager(OutputManager):
     def refresh_text(self, cursor: bool = True) -> None:
         """Refreshes the content display."""
         text = self.content
+        replacement = "```text"
         lines = text.split('\n')
         inside_code_block = False
-        for line in lines:
+        for i, line in enumerate(lines):
             # find the start of the code block
-            if line.startswith("```"):
+            if line.strip().startswith("```"):
                 inside_code_block = not inside_code_block
+                if inside_code_block:
+                    lines[i] = replacement
 
         content = '\n'.join(lines)
-        if cursor:
-            content += "█"
-        else:
-            if content.endswith("█"):
-                content = content[:-1]
+        content = self.update_cursor(cursor, content)
         if inside_code_block:
             content += "\n```"
         markdown = Markdown(content.strip())
@@ -109,7 +108,8 @@ class RichOutputManager(OutputManager):
         code_table = self._create_code_table(cursor)
         output_panel = self._create_output_panel()
 
-        group = Group(code_table, output_panel)
+        group_items = [code_table, output_panel]
+        group = Group(*group_items)
         self.code_live.update(group)
         self.code_live.refresh()
 
@@ -121,6 +121,13 @@ class RichOutputManager(OutputManager):
             self.refresh_code(cursor=cursor)
         else:
             self.refresh_text(cursor=cursor)
+
+    def update_cursor(self, cursor, content):
+        if cursor:
+            content += "●"
+        elif content.endswith("●"):
+            content = content[:-1]
+        return content
 
     def update_tool_result(self, chunk):
         if not self.use_rich:
@@ -167,11 +174,7 @@ class RichOutputManager(OutputManager):
         code_table = Table(show_header=False, show_footer=False, box=None, padding=0, expand=True)
         code_table.add_column()
 
-        if cursor:
-            self.code += "█"
-        else:
-            if len(self.code) > 0 and self.code[-1] == "█":
-                self.code = self.code[:-1]
+        self.code = self.update_cursor(cursor, self.code)
 
         code_lines = self.code.strip().split('\n')
         for i, line in enumerate(code_lines, start=1):
@@ -193,7 +196,7 @@ class RichOutputManager(OutputManager):
     def _create_output_panel(self) -> Panel:
         """Creates a panel for displaying the output."""
         if not self.tool_result or self.tool_result == "None":
-            return Panel("", box=MINIMAL, style="#FFFFFF on #3b3b37")
+            return ""
         return Panel(self.tool_result, box=MINIMAL, style="#FFFFFF on #3b3b37")
 
 
