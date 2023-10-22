@@ -1,156 +1,1174 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://open-creator.github.io/api_doc/" />
-      <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>API Docs - Open-Creator</title>
-    <link rel="stylesheet" href="../css/theme.css" />
-    <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
     
-      <script>
-        // Current page data
-        var mkdocs_page_name = "API Docs";
-        var mkdocs_page_input_path = "api_doc.md";
-        var mkdocs_page_url = "/api_doc/";
-      </script>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://open-creator.github.io/api_doc/">
+      
+      
+        <link rel="prev" href="../examples/08_creator_agent/">
+      
+      
+        <link rel="next" href="../commands/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
     
-    <!--[if lt IE 9]>
-      <script src="../js/html5shiv.min.js"></script>
-    <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
-</head>
+    
+      
+        <title>API Docs - Open Creator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.35e1ed30.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
 
-<body class="wy-body-for-nav" role="document">
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Open-Creator
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Getting Start</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                  </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Examples</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/01_skills_create/">01 Skills Create</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/02_skills_library/">02 Skills Lirabry</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/03_skills_search/">03 Skills Search</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/04_skills_run/">04 Skills Run</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/05_skills_test/">05 Skills Test</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/06_skills_refactor/">06 Skills Refactor</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/07_skills_auto_optimize/">07 Skills Auto Optimize</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../examples/08_creator_agent/">08 Creator Agent</a>
-                  </li>
-              </ul>
-              <p class="caption"><span class="caption-text">API</span></p>
-              <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">API Docs</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#function-create">Function: create</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#returns">Returns:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#usage">Usage:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#notes">Notes:</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#function-save">Function: save</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#parameters_1">Parameters:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#returns_1">Returns:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#usage_1">Usage:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#notes_1">Notes:</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#function-search">Function: search</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#parameters_2">Parameters:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#returns_2">Returns:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#usage_2">Usage:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#notes_2">Notes:</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#skill-object-methods-and-operator-overloading">Skill Object Methods and Operator Overloading</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#method-run">Method: run</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-test">Method: test</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#overloaded-operators">Overloaded Operators:</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#notes_3">Notes:</a>
-    </li>
-        </ul>
-    </li>
-    </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../configurations/">Configurations</a>
-                  </li>
-              </ul>
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#open-creator-api-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Open Creator" class="md-header__button md-logo" aria-label="Open Creator" data-md-component="logo">
+      
+  <img src="../pics/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Open Creator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Docs
+            
+          </span>
+        </div>
       </div>
     </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Open-Creator</a>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_3" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
         
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
       </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">API</li>
-      <li class="breadcrumb-item active">API Docs</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/timedomain-tech/open-creator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    open-creator
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+  Getting Start
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../examples/01_skills_create/" class="md-tabs__link">
+          
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
               
-                <h2 id="open-creator-api-documentation">Open-Creator API Documentation</h2>
-<h3 id="function-create">Function: <code>create</code></h3>
-<p>Generates a <code>CodeSkill</code> instance using different input sources.</p>
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Open Creator" class="md-nav__button md-logo" aria-label="Open Creator" data-md-component="logo">
+      
+  <img src="../pics/logo.png" alt="logo">
+
+    </a>
+    Open Creator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/timedomain-tech/open-creator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    open-creator
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Getting Start
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Start
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/01_skills_create/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01 Skills Create
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/02_skills_library/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    02 Skills Lirabry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/03_skills_search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    03 Skills Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/04_skills_run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    04 Skills Run
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/05_skills_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    05 Skills Test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/06_skills_refactor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    06 Skills Refactor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/07_skills_auto_optimize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    07 Skills Auto Optimize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/08_creator_agent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    08 Creator Agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API Docs
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API Docs
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#open-creator-api-documentation" class="md-nav__link">
+    Open-Creator API Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Open-Creator API Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-create" class="md-nav__link">
+    Function: create
+  </a>
+  
+    <nav class="md-nav" aria-label="Function: create">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    Returns:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-save" class="md-nav__link">
+    Function: save
+  </a>
+  
+    <nav class="md-nav" aria-label="Function: save">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    Parameters:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    Returns:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    Usage:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-search" class="md-nav__link">
+    Function: search
+  </a>
+  
+    <nav class="md-nav" aria-label="Function: search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    Parameters:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    Returns:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage_2" class="md-nav__link">
+    Usage:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_2" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-object-methods-and-operator-overloading" class="md-nav__link">
+    Skill Object Methods and Operator Overloading
+  </a>
+  
+    <nav class="md-nav" aria-label="Skill Object Methods and Operator Overloading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-run" class="md-nav__link">
+    Method: run
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-test" class="md-nav__link">
+    Method: test
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overloaded-operators" class="md-nav__link">
+    Overloaded Operators:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_3" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configurations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configurations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#open-creator-api-documentation" class="md-nav__link">
+    Open-Creator API Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Open-Creator API Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-create" class="md-nav__link">
+    Function: create
+  </a>
+  
+    <nav class="md-nav" aria-label="Function: create">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    Returns:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-save" class="md-nav__link">
+    Function: save
+  </a>
+  
+    <nav class="md-nav" aria-label="Function: save">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    Parameters:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    Returns:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    Usage:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-search" class="md-nav__link">
+    Function: search
+  </a>
+  
+    <nav class="md-nav" aria-label="Function: search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    Parameters:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    Returns:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage_2" class="md-nav__link">
+    Usage:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_2" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-object-methods-and-operator-overloading" class="md-nav__link">
+    Skill Object Methods and Operator Overloading
+  </a>
+  
+    <nav class="md-nav" aria-label="Skill Object Methods and Operator Overloading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-run" class="md-nav__link">
+    Method: run
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-test" class="md-nav__link">
+    Method: test
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overloaded-operators" class="md-nav__link">
+    Overloaded Operators:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_3" class="md-nav__link">
+    Notes:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>API Docs</h1>
+
+<h2 id="open-creator-api-documentation">Open-Creator API Documentation</h2>
+<h3 id="function-create">Function: <code class="language-python highlight"><span class="n">create</span></code></h3>
+<p>Generates a <code class="language-python highlight"><span class="n">CodeSkill</span></code> instance using different input sources.</p>
 <h4 id="parameters">Parameters:</h4>
 <ul>
 <li><code>request</code>: String detailing the skill functionality.</li>
@@ -162,53 +1180,51 @@
 </ul>
 <h4 id="returns">Returns:</h4>
 <ul>
-<li><code>CodeSkill</code>: The created skill.</li>
+<li><code class="language-python highlight"><span class="n">CodeSkill</span></code>: The created skill.</li>
 </ul>
 <h4 id="usage">Usage:</h4>
 <ol>
-<li>Creating Skill using a Request String:</li>
-</ol>
-<pre><code class="language-python">skill = create(request=&quot;filter how many prime numbers are in 201&quot;)
-</code></pre>
-<ol>
+<li>Creating Skill using a Request String:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="s2">&quot;filter how many prime numbers are in 201&quot;</span><span class="p">)</span>
+</span></code></pre></div></li>
 <li>Creating Skill using Messages:</li>
-<li>Directly:</li>
+<li>Directly:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;write a program...&quot;</span><span class="p">}])</span>
+</span></code></pre></div></li>
+<li>
+<p>Via JSON Path:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">messages_json_path</span><span class="o">=</span><span class="s2">&quot;./messages_example.json&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Creating Skill using File Content or File Path:</p>
+</li>
+<li>Direct Content:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">file_content</span><span class="o">=</span><span class="s2">&quot;def example_function(): pass&quot;</span><span class="p">)</span>
+</span></code></pre></div></li>
+<li>
+<p>File Path:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s2">&quot;../creator/utils/example.py&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Creating Skill using Skill Path or Skill JSON Path:</p>
+</li>
+<li>JSON Path:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">skill_json_path</span><span class="o">=</span><span class="s2">&quot;~/.cache/open_creator/skill_library/create/skill.json&quot;</span><span class="p">)</span>
+</span></code></pre></div></li>
+<li>
+<p>Skill Path:
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">skill_path</span><span class="o">=</span><span class="s2">&quot;~/.cache/open_creator/skill_library/create&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Creating Skill using Huggingface Repository ID and Skill Path:
+If a skill is hosted in a Huggingface repository, you can create it by specifying the repository ID and the skill path within the repository.
+<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">huggingface_repo_id</span><span class="o">=</span><span class="s2">&quot;YourRepo/skill-library&quot;</span><span class="p">,</span> <span class="n">huggingface_skill_path</span><span class="o">=</span><span class="s2">&quot;specific_skill&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
 </ol>
-<pre><code class="language-python">skill = create(messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;write a program...&quot;}])
-</code></pre>
-<ul>
-<li>Via JSON Path:</li>
-</ul>
-<pre><code class="language-python">skill = create(messages_json_path=&quot;./messages_example.json&quot;)
-</code></pre>
-<ol>
-<li>Creating Skill using File Content or File Path:</li>
-<li>Direct Content:</li>
-</ol>
-<pre><code class="language-python">skill = create(file_content=&quot;def example_function(): pass&quot;)
-</code></pre>
-<ul>
-<li>File Path:</li>
-</ul>
-<pre><code class="language-python">skill = create(file_path=&quot;../creator/utils/example.py&quot;)
-</code></pre>
-<ol>
-<li>Creating Skill using Skill Path or Skill JSON Path:</li>
-<li>JSON Path:</li>
-</ol>
-<pre><code class="language-python">skill = create(skill_json_path=&quot;~/.cache/open_creator/skill_library/create/skill.json&quot;)
-</code></pre>
-<ul>
-<li>Skill Path:</li>
-</ul>
-<pre><code class="language-python">skill = create(skill_path=&quot;~/.cache/open_creator/skill_library/create&quot;)
-</code></pre>
-<ol>
-<li>Creating Skill using Huggingface Repository ID and Skill Path:
-If a skill is hosted in a Huggingface repository, you can create it by specifying the repository ID and the skill path within the repository.</li>
-</ol>
-<pre><code class="language-python">skill = create(huggingface_repo_id=&quot;YourRepo/skill-library&quot;, huggingface_skill_path=&quot;specific_skill&quot;)
-</code></pre>
 <h4 id="notes">Notes:</h4>
 <ul>
 <li>Ensure to provide accurate and accessible file paths.</li>
@@ -218,7 +1234,7 @@ If a skill is hosted in a Huggingface repository, you can create it by specifyin
 <li>Ensure the repository ID and skill path are accurate and that you have the necessary access permissions to retrieve the skill from the repository.</li>
 </ul>
 <h3 id="function-save">Function: <code>save</code></h3>
-<p>Stores a <code>CodeSkill</code> instance either to a local path or a Huggingface repository. In default just use <code>save(skill)</code> and it will store the skill into the default path. Only save the skill when the user asks to do so.</p>
+<p>Stores a <code class="language-python highlight"><span class="n">CodeSkill</span></code> instance either to a local path or a Huggingface repository. In default just use <code>save(skill)</code> and it will store the skill into the default path. Only save the skill when the user asks to do so.</p>
 <h4 id="parameters_1">Parameters:</h4>
 <ul>
 <li><code>skill</code> (CodeSkill): The skill instance to be saved.</li>
@@ -230,17 +1246,19 @@ If a skill is hosted in a Huggingface repository, you can create it by specifyin
 <li>None</li>
 </ul>
 <h4 id="usage_1">Usage:</h4>
-<p>The <code>save</code> function allows for the persistent storage of a <code>CodeSkill</code> instance by saving it either locally or to a specified Huggingface repository. </p>
+<p>The <code>save</code> function allows for the persistent storage of a <code class="language-python highlight"><span class="n">CodeSkill</span></code> instance by saving it either locally or to a specified Huggingface repository. </p>
 <ol>
-<li><strong>Save to Huggingface Repository:</strong></li>
+<li>
+<p><strong>Save to Huggingface Repository:</strong>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">save</span><span class="p">(</span><span class="n">skill</span><span class="o">=</span><span class="n">skill</span><span class="p">,</span> <span class="n">huggingface_repo_id</span><span class="o">=</span><span class="s2">&quot;YourRepo/skill_library&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Save Locally:</strong>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">save</span><span class="p">(</span><span class="n">skill</span><span class="o">=</span><span class="n">skill</span><span class="p">,</span> <span class="n">skill_path</span><span class="o">=</span><span class="s2">&quot;/path/to/save&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
 </ol>
-<pre><code class="language-python">save(skill=skill, huggingface_repo_id=&quot;YourRepo/skill_library&quot;)
-</code></pre>
-<ol>
-<li><strong>Save Locally:</strong></li>
-</ol>
-<pre><code class="language-python">save(skill=skill, skill_path=&quot;/path/to/save&quot;)
-</code></pre>
 <h4 id="notes_1">Notes:</h4>
 <ul>
 <li>At least one of <code>huggingface_repo_id</code> or <code>skill_path</code> must be provided to execute the function, otherwise a <code>ValueError</code> will be raised.</li>
@@ -256,20 +1274,22 @@ If a skill is hosted in a Huggingface repository, you can create it by specifyin
 </ul>
 <h4 id="returns_2">Returns:</h4>
 <ul>
-<li>List[CodeSkill]: A list of retrieved <code>CodeSkill</code> objects that match the query.</li>
+<li>List[CodeSkill]: A list of retrieved <code class="language-python highlight"><span class="n">CodeSkill</span></code> objects that match the query.</li>
 </ul>
 <h4 id="usage_2">Usage:</h4>
 <p>The <code>search</code> function allows users to locate skills related to a particular query string. This is particularly useful for identifying pre-existing skills within a skill library that may fulfill a requirement or for exploring available functionalities.</p>
 <ol>
-<li><strong>Basic Search:</strong></li>
+<li>
+<p><strong>Basic Search:</strong>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">skills</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="s2">&quot;extract pages from a pdf&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Refined Search:</strong>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">skills</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="s2">&quot;extract pages from a pdf&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
 </ol>
-<pre><code class="language-python">skills = search(&quot;extract pages from a pdf&quot;)
-</code></pre>
-<ol>
-<li><strong>Refined Search:</strong></li>
-</ol>
-<pre><code class="language-python">skills = search(&quot;extract pages from a pdf&quot;, top_k=3, threshold=0.85)
-</code></pre>
 <h4 id="notes_2">Notes:</h4>
 <ul>
 <li>The <code>query</code> should be descriptive to enhance the accuracy of retrieved results.</li>
@@ -283,44 +1303,56 @@ If a skill is hosted in a Huggingface repository, you can create it by specifyin
 <ul>
 <li><strong>Example Usage</strong>:</li>
 </ul>
-<pre><code class="language-python">skills = search(&quot;pdf extract section&quot;)
-if skills:
-  skill = skills[0]
-  input_args = {
-      &quot;pdf_path&quot;: &quot;creator.pdf&quot;,
-      &quot;start_page&quot;: 3,
-      &quot;end_page&quot;: 8,
-      &quot;output_path&quot;: &quot;creator3-8.pdf&quot;
-  }
-  print(skill.run(input_args))
-</code></pre>
+<div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-12-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-12-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-12-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-12-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-12-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-12-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-12-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-12-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-12-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="n">skills</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="s2">&quot;pdf extract section&quot;</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="k">if</span> <span class="n">skills</span><span class="p">:</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3"></a>  <span class="n">skill</span> <span class="o">=</span> <span class="n">skills</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4"></a>  <span class="n">input_args</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5"></a>      <span class="s2">&quot;pdf_path&quot;</span><span class="p">:</span> <span class="s2">&quot;creator.pdf&quot;</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6"></a>      <span class="s2">&quot;start_page&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7"></a>      <span class="s2">&quot;end_page&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8"></a>      <span class="s2">&quot;output_path&quot;</span><span class="p">:</span> <span class="s2">&quot;creator3-8.pdf&quot;</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9"></a>  <span class="p">}</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10"></a>  <span class="nb">print</span><span class="p">(</span><span class="n">skill</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_args</span><span class="p">))</span>
+</span></code></pre></div></td></tr></table></div>
 <h4 id="method-test">Method: <code>test</code></h4>
 <p>Validate a skill using a tester agent.</p>
 <ul>
 <li><strong>Example Usage</strong>:</li>
 </ul>
-<pre><code class="language-python">skill = create(request=&quot;filter prime numbers in a range, e.g., filter_prime_numbers(2, 201)&quot;)
-test_summary = skill.test()
-print(test_summary)
-print(skill.conversation_history)
-</code></pre>
+<div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span>
+<span class="normal"><a href="#__codelineno-13-3">3</a></span>
+<span class="normal"><a href="#__codelineno-13-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="s2">&quot;filter prime numbers in a range, e.g., filter_prime_numbers(2, 201)&quot;</span><span class="p">)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="n">test_summary</span> <span class="o">=</span> <span class="n">skill</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">test_summary</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">skill</span><span class="o">.</span><span class="n">conversation_history</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
 <h4 id="overloaded-operators">Overloaded Operators:</h4>
 <p>Modify and refine skills using operator overloading.</p>
 <ol>
 <li><strong>Combining Skills</strong>: Utilize the <code>+</code> operator to chain or execute skills in parallel, detailing the coordination with the <code>&gt;</code> operator.</li>
 </ol>
-<pre><code class="language-python">new_skill = skillA + skillB &gt; &quot;Explanation of how skills A and B operate together&quot;
-</code></pre>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">new_skill</span> <span class="o">=</span> <span class="n">skillA</span> <span class="o">+</span> <span class="n">skillB</span> <span class="o">&gt;</span> <span class="s2">&quot;Explanation of how skills A and B operate together&quot;</span>
+</span></code></pre></div>
 <ol>
 <li>
 <p><strong>Refactoring Skills</strong>: Employ the <code>&gt;</code> operator to enhance or modify existing skills.
-   <code>python
-   refactored_skill = skill &gt; "Descriptive alterations or enhancements"</code></p>
+   <div class="language-py highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">refactored_skill</span> <span class="o">=</span> <span class="n">skill</span> <span class="o">&gt;</span> <span class="s2">&quot;Descriptive alterations or enhancements&quot;</span>
+</span></code></pre></div></p>
 </li>
 <li>
 <p><strong>Decomposing Skills</strong>: Use the <code>&lt;</code> operator to break down a skill into simpler components.
-   <code>python
-   simpler_skills = skill &lt; "Description of how the skill should be decomposed"</code></p>
+   <div class="language-py highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">simpler_skills</span> <span class="o">=</span> <span class="n">skill</span> <span class="o">&lt;</span> <span class="s2">&quot;Description of how the skill should be decomposed&quot;</span>
+</span></code></pre></div></p>
 </li>
 </ol>
 <h4 id="notes_3">Notes:</h4>
@@ -328,51 +1360,68 @@ print(skill.conversation_history)
 <li>Ensure accurate descriptions when using overloaded operators to ensure skill modifications are clear and understandable.</li>
 <li>Validate skills with <code>test</code> method to ensure functionality post-modification.</li>
 </ul>
-              
-            </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../examples/08_creator_agent/" class="btn btn-neutral float-left" title="08 Creator Agent"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../commands/" class="btn btn-neutral float-right" title="Commands">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
+  <hr>
+<div class="md-source-file">
+  <small>
     
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 18, 2023</span>
+      
+        <br>
+        Created:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 6, 2023</span>
+      
     
-      <span><a href="../examples/08_creator_agent/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../commands/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
+  </small>
 </div>
-    <script src="../js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = "..";</script>
-    <script src="../js/theme_extra.js"></script>
-    <script src="../js/theme.js"></script>
-      <script src="../search/main.js"></script>
-    <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
-    </script>
 
-</body>
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "header.autohide", "announce.dismiss", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.path", "navigation.expand", "search", "search.suggest", "search.highlight", "search.share"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.aecac24b.min.js"></script>
+      
+    
+  </body>
 </html>
