@@ -1,7 +1,7 @@
 ## Open-Creator API Documentation
 
-### Function: `create`
-Generates a `CodeSkill` instance using different input sources.
+### Function: `#!python create`
+Generates a `#!python CodeSkill` instance using different input sources.
 
 #### Parameters:
 - `request`: String detailing the skill functionality.
@@ -12,46 +12,46 @@ Generates a `CodeSkill` instance using different input sources.
 - `huggingface_skill_path`: Path to the skill within the Huggingface repository.
 
 #### Returns:
-- `CodeSkill`: The created skill.
+- `#!python CodeSkill`: The created skill.
 
 #### Usage:
 1. Creating Skill using a Request String:
-```python
+``` py
 skill = create(request="filter how many prime numbers are in 201")
 ```
 2. Creating Skill using Messages:
 - Directly:
-```python
+``` py
 skill = create(messages=[{"role": "user", "content": "write a program..."}])
 ```
 - Via JSON Path:
-```python
+``` py
 skill = create(messages_json_path="./messages_example.json")
 ```
 
 3. Creating Skill using File Content or File Path:
 - Direct Content:
-```python
+``` py
 skill = create(file_content="def example_function(): pass")
 ```
 - File Path:
-```python
+``` py
 skill = create(file_path="../creator/utils/example.py")
 ```
 
 4. Creating Skill using Skill Path or Skill JSON Path:
 - JSON Path:
-```python
+``` py
 skill = create(skill_json_path="~/.cache/open_creator/skill_library/create/skill.json")
 ```
 - Skill Path:
-```python
+``` py
 skill = create(skill_path="~/.cache/open_creator/skill_library/create")
 ```
 
 5. Creating Skill using Huggingface Repository ID and Skill Path:
 If a skill is hosted in a Huggingface repository, you can create it by specifying the repository ID and the skill path within the repository.
-```python
+``` py
 skill = create(huggingface_repo_id="YourRepo/skill-library", huggingface_skill_path="specific_skill")
 ```
 
@@ -64,7 +64,7 @@ skill = create(huggingface_repo_id="YourRepo/skill-library", huggingface_skill_p
 
 
 ### Function: `save`
-Stores a `CodeSkill` instance either to a local path or a Huggingface repository. In default just use `save(skill)` and it will store the skill into the default path. Only save the skill when the user asks to do so.
+Stores a `#!python CodeSkill` instance either to a local path or a Huggingface repository. In default just use `save(skill)` and it will store the skill into the default path. Only save the skill when the user asks to do so.
 
 #### Parameters:
 - `skill` (CodeSkill): The skill instance to be saved.
@@ -75,15 +75,15 @@ Stores a `CodeSkill` instance either to a local path or a Huggingface repository
 - None
 
 #### Usage:
-The `save` function allows for the persistent storage of a `CodeSkill` instance by saving it either locally or to a specified Huggingface repository. 
+The `save` function allows for the persistent storage of a `#!python CodeSkill` instance by saving it either locally or to a specified Huggingface repository. 
 
 1. **Save to Huggingface Repository:**
-```python
+``` py
 save(skill=skill, huggingface_repo_id="YourRepo/skill_library")
 ```
 
 2. **Save Locally:**
-```python
+``` py
 save(skill=skill, skill_path="/path/to/save")
 ```
 
@@ -101,18 +101,18 @@ Retrieve skills related to a specified query from the available pool of skills.
 - `threshold` (Optional[float]): Minimum similarity score to return a skill. Default is 0.8.
 
 #### Returns:
-- List[CodeSkill]: A list of retrieved `CodeSkill` objects that match the query.
+- List[CodeSkill]: A list of retrieved `#!python CodeSkill` objects that match the query.
 
 #### Usage:
 The `search` function allows users to locate skills related to a particular query string. This is particularly useful for identifying pre-existing skills within a skill library that may fulfill a requirement or for exploring available functionalities.
 
 1. **Basic Search:**
-```python
+``` py
 skills = search("extract pages from a pdf")
 ```
 
 2. **Refined Search:**
-```python
+``` py
 skills = search("extract pages from a pdf", top_k=3, threshold=0.85)
 ```
 
@@ -131,7 +131,7 @@ Execute a skill with provided arguments or request.
 
 - **Example Usage**:
 
-```python
+``` py linenums="1"
 skills = search("pdf extract section")
 if skills:
   skill = skills[0]
@@ -149,7 +149,7 @@ Validate a skill using a tester agent.
 
 - **Example Usage**:
 
-```python
+``` py linenums="1"
 skill = create(request="filter prime numbers in a range, e.g., filter_prime_numbers(2, 201)")
 test_summary = skill.test()
 print(test_summary)
@@ -161,17 +161,17 @@ Modify and refine skills using operator overloading.
 
 1. **Combining Skills**: Utilize the `+` operator to chain or execute skills in parallel, detailing the coordination with the `>` operator.
 
-```python
+``` py
 new_skill = skillA + skillB > "Explanation of how skills A and B operate together"
 ```
    
 2. **Refactoring Skills**: Employ the `>` operator to enhance or modify existing skills.
-   ```python
+   ``` py
    refactored_skill = skill > "Descriptive alterations or enhancements"
    ```
    
 3. **Decomposing Skills**: Use the `<` operator to break down a skill into simpler components.
-   ```python
+   ``` py
    simpler_skills = skill < "Description of how the skill should be decomposed"
    ```
 

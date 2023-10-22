@@ -1,5 +1,7 @@
-site_name: Open-Creator
+site_name: Open Creator
 site_url: https://open-creator.github.io
+repo_url: https://github.com/timedomain-tech/open-creator
+repo_name: open-creator
 nav:
   - Getting Start:
     - Overview: index.md
@@ -18,7 +20,56 @@ nav:
     - Commands: commands.md
     - Configurations: configurations.md
 
-theme: readthedocs
+theme: 
+  name: material
+  logo: pics/logo.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  features:
+      - content.code.copy
+      - content.code.select
+      - content.code.annotate
+      - content.tabs.link
+      - header.autohide
+      - announce.dismiss
+      - navigation.instant
+      - navigation.instant.prefetch
+      - navigation.instant.progress
+      - navigation.tracking
+      - navigation.tabs
+      - navigation.tabs.sticky
+      - navigation.path
+      - navigation.expand
+      - search
+      - search.suggest
+      - search.highlight
+      - search.share
 
 plugins:
   - search
@@ -26,3 +77,15 @@ plugins:
       kernel_name: python3
       ignore_h1_titles: true
       include_requirejs: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - git-authors
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
