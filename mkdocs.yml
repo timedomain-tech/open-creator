@@ -26,7 +26,6 @@ theme:
   icon:
     repo: fontawesome/brands/github
   palette:
-
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
@@ -43,6 +42,7 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: black
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
@@ -50,7 +50,6 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-
   features:
       - content.code.copy
       - content.code.select
@@ -70,6 +69,7 @@ theme:
       - search.suggest
       - search.highlight
       - search.share
+      - navigation.footer
 
 plugins:
   - search
@@ -89,3 +89,12 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/UseOpenCreator
+    - icon: fontawesome/brands/github
+      link: https://github.com/timedomain-tech/open-creator
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/eEraZEry53
