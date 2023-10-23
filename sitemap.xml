@@ -2,82 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://open-creator.github.io/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/api_doc/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/commands/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/configurations/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/installation/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/skill-library-hub/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/01_skills_create/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/02_skills_library/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/03_skills_search/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/04_skills_run/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/05_skills_test/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/06_skills_refactor/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/07_skills_auto_optimize/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/08_creator_agent/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://open-creator.github.io/examples/data/create_api/</loc>
-         <lastmod>2023-10-22</lastmod>
+         <lastmod>2023-10-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
