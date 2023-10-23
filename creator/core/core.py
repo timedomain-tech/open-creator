@@ -1,6 +1,8 @@
 import os
 from typing import Union, List, Optional
 from creator.agents import skill_extractor_agent, code_interpreter_agent
+from creator.agents.prompt_enhancer_agent import create_prompt_enhancer_agent
+from creator.llm.llm_creator import create_llm
 from creator.core.skill import CodeSkill, BaseSkill, BaseSkillMetadata
 from creator.config.library import config
 from creator.utils import print
@@ -144,10 +146,20 @@ class Creator:
             return cls._create_from_skill_json_path(skill_json_path)
 
         if request:
-            messages = code_interpreter_agent.run({
+            config.use_rich = False
+            prompt_enhancer_agent = create_prompt_enhancer_agent(create_llm(config))
+            enhanced_prompt = prompt_enhancer_agent.run({
                 "messages": [{
                     "role": "user",
                     "content": request
+                }],
+                "verbose": False,
+            })
+            config.use_rich = True
+            messages = code_interpreter_agent.run({
+                "messages": [{
+                    "role": "user",
+                    "content": enhanced_prompt
                 }],
                 "verbose": True,
             })

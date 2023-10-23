@@ -1,0 +1,18 @@
+{
+    "name": "prompt_enhancer",
+    "description": "a function that guide GPT to act as a specific expert in the field to respond to the user's request",
+    "parameters": {
+        "properties": {
+            "prefix_prompt": {
+                "type": "string",
+                "description": "A concise directive provided at the beginning of the user's request, guiding GPT to adopt a specific expert role or mindset within a particular vertical."
+            },
+            "postfix_prompt": {
+                "type": "string",
+                "description": "A brief set of tips or guidelines placed after the user's original request, offering additional context or direction for GPT's response. If you don't know how to give guidance based on the user's request just let the GPT think step-by-step."
+            }
+        },
+        "type": "object",
+        "required": ["prefix_prompt", "postfix_prompt"]
+    }
+}

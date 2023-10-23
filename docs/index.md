@@ -33,6 +33,3 @@
 ## Framework
 
 ![](tech_report/figures/framework.png)
-
----
-
