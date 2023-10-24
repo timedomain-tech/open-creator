@@ -47,4 +47,6 @@ help_commands = """
 - `%undo`: undo the last request
 - `%help`: Print this help message
 - `%interpreter`: toggle interpreter mode
+- `%save_message`: save current conversation messages to a file
+- `%load_message`: load conversation messages from a file
 """

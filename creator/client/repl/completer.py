@@ -33,4 +33,6 @@ completer = NestedCompleter.from_nested_dict({
     '%undo': None,
     '%help': None,
     '%interpreter': None,
+    '%save_message': None,
+    '%load_message': None,
 })

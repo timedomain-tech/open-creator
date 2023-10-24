@@ -18,7 +18,7 @@ import sys
 class OpenCreatorREPL:
     interpreter = False
 
-    def setup(self):
+    async def setup(self, quiet=False):
         self.handler = RequestHandler()
         # The key bindings.
         kb = KeyBindings()
@@ -40,26 +40,26 @@ class OpenCreatorREPL:
             mouse_support=True,
             key_bindings=kb
         )
+        if not quiet:
+            await self.handler.show_output("", help_text, add_prompt_prefix=False)
 
-    async def ask(self, interpreter=False):
+    async def ask(self, interpreter=True):
         if self.interpreter != interpreter:
             self.interpreter = interpreter
-            self.setup()
+            self.handler.interpreter = interpreter
+            await self.setup()
         self.prompt_session.default_buffer.reset(Document())
         question = Question(self.prompt_session.app)
         output = await question.unsafe_ask_async(patch_stdout=True)
         return output
 
     async def run(self, quiet=False, interpreter=False):
-        self.setup()
-        if not quiet:
-            await self.handler.show_output("", help_text, add_prompt_prefix=False)
-
+        await self.setup(quiet)
         while 1:
             try:
                 user_request = await self.ask(interpreter)
                 user_request = user_request.strip()
-                await self.handler.show_output(user_request, "", add_newline=user_request != "", interpreter=interpreter)
+                await self.handler.show_output(user_request, "", add_newline=user_request != "")
                 if user_request == "%exit":
                     sys.exit()
                 if user_request.startswith("%interpreter"):
@@ -68,15 +68,15 @@ class OpenCreatorREPL:
                     await self.handler.show_output("", f"[red]Toggled Interpreter mode {mode}![/red]", add_prompt_prefix=False, add_newline=False, add_request=False)
                     continue
                 if user_request:
-                    await self.handler.handle(user_request, interpreter=interpreter)
+                    await self.handler.handle(user_request, interpreter)
             except KeyboardInterrupt:
                 user_request = self.prompt_session.default_buffer.text
-                await self.handler.show_output(user_request, "", grey=True, interpreter=interpreter)
+                await self.handler.show_output(user_request, "", grey=True)
                 await self.handler.show_output("", "[red]KeyboardInterrupt[/red]", add_prompt_prefix=False, add_newline=False, add_request=False)
             except EOFError:
                 sys.exit()
             except Exception:
                 err = traceback.format_exc()
                 user_request = self.prompt_session.default_buffer.text
-                await self.handler.show_output(user_request, "", grey=True, interpreter=interpreter)
+                await self.handler.show_output(user_request, "", grey=True)
                 await self.handler.show_output("", f"[red]{err}[/red]", add_prompt_prefix=False, add_newline=False, add_request=False)

@@ -9,6 +9,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 
 from langchain.output_parsers.json import parse_partial_json
+import os
 
 
 class RequestHandler:
@@ -18,8 +19,8 @@ class RequestHandler:
         self.message_states = [self.messages]
         self.history = []
         self.output = []
-        self.interpreter = False
         self.console = Console()
+        self.interpreter = False
 
     async def handle(self, request, interpreter):
         """
@@ -31,13 +32,14 @@ class RequestHandler:
         Returns:
             str: The output text to be displayed in the output_field.
         """
+        self.interpreter = interpreter
         if request.startswith("%"):
-            await self.meta_prompt_handler(request)
+            await self.meta_prompt_handler(request, )
         elif is_valid_code(request, open_creator_agent.tools[0].namespace):
             await self.expression_handler(request)
             self.update_history(request)
         else:
-            await self.agent_handler(request, interpreter)
+            await self.agent_handler(request)
             self.update_history(request)
 
     async def meta_prompt_handler(self, request):
@@ -54,20 +56,19 @@ class RequestHandler:
 
         if request.startswith("%reset"):
             self.messages = []
-            output = "[blue]Conversation Message Reset![/blue]"
+            self.output.append(("> Conversation Message Reset!", "Markdown"))
             await self.show_output(request=request, output=output, add_prompt_prefix=False, add_request=False, add_newline=False)
 
         if request.startswith("%clear"):
             self.history = []
             self.output = []
-            output = ""
             await self.show_output(request=request, output=output, add_prompt_prefix=False, add_request=False, add_newline=False)
 
         if request.startswith("%undo"):
             if len(self.history) == 0 or len(self.message_states) == 0:
-                output = "[red]Nothing to undo![/red]"
                 self.output = []
-                await self.show_output(request=request, output=output)
+                self.output.append(("> Nothing to undo!", "Markdown"))
+                await self.show_output(request=request, output=output, add_prompt_prefix=False, add_request=False, add_newline=False)
                 return
 
             self.history.pop(-1)
@@ -82,7 +83,31 @@ class RequestHandler:
             else:
                 self.messages = []
             output = ""
-            await self.show_output(request, output)
+            await self.show_output(request, output, add_prompt_prefix=False, add_request=False, add_newline=False)
+
+        if request.startswith("%save_message"):
+            json_path = " ".join(request.split(" ")[1:])
+            if json_path == "":
+                json_path = "messages.json"
+            if not json_path.endswith(".json"):
+                json_path += ".json"
+            with open(json_path, 'w') as f:
+                json.dump(self.messages, f, indent=4)
+
+            self.output.append((f"> messages json export to {os.path.abspath(json_path)}", "Markdown"))
+            await self.show_output(request, output, add_prompt_prefix=False, add_request=False, add_newline=False)
+
+        if request.startswith("%load_message"):
+            json_path = " ".join(request.split(" ")[1:])
+            if json_path == "":
+                json_path = "messages.json"
+            if not json_path.endswith(".json"):
+                json_path += ".json"
+            with open(json_path) as f:
+                self.messages = json.load(f)
+
+            self.output.append((f"> messages json loaded from {os.path.abspath(json_path)}", "Markdown"))
+            await self.show_output(request, output, add_prompt_prefix=False, add_request=False, add_newline=False)
 
         if request.startswith("%help"):
             output = help_commands
@@ -119,7 +144,7 @@ class RequestHandler:
             output_text (str): The resulting output string.
         """
 
-        self.history.append((input_text, self.output))
+        self.history.append((input_text, list(self.output)))
         self.message_states.append(self.messages.copy())
 
     def convert_agent_message(self, message):
@@ -148,7 +173,7 @@ class RequestHandler:
             output += f"```{language}\n{code}\n```"
         return output
 
-    async def agent_handler(self, request, interpreter):
+    async def agent_handler(self, request):
         """
         Handle user input that is intended to be processed by the agent. The input will
         be sent to the agent, and the agent's response will be displayed.
@@ -163,19 +188,19 @@ class RequestHandler:
         messages = self.messages + [{"role": "user", "content": request}]
         inputs = {"messages": messages, "verbose": True}
         with self.console.status("[blue]Thinking[/blue]", spinner="circleHalves"):
-            if interpreter:
+            if self.interpreter:
                 messages = code_interpreter_agent.run(inputs)
             else:
                 messages = open_creator_agent.run(inputs)
-        output = "\n".join([self.convert_agent_message(message) for message in messages[len(self.messages):]])
+        output = "\n".join([self.convert_agent_message(message) for message in messages[len(self.messages)+1:]])
         self.messages = messages
         self.output.append((output, "Markdown"))
 
-    async def show_output(self, request, output, add_prompt_prefix=True, add_request=True, add_newline=True, grey=False, interpreter=False):
+    async def show_output(self, request, output, add_prompt_prefix=True, add_request=True, add_newline=True, grey=False):
         new_text = ""
         if add_prompt_prefix:
             prefix = prompt_prefix
-            if interpreter:
+            if self.interpreter:
                 prefix = interpreter_prefix
             if grey:
                 new_text += prefix.replace("green]", "grey62]")
@@ -187,7 +212,8 @@ class RequestHandler:
             new_text += "\n"
         new_text += output
         self.console.clear()
-        self.output.append((new_text, "Text"))
+        if len(new_text) > 0:
+            self.output.append((new_text, "Text"))
         for text, style in self.output:
             if style == "Text":
                 self.console.print(text, end="")

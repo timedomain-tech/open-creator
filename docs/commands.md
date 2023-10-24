@@ -13,8 +13,8 @@ creator -h
     show this help message and exit
 - `-c, --config`
     open config.yaml file in text editor
-- `-i, --interactive`
-    Enter interactive mode
+- `-i, --interpreter`
+    Enter interpreter mode
 - COMMANDS `{create,save,search,server,ui}`
 
 
@@ -146,7 +146,7 @@ creator
 or 
 
 ```shell
-creator [-i] [--interactive] [-q] [--quiet]
+creator [-i] [--interpreter] [-q] [--quiet]
 ```
 
 - `q, --quiet`           Quiet mode to enter interactive mode and not rich_print LOGO and help

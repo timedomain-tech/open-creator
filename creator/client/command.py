@@ -130,9 +130,9 @@ arguments = [
         ],
     },
     {
-        "name": "interactive",
+        "name": "interpreter",
         "nickname": "i",
-        "help_text": "Enter interactive mode",
+        "help_text": "Enter interpreter mode",
         "command": False,
         "type": bool,
     },
@@ -216,9 +216,9 @@ def cmd_client():
         open_user_config()
         return
     
-    if not args.command or args.interactive:
+    if not args.command or args.interpreter:
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(repl_app.run(args.quiet))
+        loop.run_until_complete(repl_app.run(args.quiet, args.interpreter))
         return
 
     if args.command == "create":
