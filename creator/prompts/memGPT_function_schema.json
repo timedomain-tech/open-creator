@@ -1,0 +1,123 @@
+[
+    {
+        "name": "send_message",
+        "description": "Sends a message to the human user or chatgpt",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "Message contents. All unicode (including emojis) are supported."
+                },
+                "receiver": {
+                    "type": "string",
+                    "enum": ["human", "chatgpt"],
+                    "description": "Role to send the message to. ChatGPT is more basic AI, A useful resource for asking questions. ChatGPT does not retain memory of previous interactions."
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions."
+                }
+            },
+            "required": ["message", "receiver", "request_heartbeat"]
+        }
+    },
+    {
+        "name": "pause_heartbeats",
+        "description": "Temporarily ignore timed heartbeats. You may still receive messages from manual heartbeats and other events.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "minutes": {
+                    "type": "integer",
+                    "description": "Number of minutes to ignore heartbeats for. Max value of 360 minutes (6 hours)."
+                }
+            },
+            "required": ["minutes"]
+        }
+    },
+    {
+        "name": "add_memory",
+        "description": "Append to the contents of core memory or archival memory.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "enum": ["persona", "human", "archival"],
+                    "description": "Section of the memory to be edited (persona, human or archival)."
+                },
+                "content": {
+                    "type": "string",
+                    "description": "Content to write to the memory. All unicode (including emojis) are supported."
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions."
+                }
+            }
+        }
+    },
+    {
+        "name": "modify_memory",
+        "description": "Replace to the contents of core or archival memory. To delete memories, use an empty string for new_content.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "enum": ["persona", "human", "archival"],
+                    "description": "Section of the memory to be edited (persona, human or archival)."
+                },
+                "old_content": {
+                    "type": "string",
+                    "description": "String to replace. Must be an exact match."
+                },
+                "new_content": {
+                    "type": "string",
+                    "description": "Content to write to the memory. All unicode (including emojis) are supported."
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions."
+                }
+            },
+            "required": ["name", "old_content", "new_content", "request_heartbeat"]
+        }
+    },
+    {
+        "name": "search_memory",
+        "description": "Search memory using different criteria.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "memory_type": {
+                    "type": "string",
+                    "enum": ["archival", "conversation"],
+                    "description": "Type of memory to search (archival or conversation)."
+                },
+                "query": {
+                    "type": "string",
+                    "description": "String to search for. If you are search by date you can leave this blank."
+                },
+                "page": {
+                    "type": "integer",
+                    "description": "Allows you to page through results. Only use on a follow-up query. Defaults to 0 (first page)."
+                },
+                "start_date": {
+                    "type": "string",
+                    "description": "The start of the date range to search, in the format 'YYYY-MM-DD'."
+                },
+                "end_date": {
+                    "type": "string",
+                    "description": "The end of the date range to search, in the format 'YYYY-MM-DD'."
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions."
+                }
+            },
+            "required": ["memory_type", "page", "request_heartbeat"]
+        }
+    }
+]

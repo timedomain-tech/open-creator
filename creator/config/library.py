@@ -88,6 +88,8 @@ class LibraryConfig(BaseModel):
     tips_for_veryfy_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_veryfy_prompt.md")
     prompt_enhancer_agent_prompt_path: str = os.path.join(project_dir, "prompts", "prompt_enhancer_agent_prompt.md")
     prompt_enhancer_schema_path: str = os.path.join(project_dir, "prompts", "prompt_enhancer_schema.json")
+    memGPT_prompt_path: str = os.path.join(project_dir, "prompts", "memGPT_prompt.md")
+    memGPT_schema_path: str = os.path.join(project_dir, "prompts", "memGPT_function_schema.json")
 
     use_rich: bool = True
     use_file_logger: bool = False
