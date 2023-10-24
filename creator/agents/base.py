@@ -159,4 +159,3 @@ class BaseAgent(LLMChain):
                 result = output_queue.pop()
                 yield True, result
                 return
-

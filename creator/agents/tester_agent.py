@@ -38,7 +38,7 @@ class CodeTesterAgent(BaseAgent):
                 }
                 message.additional_kwargs["function_call"] = function_call
         return message
-    
+
     def messages_hot_fix(self, langchain_messages):
         langchain_messages = remove_tips(langchain_messages)
         tool_result = langchain_messages[-1].content

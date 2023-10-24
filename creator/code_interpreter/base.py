@@ -1,8 +1,12 @@
 import subprocess
 import traceback
 import threading
+import selectors
 import time
 import os
+
+
+RETRY_LIMIT = 3
 
 
 class BaseInterpreter:
@@ -20,9 +24,14 @@ class BaseInterpreter:
 
     def __init__(self):
         self.process = None
+        self.output_cache = {"stdout": "", "stderr": ""}
         self.done = threading.Event()
+        self.lock = threading.Lock()
 
     def get_persistent_process(self):
+        if self.process:
+            self.process.terminate()
+            self.process = None
         self.process = subprocess.Popen(
             args=self.start_command.split(),
             stdin=subprocess.PIPE,
@@ -40,27 +49,36 @@ class BaseInterpreter:
     def handle_stream_output(self, stream, is_stderr):
         """Reads from a stream and appends data to either stdout_data or stderr_data."""
         start_time = time.time()
-        for line in stream:
-            if self.done.is_set():
-                break
-            if self.detect_program_end(line):
-                self.done.set()
-                break
-            if time.time() - start_time > self.timeout:
-                self.done.set()
-                self.output_cache["stderr"] += f"\nsession timeout ({self.timeout}) s\n"
-                break
-            if line:
-                if is_stderr:
-                    self.output_cache["stderr"] += line
-                else:
-                    self.output_cache["stdout"] += line
-            time.sleep(0.1)
+        sel = selectors.DefaultSelector()
+        sel.register(stream, selectors.EVENT_READ)
+
+        while not self.done.is_set():
+            for key, _ in sel.select(timeout=0.1):   # Non-blocking with a small timeout
+                line = key.fileobj.readline()
+
+                if self.detect_program_end(line):
+                    self.done.set()
+                    break
+                if time.time() - start_time > self.timeout:
+                    self.done.set()
+                    with self.lock:
+                        self.output_cache["stderr"] += f"\nsession timeout ({self.timeout}) s\n"
+                    break
+                with self.lock:
+                    if line:
+                        if is_stderr:
+                            self.output_cache["stderr"] += line
+                        else:
+                            self.output_cache["stdout"] += line
+        sel.unregister(stream)
+        sel.close()
 
     def add_program_end_detector(self, code):
         if self.process:
             print_command = self.print_command.format(self.PROGRAM_END_DETECTOR) + "\n"
             return code + "\n\n" + print_command
+        else:
+            return code
 
     def clear(self):
         self.output_cache = {"stdout": "", "stderr": ""}
@@ -85,7 +103,7 @@ class BaseInterpreter:
     def postprocess(self, output):
         return output
 
-    def run(self, query: str, is_start: bool = False) -> dict:
+    def run(self, query: str, is_start: bool = False, retries: int = 0) -> dict:
         try:
             query = self.preprocess(query)
         except Exception:
@@ -99,26 +117,31 @@ class BaseInterpreter:
                 return {"status": "error", "stdout": "", "stderr": traceback_string}
         self.clear()
         try:
-            try:
-                query = self.add_program_end_detector(query)
-                self.process.stdin.write(query + "\n")
-                self.process.stdin.flush()
+            code = self.add_program_end_detector(query)
+            self.process.stdin.write(code + "\n")
+            self.process.stdin.flush()
 
-                time.sleep(0.2)
-            except subprocess.TimeoutExpired:
-                self.process.kill()
-                stdout, stderr = "", traceback.format_exc()
-                return {"status": "error", "stdout": stdout, "stderr": stderr}
-        except BrokenPipeError:
-            stderr = traceback.format_exc()
-            return {"status": "error", "stdout": "", "stderr": stderr}
+            time.sleep(0.2)
+        except (BrokenPipeError, OSError):
+            if retries < RETRY_LIMIT:
+                time.sleep(retries * 2)  # Exponential back-off
+                self.get_persistent_process()
+                return self.run(query=query, retries=retries+1)
+            else:
+                stderr = traceback.format_exc()
+                return {"status": "error", "stdout": "", "stderr": stderr}
+        except subprocess.TimeoutExpired:
+            self.process.kill()
+            stdout, stderr = "", traceback.format_exc()
+            return {"status": "error", "stdout": stdout, "stderr": stderr}
+
         self.join(self.timeout)
         return self.postprocess({"status": "success", **self.output_cache})
 
     def __del__(self):
         if self.process:
             self.process.terminate()
-        if self.stdout_thread:
-            self.stdout_thread.terminate()
-        if self.stderr_thread:
-            self.stderr_thread.terminate()
+        if self.stdout_thread and self.stdout_thread.is_alive():
+            self.stdout_thread.join()
+        if self.stderr_thread and self.stderr_thread.is_alive():
+            self.stderr_thread.join()
