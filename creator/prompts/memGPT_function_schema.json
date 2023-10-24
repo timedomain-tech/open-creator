@@ -12,14 +12,14 @@
                 "receiver": {
                     "type": "string",
                     "enum": ["human", "chatgpt"],
-                    "description": "Role to send the message to. ChatGPT is more basic AI, A useful resource for asking questions. ChatGPT does not retain memory of previous interactions."
+                    "description": "Role to send the message to. default is the user. ChatGPT is a useful resource for asking questions. ChatGPT does not retain memory of previous interactions."
                 },
                 "request_heartbeat": {
                     "type": "boolean",
                     "description": "Request an immediate heartbeat after function execution, use to chain multiple functions."
                 }
             },
-            "required": ["message", "receiver", "request_heartbeat"]
+            "required": ["message", "request_heartbeat"]
         }
     },
     {
@@ -117,7 +117,7 @@
                     "description": "Request an immediate heartbeat after function execution, use to chain multiple functions."
                 }
             },
-            "required": ["memory_type", "page", "request_heartbeat"]
+            "required": ["memory_type", "request_heartbeat"]
         }
     }
 ]
