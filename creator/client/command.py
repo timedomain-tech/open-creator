@@ -1,6 +1,7 @@
 import argparse
 from rich.rule import Rule
 import json
+import asyncio
 
 from creator.utils.printer import print as rich_print
 from creator.config.open_config import open_user_config
@@ -216,7 +217,8 @@ def cmd_client():
         return
     
     if not args.command or args.interactive:
-        repl_app.run(args.quiet)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(repl_app.run(args.quiet))
         return
 
     if args.command == "create":

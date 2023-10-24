@@ -1,9 +1,8 @@
 from prompt_toolkit.formatted_text import FormattedText
 
 
-help_text = """
-Open-Creator 0.1.2 - Build your costomized skill library
-Type "%help" for more information. Pressing Ctrl-Q/Ctrl-D to exit
+help_text = """Open-Creator 0.1.3 - Build your costomized skill library
+Type "%help" for more information. Pressing Ctrl-Q/Ctrl-D to exit. Ctrl-J to add new line.
   ___                      ____                _             
  / _ \ _ __   ___ _ __    / ___|_ __ ___  __ _| |_ ___  _ __ 
 | | | | '_ \ / _ \ '_ \  | |   | '__/ _ \/ _` | __/ _ \| '__|
@@ -14,11 +13,19 @@ Type "%help" for more information. Pressing Ctrl-Q/Ctrl-D to exit
 
 
 prompt_message = FormattedText([
-    ('class:prompt', 'creator'),
-    ('', ' ◐ ')
+    ('ansigreen', 'creator'),
+    ('#ffffff', ' ◐ ')
 ])
 
-prompt_prefix = "\n<prompt>creator</prompt> ◐ "
+
+interpreter_message = FormattedText([
+    ('ansigreen', 'interpreter'),
+    ('#ffffff', ' ◑ ')
+])
+
+
+prompt_prefix = "\n[green]creator[/green] ◐ "
+interpreter_prefix = "\n[green]interpreter[/green] ◑ "
 
 help_commands = """
 # Entering Help Commands
@@ -39,4 +46,5 @@ help_commands = """
 - `%reset`: reset all messages and cached skills
 - `%undo`: undo the last request
 - `%help`: Print this help message
+- `%interpreter`: toggle interpreter mode
 """

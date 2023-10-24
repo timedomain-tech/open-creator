@@ -17,8 +17,4 @@ style = Style.from_dict(style_dict={
     # Scrollbar
     'scrollbar.background': 'bg:#d0d0d0',  # Light gray background for scrollbar
     'scrollbar.button': 'bg:#222222',  # Dark color for scrollbar button
-
-    'prompt': 'ansigreen',
-    'stderr': 'red',
-    "system": "ansiblue",
 })

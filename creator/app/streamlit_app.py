@@ -28,7 +28,9 @@ def setup_slidebar():
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
         "[View the source code](https://github.com/timedomain-tech/open-creator/tree/main/creator/app/streamlit_app.py)"
-        os.environ["OPENAI_API_KEY"] = openai_api_key
+        curr_api_key = os.environ.get("OPENAI_API_KEY", "")
+        if not curr_api_key:
+            os.environ["OPENAI_API_KEY"] = openai_api_key
         model_list = ["gpt-3.5-turbo-16k", "gpt-3.5-turbo", "gpt-4"]
         model = st.selectbox("Model", model_list, key="model")
         config.model = model
