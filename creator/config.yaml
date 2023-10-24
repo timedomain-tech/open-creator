@@ -15,7 +15,7 @@ BUILD_IN_SKILL_LIBRARY_DIR: skill_library/open-creator/
 # for huggingface, it is huggingface/WizardLM/WizardCoder-Python-34B-V1.0 model path
 # for ollama, it is like ollama/llama2
 # the default is openai/gpt-3.5
-MODEL_NAME: gpt-3.5-turbo-16k
+MODEL_NAME: gpt-4
 TEMPERATURE: 0 # only 0 can use llm_cache
 
 USE_AZURE: false
