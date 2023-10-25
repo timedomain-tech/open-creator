@@ -25,17 +25,17 @@ def pause_heartbeats(minutes: int):
     pass
 
 
-def add_memory(name: str, content: str, request_heartbeat: bool):
+def add_memory(name: str, content: str, request_heartbeat: bool = False):
     """Adds a memory with a specified name and content, and optionally requests a heartbeat"""
     pass
 
 
-def modify_memory(name: str, old_content:str, new_content: str, request_heartbeat: bool):
+def modify_memory(name: str, old_content:str, new_content: str, request_heartbeat: bool = False):
     """Modifies a memory with a specified name, replacing old content with new content, and optionally requests a heartbeat"""
     pass
 
 
-def search_memory(memory_type: str, request_heartbeat: bool, page: int = 0, query: str = "", start_date: str = "", end_date: str = ""):
+def search_memory(memory_type: str, request_heartbeat: bool = False, page: int = 0, query: str = "", start_date: str = "", end_date: str = ""):
     """Searches memory of a specified type, with optional query, start date, end date, and request for heartbeat"""
     pass
 
@@ -98,6 +98,11 @@ class MemGPTAgent(BaseAgent):
         inputs["archival_memory_count"] = 0
         inputs["persona"] = ""
         inputs["human"] = ""
+        inputs["subagent_tasks"] = """
+- create/save/search skill
+- run/test/refactor skill
+- show skill
+"""
         return inputs
 
     def construct_prompt(self, langchain_messages: Dict[str, Any]):

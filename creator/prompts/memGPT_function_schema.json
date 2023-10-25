@@ -1,7 +1,7 @@
 [
     {
         "name": "send_message",
-        "description": "Sends a message to the human user or chatgpt",
+        "description": "Communicate with a human or assign a task to the other subagent",
         "parameters": {
             "type": "object",
             "properties": {
@@ -11,8 +11,8 @@
                 },
                 "receiver": {
                     "type": "string",
-                    "enum": ["human", "chatgpt"],
-                    "description": "Role to send the message to. default is the user. ChatGPT is a useful resource for asking questions. ChatGPT does not retain memory of previous interactions."
+                    "enum": ["human", "subagent"],
+                    "description": "Receiver of the message. Default to 'human'."
                 },
                 "request_heartbeat": {
                     "type": "boolean",
