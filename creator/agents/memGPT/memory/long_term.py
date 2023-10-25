@@ -79,3 +79,17 @@ class RecallMemory(BaseMemory):
             else:
                 matches = [d for d in matches if d.content and query.lower() in d.content.lower()]
         return self._paginate_results(matches, page)
+
+
+class ArchivalMemory(RecallMemory):
+
+    def __repr__(self) -> str:
+        if len(self.message_database.messages) == 0:
+            memory_str = "<empty>"
+        else:
+            memory_str = "\n".join([d.content for d in self.message_database.messages])
+        return f"\n### ARCHIVAL MEMORY ###\n{memory_str}"
+
+    def _filter_messages(self):
+        """Utility to filter messages based on roles."""
+        return [d for d in self.message_database.messages if d.type in ['archival']]
