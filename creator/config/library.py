@@ -1,5 +1,5 @@
 from langchain.cache import SQLiteCache
-import langchain
+from langchain.globals import set_llm_cache
 from pydantic import BaseModel
 from creator.code_interpreter import CodeInterpreter
 from creator.config.load_config import load_yaml_config
@@ -97,4 +97,4 @@ class LibraryConfig(BaseModel):
 
 config = LibraryConfig()
 
-langchain.llm_cache = SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db")
+set_llm_cache(SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db"))

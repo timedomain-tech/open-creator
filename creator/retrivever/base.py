@@ -35,7 +35,7 @@ class BaseVectorStore:
             # load vectordb
             with open(self.vectordb_path, mode="r", encoding="utf-8") as f:
                 self.vector_store = json.load(f)
-        
+
         self.update_index()
 
     def update_index(self):
@@ -48,7 +48,7 @@ class BaseVectorStore:
                     embedding_text_path = os.path.join(root, file)
                     with open(embedding_text_path, mode="r", encoding="utf-8") as f:
                         embedding_text = f.read()
-                    
+
                     skill_path = os.path.join(root, "skill.json")
                     with open(skill_path, encoding="utf-8") as f:
                         skill_json = json.load(f)
@@ -67,7 +67,7 @@ class BaseVectorStore:
             embeddings = self.embedding_model.embed_documents(no_embedding_texts)
             for i, key in enumerate(sorted_keys):
                 self.vector_store[key]["embedding"] = embeddings[i]
-        
+
         self.sorted_keys = sorted(self.vector_store)
         embeddings = []
         for key in self.sorted_keys:
@@ -80,7 +80,7 @@ class BaseVectorStore:
     def save_query_cache(self):
         with open(self.query_cache_path, "w", encoding="utf-8") as f:
             json.dump(self.query_cache, f)
-        
+
     def search(self, query: str, top_k: int = 3, threshold=0.8) -> List[dict]:
         key = str((query, top_k, threshold))
         if key in self.query_cache:
@@ -103,4 +103,3 @@ class BaseVectorStore:
         self.query_cache[key] = results
         self.save_query_cache()
         return results
-
