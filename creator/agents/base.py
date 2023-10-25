@@ -2,6 +2,7 @@
 from typing import List, Dict, Any, Optional
 from threading import Thread
 import json
+import uuid
 
 from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
@@ -13,6 +14,10 @@ from langchain.schema.messages import FunctionMessage
 
 from creator.utils import get_user_info, ask_run_code_confirm, remove_tips
 from creator.callbacks.buffer_manager import buffer_output_manager
+from creator.memory.schema import MessageConverter
+from langchain.memory.chat_message_histories import SQLChatMessageHistory
+from creator.config.library import config
+from langchain.callbacks import tracing_v2_enabled
 
 
 class BaseAgent(LLMChain):
@@ -23,6 +28,7 @@ class BaseAgent(LLMChain):
     system_template: str = ""
     allow_user_confirm: bool = False
     prompt: ChatPromptTemplate = ChatPromptTemplate.from_messages(messages=["system", ""])
+    long_term_memory: SQLChatMessageHistory = None
 
     @property
     def _chain_type(self):
@@ -31,6 +37,15 @@ class BaseAgent(LLMChain):
     @property
     def input_keys(self) -> List[str]:
         return ["messages"]
+
+    def build_memory(self, session_id=None):
+        if session_id is None:
+            session_id = str(uuid.uuid4())
+        self.long_term_memory = SQLChatMessageHistory(
+            session_id=session_id,
+            connection_string=f"sqlite:///{config.memory_path}/.langchain.db",
+            custom_message_converter=MessageConverter()
+        )
 
     def construct_prompt(self, langchain_messages: Dict[str, Any]):
         prompt = ChatPromptTemplate.from_messages(messages=[
@@ -70,14 +85,14 @@ class BaseAgent(LLMChain):
             return json.dumps(tool_result, ensure_ascii=False)
         return str(tool_result)
 
-    def run_tool(self, function_call: Dict[str, Any]):
+    def run_tool(self, function_call: Dict[str, Any], run_manager: Optional[CallbackManager] = None):
         function_name = function_call.get("name", "")
         arguments = parse_partial_json(function_call.get("arguments", "{}"))
         tool_result = None
         for tool in self.tools:
             if tool.name == function_name:
                 if self.human_confirm():
-                    tool_result = tool.run(arguments)
+                    tool_result = tool.run(arguments, callbacks=run_manager)
                     tool_result = self.tool_result_to_str(tool_result)
                     tool_result = FunctionMessage(name=function_name, content=tool_result)
                     self.update_tool_result_in_callbacks(tool_result)
@@ -97,7 +112,10 @@ class BaseAgent(LLMChain):
         return inputs
 
     def run_workflow(self, inputs: Dict[str, Any], run_manager: Optional[CallbackManager] = None) -> Dict[str, Any]:
+        run_manager_callbacks = run_manager.get_child() if run_manager else None
         inputs = self.preprocess_inputs(inputs)
+        session_id = inputs.get("session_id", None)
+        self.build_memory(session_id)
         messages = inputs.pop("messages")
         langchain_messages = convert_openai_messages(messages)
         llm_with_functions = self.llm.bind(functions=self.function_schemas)
@@ -106,14 +124,14 @@ class BaseAgent(LLMChain):
             self.start_callbacks()
             prompt = self.construct_prompt(langchain_messages)
             llm_chain = prompt | llm_with_functions | self.postprocess_mesasge
-            message = llm_chain.invoke(inputs)
+            message = llm_chain.invoke(inputs, {"callbacks": run_manager_callbacks})
             langchain_messages.append(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
                 self.end_callbacks(message)
                 break
 
-            tool_result = self.run_tool(function_call)
+            tool_result = self.run_tool(function_call, run_manager_callbacks)
             if tool_result is None:
                 self.end_callbacks(message)
                 break

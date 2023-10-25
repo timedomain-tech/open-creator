@@ -4,6 +4,7 @@ LOCAL_SKILL_LIBRARY_VECTORD_PATH: .cache/open_creator/vectordb/
 PROMPT_CACHE_HISTORY_PATH: .cache/open_creator/prompt_cache/
 LOGGER_CACHE_PATH: .cache/open_creator/logs/
 SKILL_EXTRACT_AGENT_CACHE_PATH: .cache/open_creator/llm_cache
+MEMORY_PATH: .cache/open_creator/memory
 OFFICIAL_SKILL_LIBRARY_PATH: timedomain/skill-library
 OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH: timedomain/skill-library-template
 
@@ -34,3 +35,8 @@ VERTEX_LOCATION: ""
 HUGGINGFACE_API_KEY: ""
 HUGGINGFACE_API_BASE: ""
 
+# for langsmith trace
+LANGCHAIN_ENDPOINT: 
+LANGCHAIN_API_KEY: 
+LANGCHAIN_TRACING_V2: true
+LANGCHAIN_PROJECT: "open-creator"

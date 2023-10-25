@@ -27,6 +27,7 @@ _local_skill_library_vectordb_path = resolve_path(yaml_config.get("LOCAL_SKILL_L
 _prompt_cache_history_path = resolve_path(yaml_config.get("PROMPT_CACHE_HISTORY_PATH", ".cache/open_creator/prompt_cache/"))
 _logger_cache_path = resolve_path(yaml_config.get("LOGGER_CACHE_PATH", ".cache/open_creator/logs/"))
 _skill_extract_agent_cache_path = resolve_path(yaml_config.get("SKILL_EXTRACT_AGENT_CACHE_PATH", ".cache/open_creator/llm_cache"))
+_memory_path = resolve_path(yaml_config.get("MEMORY_PATH", ".cache/open_creator/memory"))
 _official_skill_library_path = resolve_path(yaml_config.get("OFFICIAL_SKILL_LIBRARY_PATH", "timedomain/skill-library"))
 _official_skill_library_template_path = resolve_path(yaml_config.get("OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH", "timedomain/skill-library-template"))
 _model = yaml_config.get("MODEL_NAME", "gpt-3.5-turbo-16k-0613")
@@ -37,7 +38,7 @@ _build_in_skill_library_dir = yaml_config.get("BUILD_IN_SKILL_LIBRARY_DIR", "ski
 _build_in_skill_library_dir = os.path.join(project_dir, _build_in_skill_library_dir)
 
 # Ensure directories exist
-for path in [_skill_extract_agent_cache_path, _local_skill_library_path, _local_skill_library_vectordb_path, _prompt_cache_history_path, _logger_cache_path]:
+for path in [_skill_extract_agent_cache_path, _local_skill_library_path, _local_skill_library_vectordb_path, _prompt_cache_history_path, _logger_cache_path, _memory_path]:
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -65,6 +66,7 @@ class LibraryConfig(BaseModel):
     prompt_cache_history_path: str = _prompt_cache_history_path
     logger_cache_path: str = _logger_cache_path
     skill_extract_agent_cache_path: str = _skill_extract_agent_cache_path
+    memory_path: str = _memory_path
     model: str = _model
     temperature: float = _temperature
     official_skill_library_path: str = _official_skill_library_path
