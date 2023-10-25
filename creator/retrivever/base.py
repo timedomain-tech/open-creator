@@ -17,7 +17,7 @@ class BaseVectorStore:
         self.skill_library_path = config.local_skill_library_path
         self.vector_store = {}
         self.embeddings = None
-        self.embedding_model = create_embedding()
+        self.embedding_model = create_embedding(config)
         self.sorted_keys = []
         self.query_cache = {}
 
