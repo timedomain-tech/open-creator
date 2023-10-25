@@ -6,6 +6,7 @@ from creator.retrivever.score_functions import cosine_similarity
 from langchain.memory.chat_message_histories import SQLChatMessageHistory
 
 from .base import BaseMemory
+from .schema import ArchivalMessage
 
 
 class RecallMemory(BaseMemory):
@@ -93,3 +94,10 @@ class ArchivalMemory(RecallMemory):
     def _filter_messages(self):
         """Utility to filter messages based on roles."""
         return [d for d in self.message_database.messages if d.type in ['archival']]
+
+    async def add(self, message: str, name=None):
+        """Adds a new memory string. Optionally, a name can be provided."""
+        return self.message_database.add_message(ArchivalMessage(content=message))
+
+    async def modify(self, old_content, new_content, name=None):
+        raise NotImplementedError("Archival memory doesn't support modify!")

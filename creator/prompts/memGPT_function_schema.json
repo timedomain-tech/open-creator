@@ -60,13 +60,13 @@
     },
     {
         "name": "modify_memory",
-        "description": "Replace to the contents of core or archival memory. To delete memories, use an empty string for new_content.",
+        "description": "Replace to the contents of core memory. To delete memories, use an empty string for new_content.",
         "parameters": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string",
-                    "enum": ["persona", "human", "archival"],
+                    "enum": ["persona", "human"],
                     "description": "Section of the memory to be edited (persona, human or archival)."
                 },
                 "old_content": {
