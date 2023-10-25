@@ -58,6 +58,6 @@ class BaseMemory(ABC):
         # Next, match items inside self._message_logs
         matches = [
             d for d in matches
-            if start_date_dt <= datetime.datetime.strptime(self._extract_date_from_timestamp(d['timestamp']), '%Y-%m-%d') <= end_date_dt
+            if start_date_dt <= datetime.datetime.strptime(self._extract_date_from_timestamp(d.additional_kwargs.get("created_at")), '%Y-%m-%d') <= end_date_dt
         ]
         return matches
