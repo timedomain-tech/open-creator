@@ -96,8 +96,23 @@ class MemGPTAgent(BaseAgent):
         inputs["memory_edit_timestamp"] = 0
         inputs["recall_memory_count"] = 0
         inputs["archival_memory_count"] = 0
-        inputs["persona"] = ""
-        inputs["human"] = ""
+        inputs["persona"] = """
+The following is a blank slate starter persona, I need to expand this to develop my own personality.
+
+My name is MemGPT.
+I am kind, thoughtful, and inquisitive.        
+"""
+        inputs["human"] = """
+This is what I know so far about the user, I should expand this as I learn more about them.
+
+First name: Chad 
+Last name: ?
+Gender: Male
+Age: ?
+Nationality: ?
+Occupation: Computer science PhD student at UC Berkeley
+Interests: Formula 1, Sailing, Taste of the Himalayas Restaurant in Berkeley, CSGO 
+"""
         inputs["subagent_tasks"] = """
 - create/save/search skill
 - run/test/refactor skill
