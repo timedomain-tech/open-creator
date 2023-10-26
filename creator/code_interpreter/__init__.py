@@ -79,7 +79,10 @@ class CodeInterpreter(StructuredTool):
         if language not in self.interpreters:
             self.add_interpreter(language=language)
         code = self.clean_code(code)
-        result = self.interpreters[language].run(code)
+        if isinstance(self.interpreters[language], SafePythonInterpreter):
+            result = self.interpreters[language].run(code, callbacks=run_manager.get_child() if run_manager else None)
+        else:
+            result = self.interpreters[language].run(code)
         self.run_history[language].append({
             "code": code,
             "result": result

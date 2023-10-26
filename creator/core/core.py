@@ -48,7 +48,6 @@ def validate_create_params(func):
             if not can_construct_skill:
                 print(f"[red]Warning[/red]: [yellow]Only one parameter can be provided. You provided: {provided_params}[/yellow]")
                 return None
-
         # Return the original function with the validated parameters
         return func(cls, **kwargs)
     return wrapper
@@ -131,11 +130,11 @@ class Creator:
         file_path: Optional[str] = None,
         huggingface_repo_id: Optional[str] = None,
         huggingface_skill_path: Optional[str] = None,
+        save: bool = False,
     ) -> CodeSkill:
         """Main method to create a new skill."""
 
         skill_json = None
-
         if skill_path:
             skill_json_path = os.path.join(skill_path, "skill.json")
             return cls._create_from_skill_json_path(skill_json_path)
@@ -144,7 +143,7 @@ class Creator:
             return cls._create_from_skill_json_path(skill_json_path)
 
         if request:
-            skill_json = create_skill_from_request.invoke({"request": request})
+            skill_json = create_skill_from_request(request)
 
         if messages_json_path:
             with open(messages_json_path, encoding="utf-8") as f:
@@ -155,10 +154,10 @@ class Creator:
                 file_content = "### file name: " + os.path.basename(file_path) + "\n---" + f.read()
 
         if messages is not None and len(messages) > 0:
-            skill_json = create_skill_from_messages.invoke({"messages": messages})
+            skill_json = create_skill_from_messages(messages)
 
         elif file_content is not None:
-            skill_json = create_skill_from_file_content.invoke({"file_content": file_content})
+            skill_json = create_skill_from_file_content(file_content)
 
         elif huggingface_repo_id and huggingface_skill_path:
             # huggingface_skill_path pattern username/skill_name_{version}, the version is optional and default to 1.0.0

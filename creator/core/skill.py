@@ -148,6 +148,7 @@ When writing code, it's imperative to follow industry standards and best practic
         skills_to_combine = []
         user_request = "please help me refine the skill object"
         refactor_type = "Refine"
+        runnable_config = None
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -250,7 +251,7 @@ When writing code, it's imperative to follow industry standards and best practic
         return self.refactor()
 
     def run(self, inputs: Union[str, dict[str, Any]]):
-        return run_skill.invoke({"params": inputs, "skill_name": self.skill_name, "skill_program_language": self.skill_program_language, "skill_code": self.skill_code, "skill_dependencies": self.skill_dependencies})
+        return run_skill.invoke(input={"params": inputs, "skill_name": self.skill_name, "skill_program_language": self.skill_program_language, "skill_code": self.skill_code, "skill_dependencies": self.skill_dependencies})
 
     def test(self):
         if self.conversation_history is None:
@@ -278,7 +279,7 @@ When writing code, it's imperative to follow industry standards and best practic
             "skill_program_language": self.skill_program_language,
             "skill_code": self.skill_code,
             "user_request": self.Config.user_request,
-        })
+        }, self.Config.runnable_config)
         refactored_skills = []
         for refactored_skill_json in refactored_skill_jsons:
             refactored_skill = CodeSkill(**refactored_skill_json)

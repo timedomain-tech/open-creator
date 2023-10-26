@@ -55,7 +55,6 @@ class BaseInterpreter:
         while not self.done.is_set():
             for key, _ in sel.select(timeout=0.1):   # Non-blocking with a small timeout
                 line = key.fileobj.readline()
-
                 if self.detect_program_end(line):
                     self.done.set()
                     break
