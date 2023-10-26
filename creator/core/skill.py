@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
 
-from creator.utils import remove_title
+from creator.utils import remove_title, print_run_url
 from creator.config.library import config
 from creator.utils import generate_skill_doc, generate_install_command, print, generate_language_suffix
 from creator.hub.huggingface import hf_repo_update, hf_push
@@ -250,9 +250,11 @@ When writing code, it's imperative to follow industry standards and best practic
             self.Config.refactor_type = "Combine"
         return self.refactor()
 
+    @print_run_url
     def run(self, inputs: Union[str, dict[str, Any]]):
         return run_skill.invoke(input={"params": inputs, "skill_name": self.skill_name, "skill_program_language": self.skill_program_language, "skill_code": self.skill_code, "skill_dependencies": self.skill_dependencies})
 
+    @print_run_url
     def test(self):
         if self.conversation_history is None:
             self.conversation_history = []
@@ -265,6 +267,7 @@ When writing code, it's imperative to follow industry standards and best practic
         self.conversation_history = self.conversation_history + test_result["messages"]
         return self.test_summary
 
+    @print_run_url
     def refactor(self):
         if self.conversation_history is None:
             self.conversation_history = []
@@ -291,6 +294,7 @@ When writing code, it's imperative to follow industry standards and best practic
             return refactored_skills[0]
         return refactored_skills
 
+    @print_run_url
     def auto_optimize(self, retry_times=3):
         optimized_result = auto_optimize_skill.invoke({"old_skill": self, "retry_times": retry_times})
         test_summary = optimized_result["test_summary"]
