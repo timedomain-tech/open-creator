@@ -7,7 +7,6 @@ from langchain.output_parsers.json import parse_partial_json
 
 from creator.config.library import config
 from creator.utils import convert_to_values_list, load_system_prompt, get_user_info
-from creator.llm.llm_creator import create_llm
 
 from .base import BaseAgent
 
@@ -68,7 +67,3 @@ def create_code_refactor_agent(llm):
         verbose=False
     )
     return chain
-
-
-llm = create_llm(config)
-code_refactor_agent = create_code_refactor_agent(llm)

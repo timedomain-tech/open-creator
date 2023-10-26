@@ -1,14 +1,12 @@
 import os
 from typing import Union, List, Optional
-from creator.agents import skill_extractor_agent, code_interpreter_agent
-from creator.agents.prompt_enhancer_agent import create_prompt_enhancer_agent
-from creator.llm.llm_creator import create_llm
-from creator.core.skill import CodeSkill, BaseSkill, BaseSkillMetadata
 from creator.config.library import config
 from creator.utils import print
-
 from creator.hub.huggingface import hf_pull
 from creator.retrivever.base import BaseVectorStore
+
+from .skill import CodeSkill, BaseSkill, BaseSkillMetadata
+from .runnable import create_skill_from_messages, create_skill_from_request, create_skill_from_file_content
 
 import json
 from functools import wraps
@@ -97,21 +95,6 @@ class Creator:
     config = config
 
     @classmethod
-    def _create_from_messages(cls, messages) -> CodeSkill:
-        """Generate skill from messages."""
-        skill_json = skill_extractor_agent.run({
-            "messages": messages,
-            "verbose": True,
-        })
-        if skill_json is None:
-            print("> No skill was generated.", print_type="markdown")
-            return None
-        skill = CodeSkill(**skill_json)
-        if skill.skill_metadata is None:
-            skill.skill_metadata = BaseSkillMetadata()
-        return skill
-
-    @classmethod
     def _create_from_skill_json_path(cls, skill_json_path) -> CodeSkill:
         """Load skill from a given path."""
         with open(skill_json_path, mode="r", encoding="utf-8") as f:
@@ -121,6 +104,19 @@ class Creator:
             if not isinstance(skill.skill_metadata.updated_at, str):
                 skill.skill_metadata.updated_at = skill.skill_metadata.updated_at.strftime("%Y-%m-%d %H:%M:%S")
         return skill
+
+    @classmethod
+    def _create_from_skill_json(cls, skill_json, save) -> CodeSkill:
+        """Load skill from a given json."""
+        if skill_json is not None:
+            skill = CodeSkill(**skill_json)
+            if skill.skill_metadata is None:
+                skill.skill_metadata = BaseSkillMetadata()
+            if save:
+                skill.save()
+            return skill
+        print("> No skill was generated.", print_type="markdown")
+        return None
 
     @classmethod
     @validate_create_params
@@ -138,6 +134,8 @@ class Creator:
     ) -> CodeSkill:
         """Main method to create a new skill."""
 
+        skill_json = None
+
         if skill_path:
             skill_json_path = os.path.join(skill_path, "skill.json")
             return cls._create_from_skill_json_path(skill_json_path)
@@ -146,23 +144,7 @@ class Creator:
             return cls._create_from_skill_json_path(skill_json_path)
 
         if request:
-            config.use_rich = False
-            prompt_enhancer_agent = create_prompt_enhancer_agent(create_llm(config))
-            enhanced_prompt = prompt_enhancer_agent.run({
-                "messages": [{
-                    "role": "user",
-                    "content": request
-                }],
-                "verbose": False,
-            })
-            config.use_rich = True
-            messages = code_interpreter_agent.run({
-                "messages": [{
-                    "role": "user",
-                    "content": enhanced_prompt
-                }],
-                "verbose": True,
-            })
+            skill_json = create_skill_from_request.invoke({"request": request})
 
         if messages_json_path:
             with open(messages_json_path, encoding="utf-8") as f:
@@ -172,25 +154,19 @@ class Creator:
             with open(file_path, encoding="utf-8") as f:
                 file_content = "### file name: " + os.path.basename(file_path) + "\n---" + f.read()
 
-        if file_content:
-            messages = [{
-                "role": "user",
-                "content": file_content
-            }]
+        if messages is not None and len(messages) > 0:
+            skill_json = create_skill_from_messages.invoke({"messages": messages})
 
-        if messages:
-            return cls._create_from_messages(messages)
+        elif file_content is not None:
+            skill_json = create_skill_from_file_content.invoke({"file_content": file_content})
 
-        if huggingface_repo_id and huggingface_skill_path:
+        elif huggingface_repo_id and huggingface_skill_path:
             # huggingface_skill_path pattern username/skill_name_{version}, the version is optional and default to 1.0.0
             save_path = os.path.join(config.remote_skill_library_path, huggingface_repo_id, huggingface_skill_path)
             skill_json = hf_pull(repo_id=huggingface_repo_id, huggingface_skill_path=huggingface_skill_path, save_path=save_path)
-            skill = CodeSkill(**skill_json)
-            cls.save(skill=skill, skill_path=save_path)
-            return skill
+            save = True
 
-        # Raise an error if none of the above conditions are met
-        print("> Please provide one of the following parameters: messages, request, skill_path, messages_json_path, file_content, or file_path.", print_type="markdown")
+        return cls._create_from_skill_json(skill_json, save=save)
 
     @classmethod
     @validate_save_params

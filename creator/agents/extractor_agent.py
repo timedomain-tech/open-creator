@@ -6,7 +6,6 @@ from creator.config.library import config
 from creator.utils import convert_to_values_list, get_user_info, load_system_prompt
 import json
 
-from creator.llm import create_llm
 from .base import BaseAgent
 
 
@@ -54,7 +53,3 @@ def create_skill_extractor_agent(llm):
         verbose=False
     )
     return chain
-
-
-llm = create_llm(config)
-skill_extractor_agent = create_skill_extractor_agent(llm)

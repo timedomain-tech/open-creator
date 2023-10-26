@@ -12,6 +12,7 @@ from .code_split import split_code_blocks
 from .valid_code import is_valid_code, is_expression
 from .tips_utils import remove_tips
 from .time_utils import get_local_time
+from .runnable_decorator import runnable
 
 
 __all__ = [
@@ -29,5 +30,6 @@ __all__ = [
     "is_valid_code",
     "is_expression",
     "remove_tips",
-    "get_local_time"
+    "get_local_time",
+    "runnable"
 ]

@@ -1,6 +1,6 @@
 import numpy as np
 
-from creator.llm.llm_creator import create_embedding
+from creator.llm import create_embedding
 from creator.retrivever.score_functions import cosine_similarity
 
 from langchain.memory.chat_message_histories import SQLChatMessageHistory

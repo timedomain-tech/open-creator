@@ -3,7 +3,9 @@ import json
 from .constants import help_commands, prompt_prefix, interpreter_prefix
 
 from creator.agents.creator_agent import open_creator_agent
-from creator.agents import code_interpreter_agent
+from creator.agents import create_code_interpreter_agent
+from creator.config.library import config
+from creator.llm import create_llm
 from creator.utils import truncate_output, is_valid_code
 from rich.console import Console
 from rich.markdown import Markdown
@@ -21,6 +23,7 @@ class RequestHandler:
         self.output = []
         self.console = Console()
         self.interpreter = False
+        self.interpreter_agent = create_code_interpreter_agent(create_llm(config))
 
     async def handle(self, request, interpreter):
         """
@@ -189,7 +192,7 @@ class RequestHandler:
         inputs = {"messages": messages, "verbose": True}
         with self.console.status("[blue]Thinking[/blue]", spinner="circleHalves"):
             if self.interpreter:
-                messages = code_interpreter_agent.run(inputs)
+                messages = self.code_interpreter_agent.run(inputs)
             else:
                 messages = open_creator_agent.run(inputs)
         output = "\n".join([self.convert_agent_message(message) for message in messages[len(self.messages)+1:]])

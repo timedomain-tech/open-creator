@@ -6,7 +6,6 @@ from langchain.output_parsers.json import parse_partial_json
 from creator.code_interpreter import CodeInterpreter, language_map
 from creator.config.library import config
 from creator.utils import load_system_prompt, remove_tips
-from creator.llm.llm_creator import create_llm
 
 from .base import BaseAgent
 
@@ -82,7 +81,3 @@ def create_code_tester_agent(llm):
         verbose=False,
     )
     return chain
-
-
-llm = create_llm(config)
-code_tester_agent = create_code_tester_agent(llm=llm)

@@ -5,7 +5,6 @@ from langchain.output_parsers.json import parse_partial_json
 
 from creator.config.library import config
 from creator.utils import load_system_prompt
-from creator.llm.llm_creator import create_llm
 from creator.utils import print
 
 from creator.agents.base import BaseAgent
@@ -13,7 +12,7 @@ import json
 
 
 class PromptEnhancerAgent(BaseAgent):
-    output_key: str = "enhanced_prompt"
+    output_key: str = "request"
 
     @property
     def _chain_type(self):
@@ -33,9 +32,9 @@ class PromptEnhancerAgent(BaseAgent):
             rewrited_prompt = parse_partial_json(function_call.get("arguments", "{}"))
             prefix_prompt = rewrited_prompt.get("prefix_prompt", "")
             postfix_prompt = rewrited_prompt.get("postfix_prompt", "")
-            print(f"[green]{prefix_prompt}[/green]\n{orignal_request}\n[green]{postfix_prompt}[/green]")
-            return {"enhanced_prompt": "\n".join([prefix_prompt, orignal_request, postfix_prompt])}
-        return {"enhanced_prompt": orignal_request}
+            # print(f"[green]{prefix_prompt}[/green]\n{orignal_request}\n[green]{postfix_prompt}[/green]")
+            return {"request": "\n".join([prefix_prompt, orignal_request, postfix_prompt])}
+        return {"request": orignal_request}
 
 
 def create_prompt_enhancer_agent(llm):
@@ -51,6 +50,3 @@ def create_prompt_enhancer_agent(llm):
         verbose=False
     )
     return chain
-
-
-llm = create_llm(config)

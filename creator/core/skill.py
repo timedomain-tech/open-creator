@@ -1,11 +1,14 @@
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Union, Any
 from datetime import datetime
+
 from creator.utils import remove_title
 from creator.config.library import config
 from creator.utils import generate_skill_doc, generate_install_command, print, generate_language_suffix
-from creator.agents import code_interpreter_agent, code_tester_agent, code_refactor_agent
 from creator.hub.huggingface import hf_repo_update, hf_push
+
+from .runnable import install_skill, run_skill, test_skill, refactor_skill, auto_optimize_skill
+
 import json
 import getpass
 import os
@@ -213,20 +216,7 @@ When writing code, it's imperative to follow industry standards and best practic
         return code_skill_json_schema
 
     def install(self):
-        if self.skill_dependencies is None:
-            return
-        try:
-            install_script = generate_install_command(self.skill_program_language, self.skill_dependencies)
-            print("> Installing dependencies", print_type="markdown")
-            print(f"```bash\n{install_script}\n```\n", print_type="markdown")
-            result = config.code_interpreter.run({
-                "language": "shell",
-                "code": install_script,
-            })
-            print(f"> Install dependencies result: {result}", print_type="markdown")
-        except Exception as e:
-            print(f"> Error when installing dependencies: {e}", print_type="markdown")
-        return
+        install_skill.invoke({"skill_dependencies": self.skill_dependencies, "skill_program_language": self.skill_program_language})
 
     def __add__(self, other_skill):
         assert isinstance(other_skill, type(self)), f"Cannot combine {type(self)} with {type(other_skill)}"
@@ -260,30 +250,7 @@ When writing code, it's imperative to follow industry standards and best practic
         return self.refactor()
 
     def run(self, inputs: Union[str, dict[str, Any]]):
-        self.install()
-        messages = [
-            {"role": "assistant", "content": "ok I will run your code", "function_call": {
-                "name": self.skill_name,
-                "arguments": json.dumps({"language": self.skill_program_language, "code": self.skill_code})
-            }}
-        ]
-        tool_result = config.code_interpreter.run({
-            "language": self.skill_program_language,
-            "code": self.skill_code
-        })
-        params = json.dumps(inputs) if isinstance(inputs, dict) else inputs
-        messages.append({"role": "function", "name": "run_code", "content": json.dumps(tool_result)})
-        messages.append({"role": "user", "content": params})
-        previews_tool = code_interpreter_agent.tools[0]
-        code_interpreter_agent.tools[0] = config.code_interpreter
-        messages = code_interpreter_agent.run(
-            {
-                "messages": messages,
-                "verbose": True,
-            }
-        )
-        code_interpreter_agent.tools[0] = previews_tool
-        return messages
+        return run_skill.invoke({"params": inputs, "skill_name": self.skill_name, "skill_program_language": self.skill_program_language, "skill_code": self.skill_code, "skill_dependencies": self.skill_dependencies})
 
     def test(self):
         if self.conversation_history is None:
@@ -291,39 +258,9 @@ When writing code, it's imperative to follow industry standards and best practic
         if not self.skill_code:
             print("> No code provided, cannot test", print_type="markdown")
             return
-
-        previews_tool = code_tester_agent.tools[0]
-        code_tester_agent.tools[0] = config.code_interpreter
-
-        self.install()
-        extra_import = """\n\n
-import io
-import unittest
-stream = io.StringIO()
-runner = unittest.TextTestRunner(stream=stream)
-"""
-        tool_input = {
-            "language": self.skill_program_language,
-            "code": self.skill_code + extra_import
-        }
-        tool_result = config.code_interpreter.run(tool_input)
-        messages = [
-            {"role": "user", "content": repr(self)},
-            {"role": "assistant", "content": "", "function_call": {"name": "run_code", "arguments": json.dumps(tool_input)}},
-            {"role": "function", "name": "run_code", "content": json.dumps(tool_result)},
-            {"role": "user", "content": "I have already run the function for you so you can directy use the function by passing the parameters without import the function"},
-        ]
-
-        test_result = code_tester_agent.run(
-            {
-                "messages": messages,
-                "verbose": True,
-            }
-        )
-        code_tester_agent.tools[0] = previews_tool
+        test_result = test_skill.invoke({"skill_program_language": self.skill_program_language, "skill_code": self.skill_code, "skill_dependencies": self.skill_dependencies, "skill_repr": repr(self)})
         if "test_summary" in test_result:
             self.test_summary = TestSummary(**{"test_cases": test_result["test_summary"]})
-
         self.conversation_history = self.conversation_history + test_result["messages"]
         return self.test_summary
 
@@ -334,23 +271,14 @@ runner = unittest.TextTestRunner(stream=stream)
         if not self.Config.refactorable:
             print("> This skill is not refactorable since it is not combined with other skills or add any user request", print_type="markdown")
             return
-        messages = [
-            {"role": "system", "content": f"Your action type is: {self.Config.refactor_type}"},
-            {"role": "function", "name": "show_skill", "content": repr(self)},
-            {"role": "function", "name": "show_code", "content": f"current skill code:\n```{self.skill_program_language}\n{self.skill_code}\n```"}
-        ]
-        additional_request = "\nplease output only one skill object" if self.Config.refactor_type in ("Combine", "Refine") else "\nplease help me decompose the skill object into different independent skill objects"
-        messages.append({
-            "role": "user",
-            "content": self.Config.user_request + additional_request
+        refactored_skill_jsons = refactor_skill.invoke({
+            "conversation_history": self.conversation_history,
+            "refactor_type": self.Config.refactor_type,
+            "skill_repr": repr(self),
+            "skill_program_language": self.skill_program_language,
+            "skill_code": self.skill_code,
+            "user_request": self.Config.user_request,
         })
-        messages = self.conversation_history + [{"role": "system", "content": "Above context is conversation history from other agents. Now let's refactor our skill."}] + messages
-        refactored_skill_jsons = code_refactor_agent.run(
-            {
-                "messages": messages,
-                "verbose": True,
-            }
-        )
         refactored_skills = []
         for refactored_skill_json in refactored_skill_jsons:
             refactored_skill = CodeSkill(**refactored_skill_json)
@@ -363,24 +291,17 @@ runner = unittest.TextTestRunner(stream=stream)
         return refactored_skills
 
     def auto_optimize(self, retry_times=3):
-        skill = self.model_copy(deep=True)
-        refined = False
-        for i in range(retry_times):
-            if skill.test_summary is None:
-                test_summary = skill.test()
-                if test_summary is None:
-                    print("> Skill test failed, cannot auto optimize", print_type="markdown")
-                    return skill
-
-            all_passed = all(test_case.is_passed for test_case in test_summary.test_cases)
-            if all_passed and refined:
-                return skill
-            print(f"> Auto Refine Skill {i+1}/{retry_times}", print_type="markdown")
-            skill = skill > "I have tested the skill, but it failed, please refine it."
-            if all_passed:
-                skill.test_summary = test_summary
-            refined = True
-        return self
+        optimized_result = auto_optimize_skill.invoke({"old_skill": self, "retry_times": retry_times})
+        test_summary = optimized_result["test_summary"]
+        skill = optimized_result["skill"]
+        if isinstance(test_summary, None):
+            return skill
+        elif isinstance(test_summary, TestSummary):
+            skill.test_summary = test_summary
+            return skill
+        elif isinstance(test_summary, dict):
+            skill.test_summary = TestSummary(**test_summary)
+            return skill
 
     def __repr__(self):
         if self.Config.refactorable:
@@ -403,7 +324,7 @@ runner = unittest.TextTestRunner(stream=stream)
 
     def show(self):
         print(self.__repr__(), print_type="markdown")
-    
+
     def show_code(self):
         code = f"""```{self.skill_program_language}\n{self.skill_code}\n```"""
         print(code, print_type="markdown")

@@ -39,4 +39,3 @@ def generate_skill_doc(skill):
         doc += format_return(skill.skill_return) + "\n"
 
     return doc.strip()
-

@@ -14,8 +14,10 @@ class TrimMixin:
 
 
 class ChatOpenAIWithTrim(TrimMixin, ChatOpenAI):
+    cache: bool = True
     pass
 
 
 class AzureChatOpenAIWithTrim(TrimMixin, AzureChatOpenAI):
+    cache: bool = True
     pass

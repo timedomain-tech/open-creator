@@ -17,7 +17,6 @@ from creator.callbacks.buffer_manager import buffer_output_manager
 from creator.memory.schema import MessageConverter
 from langchain.memory.chat_message_histories import SQLChatMessageHistory
 from creator.config.library import config
-from langchain.callbacks import tracing_v2_enabled
 
 
 class BaseAgent(LLMChain):
@@ -123,7 +122,7 @@ class BaseAgent(LLMChain):
         while current_try < self.total_tries:
             self.start_callbacks()
             prompt = self.construct_prompt(langchain_messages)
-            llm_chain = prompt | llm_with_functions | self.postprocess_mesasge
+            llm_chain = (prompt | llm_with_functions | self.postprocess_mesasge).with_config({"run_name": f"Iteration {current_try+1}"})
             message = llm_chain.invoke(inputs, {"callbacks": run_manager_callbacks})
             langchain_messages.append(message)
             function_call = message.additional_kwargs.get("function_call", None)

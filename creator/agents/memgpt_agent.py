@@ -9,7 +9,7 @@ from creator.code_interpreter import CodeInterpreter, language_map
 from langchain.adapters.openai import convert_message_to_dict, convert_openai_messages
 from creator.config.library import config
 from creator.utils import load_system_prompt
-from creator.llm.llm_creator import create_llm
+from creator.llm import create_llm
 from langchain.tools import StructuredTool
 from creator.utils import get_user_info, get_local_time
 from creator.callbacks.streaming_stdout import OutputBufferStreamingHandler

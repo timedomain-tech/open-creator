@@ -10,7 +10,7 @@ from langchain.schema.runnable import RunnableConfig
 from creator.code_interpreter.safe_python import SafePythonInterpreter
 from creator.config.library import config
 from creator.utils import load_system_prompt, get_user_info, remove_tips
-from creator.llm.llm_creator import create_llm
+from creator.llm import create_llm
 
 from .base import BaseAgent
 

@@ -2,9 +2,9 @@ import json
 import sys
 from rich.markdown import Markdown
 from rich.console import Console
-from rich import print as rich_print
 from rich.json import JSON
 import io
+
 
 # Save the original print function
 original_print = print
