@@ -110,6 +110,10 @@ class BaseAgent(LLMChain):
     def preprocess_inputs(self, inputs: Dict[str, Any]):
         return inputs
 
+    def add_to_memory(self, messages):
+        """Add message to long-term memory"""
+        pass
+
     def run_workflow(self, inputs: Dict[str, Any], run_manager: Optional[CallbackManager] = None) -> Dict[str, Any]:
         run_manager_callbacks = run_manager.get_child() if run_manager else None
         inputs = self.preprocess_inputs(inputs)
@@ -139,6 +143,7 @@ class BaseAgent(LLMChain):
             current_try += 1
             self.end_callbacks(message)
         langchain_messages = remove_tips(langchain_messages)
+        self.add_to_memory(langchain_messages)
         openai_messages = list(map(convert_message_to_dict, langchain_messages))
         return openai_messages
 

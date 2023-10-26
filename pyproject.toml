@@ -12,7 +12,7 @@ include = ["creator/config.yaml"]
 [tool.poetry.dependencies]
 python = "^3.10"
 rich = "^13.5.2"
-langchain = ">=0.0.317"
+langchain = ">=0.0.323"
 huggingface_hub = "^0.17.2"
 loguru = "^0.7.2"
 pydantic = "^2.0.3"
