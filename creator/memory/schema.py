@@ -1,10 +1,13 @@
 from typing import Any
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, Text, DateTime, JSON
-from langchain.schema import BaseMessage, HumanMessage, AIMessage, SystemMessage, FunctionMessage
-from langchain.memory.chat_message_histories.sql import BaseMessageConverter
 import datetime
 
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, Text, DateTime, JSON
+
+from langchain.schema import BaseMessage, HumanMessage, AIMessage, SystemMessage, FunctionMessage
+from langchain.memory.chat_message_histories.sql import BaseMessageConverter
+from langchain.memory.chat_message_histories import SQLChatMessageHistory
+from creator.utils.time_utils import get_local_time
 
 Base = declarative_base()
 
@@ -56,7 +59,7 @@ class MessageConverter(BaseMessageConverter):
             raise ValueError(f'Unknown message type: {sql_message.type}')
 
     def to_sql_model(self, message: BaseMessage, session_id: str) -> Any:
-        now = datetime.now()
+        now = get_local_time()
         if isinstance(message, FunctionMessage):
             message.additional_kwargs.update({"name": message.name})
         message.additional_kwargs.update({"created_at": now})
@@ -70,3 +73,24 @@ class MessageConverter(BaseMessageConverter):
 
     def get_sql_model_class(self) -> Any:
         return MemoryMessage
+
+
+class ChatMessageHistory(SQLChatMessageHistory):
+
+    @property
+    def memory_edit_timestamp(self):
+        messages = self.messages()
+        now = get_local_time()
+        if messages:
+            return messages[-1].additional_kwargs.get("created_at", now)
+        return now
+
+    @property
+    def recall_memory_count(self):
+        messages = self.messages()
+        return len([m for m in messages if m.type != "archival"])
+
+    @property
+    def archival_memory_count(self):
+        messages = self.messages()
+        return len([m for m in messages if m.type == "archival"])

@@ -14,8 +14,6 @@ from langchain.schema.messages import FunctionMessage
 
 from creator.utils import get_user_info, ask_run_code_confirm, remove_tips
 from creator.callbacks.buffer_manager import buffer_output_manager
-from creator.memory.schema import MessageConverter
-from langchain.memory.chat_message_histories import SQLChatMessageHistory
 from creator.config.library import config
 
 
@@ -27,7 +25,6 @@ class BaseAgent(LLMChain):
     system_template: str = ""
     allow_user_confirm: bool = False
     prompt: ChatPromptTemplate = ChatPromptTemplate.from_messages(messages=["system", ""])
-    long_term_memory: SQLChatMessageHistory = None
 
     @property
     def _chain_type(self):
@@ -36,15 +33,6 @@ class BaseAgent(LLMChain):
     @property
     def input_keys(self) -> List[str]:
         return ["messages"]
-
-    def build_memory(self, session_id=None):
-        if session_id is None:
-            session_id = str(uuid.uuid4())
-        self.long_term_memory = SQLChatMessageHistory(
-            session_id=session_id,
-            connection_string=f"sqlite:///{config.memory_path}/.langchain.db",
-            custom_message_converter=MessageConverter()
-        )
 
     def construct_prompt(self, langchain_messages: Dict[str, Any]):
         prompt = ChatPromptTemplate.from_messages(messages=[
@@ -96,6 +84,9 @@ class BaseAgent(LLMChain):
                     tool_result = FunctionMessage(name=function_name, content=tool_result)
                     self.update_tool_result_in_callbacks(tool_result)
                 break
+        if tool_result is None:
+            tool_names = list(map(lambda x: x.name, self.tools))
+            tool_result = FunctionMessage(name="system_alert", content=f"Unknown function name: {function_name}. Available functions: {tool_names}")
         return tool_result
 
     def human_confirm(self):
@@ -117,10 +108,9 @@ class BaseAgent(LLMChain):
     def run_workflow(self, inputs: Dict[str, Any], run_manager: Optional[CallbackManager] = None) -> Dict[str, Any]:
         run_manager_callbacks = run_manager.get_child() if run_manager else None
         inputs = self.preprocess_inputs(inputs)
-        session_id = inputs.get("session_id", None)
-        self.build_memory(session_id)
         messages = inputs.pop("messages")
         langchain_messages = convert_openai_messages(messages)
+        self.llm.function_calls = self.function_schemas
         llm_with_functions = self.llm.bind(functions=self.function_schemas)
         current_try = 0
         while current_try < self.total_tries:
@@ -143,7 +133,6 @@ class BaseAgent(LLMChain):
             current_try += 1
             self.end_callbacks(message)
         langchain_messages = remove_tips(langchain_messages)
-        self.add_to_memory(langchain_messages)
         openai_messages = list(map(convert_message_to_dict, langchain_messages))
         return openai_messages
 

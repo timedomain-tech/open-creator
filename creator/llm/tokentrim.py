@@ -1,5 +1,10 @@
 import tiktoken
 from typing import List, Dict, Any, Optional
+from .format_function_calls import get_function_calls_token_count
+
+# reference:
+# https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
+# https://github.com/KillianLucas/tokentrim/blob/main/tokentrim/tokentrim.py
 
 
 # Define model configurations in a centralized location
@@ -82,7 +87,7 @@ def tokens_for_message(message: Dict[str, Any], encoding: Any, config: Dict[str,
     Calculate the number of tokens for a single message.
     """
     num_tokens = config['tokens_per_message']
-    
+
     for key, value in message.items():
         try:
             num_tokens += len(encoding.encode(str(value)))
@@ -95,7 +100,6 @@ def tokens_for_message(message: Dict[str, Any], encoding: Any, config: Dict[str,
     return num_tokens
 
 
-# Refactored main function
 def num_tokens_from_messages(messages: List[Dict[str, Any]], model: Optional[str] = None) -> int:
     """
     Function to return the number of tokens used by a list of messages.
@@ -135,7 +139,8 @@ def trim(
     messages: List[Dict[str, Any]],
     model: Optional[str] = None,
     trim_ratio: float = 0.75,
-    max_tokens: Optional[int] = None
+    max_tokens: Optional[int] = None,
+    function_calls: List[Dict] = None,
 ) -> List[Dict[str, Any]]:
     """
     Trim a list of messages to fit within a model's token limit.
@@ -147,6 +152,9 @@ def trim(
     if max_tokens is None:
         config = get_model_config(model)
         max_tokens = int(config['max_tokens'] * trim_ratio)
+
+    if function_calls is not None:
+        max_tokens -= get_function_calls_token_count(get_encoding_for_model(model), function_calls)
 
     total_tokens = num_tokens_from_messages(messages, model)
     if total_tokens <= max_tokens:
