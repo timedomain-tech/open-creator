@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict, List
 
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
@@ -14,7 +14,7 @@ class OutputBufferStreamingHandler(StreamingStdOutCallbackHandler):
         agent_name = kwargs.get("agent_name")
         buffer_output_manager.add(agent_name)
 
-    def on_llm_new_token(self, **kwargs: Any) -> None:
+    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         """Run on new LLM token. Only available when streaming is enabled."""
         chunk = kwargs.get("chunk", None)
         if chunk is not None:
@@ -41,7 +41,7 @@ class RichTerminalStreamingHandler(StreamingStdOutCallbackHandler):
         agent_name = kwargs.get("agent_name")
         rich_output_manager.add(agent_name)
 
-    def on_llm_new_token(self, **kwargs: Any) -> None:
+    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         """Run on new LLM token. Only available when streaming is enabled."""
         chunk = kwargs.get("chunk", None)
         if chunk is not None:
@@ -68,7 +68,7 @@ class FileLoggerStreamingHandler(StreamingStdOutCallbackHandler):
         agent_name = kwargs.get("agent_name")
         file_output_manager.add(agent_name)
 
-    def on_llm_new_token(self, **kwargs: Any) -> None:
+    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         """Run on new LLM token. Only available when streaming is enabled."""
         chunk = kwargs.get("chunk", None)
         if chunk is not None:

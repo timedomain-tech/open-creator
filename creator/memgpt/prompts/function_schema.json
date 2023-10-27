@@ -7,7 +7,7 @@
             "properties": {
                 "message": {
                     "type": "string",
-                    "description": "Message contents. All unicode (including emojis) are supported."
+                    "description": "Message contents. All unicode (including emojis) are supported. Reply in the user's language."
                 },
                 "receiver": {
                     "type": "string",

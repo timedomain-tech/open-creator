@@ -74,7 +74,7 @@ def format_schema(schema, indent, json_schema):
     elif schema["type"] == "array":
         return format_schema(schema["items"], indent, json_schema) + "[]"
     else:
-        raise ValueError("unknown schema type " + schema["type"])
+        return schema["type"]
 
 
 def format_tool(tool):

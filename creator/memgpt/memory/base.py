@@ -12,8 +12,8 @@ class BaseMemory(ABC):
         pass
 
     @abstractmethod
-    async def add(self, memory_string, name=None):
-        """Adds a new memory string. Optionally, a name can be provided."""
+    async def add(self, message, name=None):
+        """Adds a new message. Optionally, a name can be provided."""
         pass
 
     @abstractmethod

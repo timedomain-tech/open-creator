@@ -4,8 +4,8 @@ script_path = os.path.abspath(__file__)
 sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 import streamlit as st
-from creator.agents.creator_agent import open_creator_agent
-from creator.agents import code_interpreter_agent
+from creator.agents import create_creator_agent, create_code_interpreter_agent
+from creator.llm import create_llm
 from creator import config
 from langchain.callbacks.streamlit.streamlit_callback_handler import _convert_newlines
 from langchain.output_parsers.json import parse_partial_json
@@ -20,6 +20,11 @@ st.title("OpenCreator Web Demo")
 container = st.container()
 
 agent_name = "interpreter_agent"
+
+agent_mapping = {
+    "interpreter_agent": create_code_interpreter_agent(create_llm(config)),
+    "creator_agent": create_creator_agent(create_llm(config))
+}
 
 
 def setup_slidebar():
@@ -62,8 +67,6 @@ def setup_state():
     if "langugae" not in st.session_state:
         st.session_state["language"] = "English"
 
-    if "agent" not in st.session_state:
-        st.session_state["agent"] = "interpreter_agent"
 
 def disable():
     st.session_state["disabled"] = True
@@ -173,7 +176,7 @@ def handle_input():
         messages.append({"role": "user", "content": prompt})
         print("current input messages", messages)
         render_conversation_history(container, messages)
-        agent = open_creator_agent if agent_name == "creator_agent" else code_interpreter_agent
+        agent = agent_mapping[agent_name]
 
         return_messages = stream_render(agent, messages, container)
         current_session["messages"] = return_messages

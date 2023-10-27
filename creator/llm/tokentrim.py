@@ -145,8 +145,10 @@ def trim(
     """
     Trim a list of messages to fit within a model's token limit.
     """
+    trimed = False
+
     if not messages:
-        return messages
+        return messages, trimed
 
     # Initialize max_tokens
     if max_tokens is None:
@@ -158,14 +160,14 @@ def trim(
 
     total_tokens = num_tokens_from_messages(messages, model)
     if total_tokens <= max_tokens:
-        return messages
+        return messages, trimed
 
     # Deduct the system message tokens from the max_tokens if system message exists
     system_messages = [msg for msg in messages if msg["role"] == "system"]
     system_message_tokens = num_tokens_from_messages(system_messages, model)
 
     available_tokens = max_tokens - system_message_tokens
-
+    trimed = True
     if available_tokens < 0:
         print("`tokentrim`: Warning, system message exceeds token limit. Trimming...")
         curr_tokens = total_tokens
@@ -181,7 +183,7 @@ def trim(
                 trimmed_messages.append(message)
                 trimmed_messages.extend(messages[idx+1:])
                 break
-        return trimmed_messages
+        return trimmed_messages, trimed
 
     # trim except system messages
     idx = 0
@@ -201,4 +203,4 @@ def trim(
             idx += 1
             break
 
-    return [msg for i, msg in enumerate(messages) if i not in removed_idxs]
+    return [msg for i, msg in enumerate(messages) if i not in removed_idxs], trimed

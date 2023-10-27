@@ -1,5 +1,6 @@
 from typing import Any
 import datetime
+import uuid
 
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, Text, DateTime, JSON
@@ -7,7 +8,9 @@ from sqlalchemy import Column, Integer, Text, DateTime, JSON
 from langchain.schema import BaseMessage, HumanMessage, AIMessage, SystemMessage, FunctionMessage
 from langchain.memory.chat_message_histories.sql import BaseMessageConverter
 from langchain.memory.chat_message_histories import SQLChatMessageHistory
-from creator.utils.time_utils import get_local_time
+
+from ..time_utils import get_local_time
+
 
 Base = declarative_base()
 
@@ -30,36 +33,40 @@ class MemoryMessage(Base):
 class MessageConverter(BaseMessageConverter):
 
     def from_sql_model(self, sql_message: Any) -> BaseMessage:
-        created_at = sql_message.additional_kwargs.get("created_at", datetime.now())
+        created_at = sql_message.created_at.strftime("%Y-%m-%d %I:%M:%S %p %Z%z")
         sql_message.additional_kwargs.update({"created_at": created_at})
         if sql_message.type == 'human':
             return HumanMessage(
                 content=sql_message.content,
-                additional_kwargs={"created_at": sql_message.created_at}
+                additional_kwargs=sql_message.additional_kwargs
             )
-        elif sql_message.type == 'ai':
+        elif "ai" in sql_message.type.lower():
             return AIMessage(
                 content=sql_message.content,
                 additional_kwargs=sql_message.additional_kwargs
             )
-        elif sql_message.type == 'system':
+        elif "system" in sql_message.type.lower():
             return SystemMessage(
                 content=sql_message.content,
+                additional_kwargs=sql_message.additional_kwargs
             )
-        elif sql_message.type == 'function':
+        elif "function" in sql_message.type.lower():
             return FunctionMessage(
                 content=sql_message.content,
                 name=sql_message.additional_kwargs.get("name", ""),
+                additional_kwargs=sql_message.additional_kwargs
             )
-        elif sql_message.type == "archival":
+        elif "archival" in sql_message.type.lower():
             return ArchivalMessage(
                 content=sql_message.content,
+                additional_kwargs=sql_message.additional_kwargs
             )
         else:
             raise ValueError(f'Unknown message type: {sql_message.type}')
 
     def to_sql_model(self, message: BaseMessage, session_id: str) -> Any:
         now = get_local_time()
+        now_datetime = datetime.datetime.strptime(now, "%Y-%m-%d %I:%M:%S %p %Z%z")
         if isinstance(message, FunctionMessage):
             message.additional_kwargs.update({"name": message.name})
         message.additional_kwargs.update({"created_at": now})
@@ -67,7 +74,7 @@ class MessageConverter(BaseMessageConverter):
             session_id=session_id,
             type=message.type,
             content=message.content,
-            created_at=message.additional_kwargs.get("created_at", now),
+            created_at=now_datetime,
             additional_kwargs=message.additional_kwargs
         )
 
@@ -75,22 +82,11 @@ class MessageConverter(BaseMessageConverter):
         return MemoryMessage
 
 
-class ChatMessageHistory(SQLChatMessageHistory):
-
-    @property
-    def memory_edit_timestamp(self):
-        messages = self.messages()
-        now = get_local_time()
-        if messages:
-            return messages[-1].additional_kwargs.get("created_at", now)
-        return now
-
-    @property
-    def recall_memory_count(self):
-        messages = self.messages()
-        return len([m for m in messages if m.type != "archival"])
-
-    @property
-    def archival_memory_count(self):
-        messages = self.messages()
-        return len([m for m in messages if m.type == "archival"])
+def build_memory(memory_path:str, session_id=None):
+    if session_id is None:
+        session_id = str(uuid.uuid4())
+    return SQLChatMessageHistory(
+        session_id=session_id,
+        connection_string=f"sqlite:///{memory_path}/.langchain.db",
+        custom_message_converter=MessageConverter()
+    )

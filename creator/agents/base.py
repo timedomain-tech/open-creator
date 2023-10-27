@@ -2,7 +2,6 @@
 from typing import List, Dict, Any, Optional
 from threading import Thread
 import json
-import uuid
 
 from langchain.chains import LLMChain
 from langchain.callbacks.manager import CallbackManager
@@ -14,7 +13,6 @@ from langchain.schema.messages import FunctionMessage
 
 from creator.utils import get_user_info, ask_run_code_confirm, remove_tips
 from creator.callbacks.buffer_manager import buffer_output_manager
-from creator.config.library import config
 
 
 class BaseAgent(LLMChain):
@@ -29,6 +27,9 @@ class BaseAgent(LLMChain):
     @property
     def _chain_type(self):
         return "BaseAgent"
+
+    def __repr__(self) -> str:
+        return self._chain_type + "()"
 
     @property
     def input_keys(self) -> List[str]:
@@ -131,7 +132,7 @@ class BaseAgent(LLMChain):
             langchain_messages.append(tool_result)
             langchain_messages = self.messages_hot_fix(langchain_messages)
             current_try += 1
-            self.end_callbacks(message)
+            self.end_callbacks(message=message)
         langchain_messages = remove_tips(langchain_messages)
         openai_messages = list(map(convert_message_to_dict, langchain_messages))
         return openai_messages

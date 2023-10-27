@@ -2,8 +2,7 @@ import json
 
 from .constants import help_commands, prompt_prefix, interpreter_prefix
 
-from creator.agents.creator_agent import open_creator_agent
-from creator.agents import create_code_interpreter_agent
+from creator.agents import create_creator_agent, create_code_interpreter_agent
 from creator.config.library import config
 from creator.llm import create_llm
 from creator.utils import truncate_output, is_valid_code
@@ -24,6 +23,7 @@ class RequestHandler:
         self.console = Console()
         self.interpreter = False
         self.interpreter_agent = create_code_interpreter_agent(create_llm(config))
+        self.open_creator_agent = create_creator_agent(create_llm(config))
 
     async def handle(self, request, interpreter):
         """
@@ -37,8 +37,8 @@ class RequestHandler:
         """
         self.interpreter = interpreter
         if request.startswith("%"):
-            await self.meta_prompt_handler(request, )
-        elif is_valid_code(request, open_creator_agent.tools[0].namespace):
+            await self.meta_prompt_handler(request)
+        elif is_valid_code(request, self.open_creator_agent.tools[0].namespace):
             await self.expression_handler(request)
             self.update_history(request)
         else:
@@ -128,7 +128,7 @@ class RequestHandler:
             str: The result of the executed expression or error message to be displayed in the output_field.
         """
 
-        tool_result = open_creator_agent.tools[0].run_with_return(request)
+        tool_result = self.open_creator_agent.tools[0].run_with_return(request)
         truncate_tool_result = truncate_output(tool_result)
         outputs = [tool_result["stdout"], tool_result["stderr"]]
         output = "\n".join([o for o in outputs if o != ""])
@@ -194,7 +194,7 @@ class RequestHandler:
             if self.interpreter:
                 messages = self.code_interpreter_agent.run(inputs)
             else:
-                messages = open_creator_agent.run(inputs)
+                messages = self.open_creator_agent.run(inputs)
         output = "\n".join([self.convert_agent_message(message) for message in messages[len(self.messages)+1:]])
         self.messages = messages
         self.output.append((output, "Markdown"))

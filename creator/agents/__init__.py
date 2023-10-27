@@ -3,6 +3,7 @@ from .interpreter_agent import create_code_interpreter_agent
 from .tester_agent import create_code_tester_agent
 from .refactor_agent import create_code_refactor_agent
 from .prompt_enhancer_agent import create_prompt_enhancer_agent
+from .creator_agent import create_creator_agent
 
 
 __all__ = [
@@ -10,5 +11,6 @@ __all__ = [
     "create_code_interpreter_agent",
     "create_code_tester_agent",
     "create_code_refactor_agent",
-    "create_prompt_enhancer_agent"
+    "create_prompt_enhancer_agent",
+    "create_creator_agent"
 ]

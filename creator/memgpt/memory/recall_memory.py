@@ -1,12 +1,11 @@
 import numpy as np
 
 from creator.llm import create_embedding
+from creator.config.library import config
 from creator.retrivever.score_functions import cosine_similarity
-
 from langchain.memory.chat_message_histories import SQLChatMessageHistory
 
 from .base import BaseMemory
-from .schema import ArchivalMessage
 
 
 class RecallMemory(BaseMemory):
@@ -19,13 +18,12 @@ class RecallMemory(BaseMemory):
     effectively allowing it to 'remember' prior engagements with a user.
     """
 
-    def __init__(self, message_database: SQLChatMessageHistory, use_vector_search=False, page_size=5):
+    def __init__(self, message_database: SQLChatMessageHistory, use_vector_search=False):
         self.message_database = message_database
         self.use_vector_search = use_vector_search
         if use_vector_search:
             self.embeddings = dict()
-            self.embedding_model = create_embedding()
-        self.page_size = page_size
+            self.embedding_model = create_embedding(config)
 
     def __len__(self):
         return len(self.message_database.messages)
@@ -47,10 +45,10 @@ class RecallMemory(BaseMemory):
         return f"\n### RECALL MEMORY ###\nStatistics:\n{len(self.message_database.messages)} total messages\n{memory_str}"
 
     async def add(self, message, name=None):
-        raise NotImplementedError("Recall memory is read-only, will automatically update, and doesn't support editting or adding new memories as it's the record of your past interactions.")
+        self.message_database.add_message(message)
 
     async def modify(self, old_content, new_content, name=None):
-        raise NotImplementedError("Recall memory is read-only, will automatically update, and doesn't support editting or adding new memories as it's the record of your past interactions.")
+        raise NotImplementedError("Archival/Recall memory doesn't support modify!")
 
     def _filter_messages(self):
         """Utility to filter messages based on roles."""
@@ -80,24 +78,3 @@ class RecallMemory(BaseMemory):
             else:
                 matches = [d for d in matches if d.content and query.lower() in d.content.lower()]
         return self._paginate_results(matches, page)
-
-
-class ArchivalMemory(RecallMemory):
-
-    def __repr__(self) -> str:
-        if len(self.message_database.messages) == 0:
-            memory_str = "<empty>"
-        else:
-            memory_str = "\n".join([d.content for d in self.message_database.messages])
-        return f"\n### ARCHIVAL MEMORY ###\n{memory_str}"
-
-    def _filter_messages(self):
-        """Utility to filter messages based on roles."""
-        return [d for d in self.message_database.messages if d.type in ['archival']]
-
-    async def add(self, message: str, name=None):
-        """Adds a new memory string. Optionally, a name can be provided."""
-        return self.message_database.add_message(ArchivalMessage(content=message))
-
-    async def modify(self, old_content, new_content, name=None):
-        raise NotImplementedError("Archival memory doesn't support modify!")

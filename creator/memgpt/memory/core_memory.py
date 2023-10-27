@@ -36,8 +36,8 @@ class CoreMemory(BaseMemory):
         setattr(self, name, memory_string)
         return len(memory_string)
 
-    async def add(self, memory_string, name):
-        new_content = getattr(self, name) + "\n" + memory_string
+    async def add(self, message, name):
+        new_content = getattr(self, name) + "\n" + message
         return self._edit(new_content, name)
 
     async def modify(self, old_content, new_content, name):

@@ -10,7 +10,6 @@ from langchain.schema.runnable import RunnableConfig
 from creator.code_interpreter.safe_python import SafePythonInterpreter
 from creator.config.library import config
 from creator.utils import load_system_prompt, get_user_info, remove_tips
-from creator.llm import create_llm
 
 from .base import BaseAgent
 
@@ -20,9 +19,8 @@ VERIFY_TIPS = load_system_prompt(config.tips_for_veryfy_prompt_path)
 ALLOWED_FUNCTIONS = {"create", "save", "search", "CodeSkill"}
 ALLOW_METHODS = {".show", ".show_code", ".test", ".run", ".save", "__add__", "__gt__", "__lt__", "__annotations__"}
 IMPORT_CODE = (
-    "from creator.core import creator\n"
+    "from creator import create, save, search\n"
     "from creator.core.skill import CodeSkill\n"
-    "create, save, search = creator.create, creator.save, creator.search\n\n"
 )
 
 
@@ -82,7 +80,3 @@ def create_creator_agent(llm):
         verbose=False,
     )
     return chain
-
-
-llm = create_llm(config)
-open_creator_agent = create_creator_agent(llm=llm)
