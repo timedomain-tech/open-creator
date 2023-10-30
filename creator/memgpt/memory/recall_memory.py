@@ -1,9 +1,7 @@
-import numpy as np
-
-from creator.llm import create_embedding
-from creator.config.library import config
-from creator.retrivever.score_functions import cosine_similarity
 from langchain.memory.chat_message_histories import SQLChatMessageHistory
+from langchain.adapters.openai import convert_message_to_dict
+
+from creator.retrivever.memory_retrivever import MemoryVectorStore
 
 from .base import BaseMemory
 
@@ -18,12 +16,11 @@ class RecallMemory(BaseMemory):
     effectively allowing it to 'remember' prior engagements with a user.
     """
 
-    def __init__(self, message_database: SQLChatMessageHistory, use_vector_search=False):
+    def __init__(self, message_database: SQLChatMessageHistory, use_vector_search: bool = True):
         self.message_database = message_database
         self.use_vector_search = use_vector_search
-        if use_vector_search:
-            self.embeddings = dict()
-            self.embedding_model = create_embedding(config)
+        if self.use_vector_search:
+            self.retrivever = MemoryVectorStore()
 
     def __len__(self):
         return len(self.message_database.messages)
@@ -54,12 +51,6 @@ class RecallMemory(BaseMemory):
         """Utility to filter messages based on roles."""
         return [d for d in self.message_database.messages if d.type not in ['system', 'function', 'archival']]
 
-    async def _get_or_compute_embedding(self, message_str):
-        """Retrieve or compute the embedding for a given string."""
-        if message_str not in self.embeddings:
-            self.embeddings[message_str] = self.embedding_model.embed_query(message_str)
-        return self.embeddings[message_str]
-
     async def search(self, query, page, start_date=None, end_date=None):
         """Simple text-based search"""
         matches = self._filter_messages()
@@ -70,11 +61,11 @@ class RecallMemory(BaseMemory):
 
         if query:
             if self.use_vector_search:
-                message_pool_filtered = [d for d in matches if await self._get_or_compute_embedding(d.content)]
-                query_vec = self.embedding_model.embed_query(query)
-                docs_matrix = np.array([self.embeddings[d.content] for d in message_pool_filtered])
-                indexes, scores = cosine_similarity(docs_matrix=docs_matrix, query_vec=query_vec, k=len(docs_matrix))
-                matches = [message_pool_filtered[i] for i in indexes]
+                texts = [d.content for d in matches]
+                metadatas = [convert_message_to_dict(match) for match in matches]
+                self.retrivever.index(documents=texts, metadatas=metadatas)
+                matches = self.retrivever.search(query=query, top_k=len(matches))
+                self.retrivever.reset()
             else:
                 matches = [d for d in matches if d.content and query.lower() in d.content.lower()]
         return self._paginate_results(matches, page)

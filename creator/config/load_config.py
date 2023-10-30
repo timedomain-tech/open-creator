@@ -2,7 +2,10 @@ import os
 import shutil
 import appdirs
 import yaml
+
 from dotenv import load_dotenv, find_dotenv
+
+from ..utils.attri_dict import AttrDict
 
 
 load_dotenv(find_dotenv())
@@ -41,6 +44,8 @@ def load_yaml_config():
 
     with open(user_config_path, mode='r', encoding="utf-8") as f:
         user_config = yaml.safe_load(f)
+        if user_config is None:
+            user_config = {}
 
     updated = False
     for key, value in project_config.items():
@@ -61,4 +66,4 @@ def load_yaml_config():
         if not os.environ.get(key) and value:
             os.environ[key] = str(value)
 
-    return user_config
+    return AttrDict(user_config)

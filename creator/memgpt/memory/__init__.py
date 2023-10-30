@@ -1,7 +1,7 @@
-from .schema import build_memory
 from .core_memory import CoreMemory
 from .recall_memory import RecallMemory
 from .archival_memory import ArchivalMemory
+from .builder import build_memory
 from ..time_utils import get_local_time
 
 

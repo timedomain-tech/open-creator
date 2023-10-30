@@ -3,7 +3,7 @@ from typing import Union, List, Optional
 from creator.config.library import config
 from creator.utils import print
 from creator.hub.huggingface import hf_pull
-from creator.retrivever.base import BaseVectorStore
+from creator.retrivever.skill_retrivever import SkillVectorStore
 
 from .skill import CodeSkill, BaseSkill, BaseSkillMetadata
 from .runnable import create_skill_from_messages, create_skill_from_request, create_skill_from_file_content
@@ -184,7 +184,7 @@ class Creator:
             raise NotImplementedError
         if self.vectordb is None:
             print("> loading vector database...", print_type="markdown")
-            self.vectordb = BaseVectorStore()
+            self.vectordb = SkillVectorStore()
         skills = self.vectordb.search(query, top_k=top_k, threshold=threshold)
 
         return [CodeSkill(**skill) if skill.get("skill_program_language", None) else BaseSkill(**skill) for skill in skills]

@@ -1,8 +1,6 @@
 import os
 from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler
 from langchain.callbacks.manager import CallbackManager
-from langchain.embeddings import OpenAIEmbeddings, CacheBackedEmbeddings
-from langchain.storage import LocalFileStore
 from .chatllm_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
 
 
@@ -32,20 +30,3 @@ def create_llm(config):
             streaming=streaming
         )
     return llm
-
-
-def create_embedding(config):
-
-    use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
-
-    if use_azure:
-        azure_model = os.getenv("EMBEDDING_DEPLOYMENT_NAME", None)
-        print(azure_model)
-        embedding = OpenAIEmbeddings(deployment=azure_model, model=azure_model)
-    else:
-        embedding = OpenAIEmbeddings()
-    fs = LocalFileStore(config.local_skill_library_vectordb_path)
-    cached_embedding = CacheBackedEmbeddings.from_bytes_store(
-        embedding, fs, namespace=embedding.model
-    )
-    return cached_embedding

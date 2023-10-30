@@ -1,4 +1,4 @@
-from .schema import ArchivalMessage
+from .converter import ArchivalMessage
 from .recall_memory import RecallMemory
 
 
