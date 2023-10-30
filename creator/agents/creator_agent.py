@@ -10,6 +10,7 @@ from langchain.schema.runnable import RunnableConfig
 from creator.code_interpreter.safe_python import SafePythonInterpreter
 from creator.config.library import config
 from creator.utils import load_system_prompt, get_user_info, remove_tips
+from creator.llm import create_llm
 
 from .base import BaseAgent
 
@@ -66,14 +67,14 @@ class CreatorAgent(BaseAgent):
         return {"messages": self.run(inputs)}
 
 
-def create_creator_agent(llm):
+def create_creator_agent(config):
     template = load_system_prompt(config.creator_agent_prompt_path)
 
     code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS, redirect_output=True)
     code_interpreter.setup(IMPORT_CODE)
 
     chain = CreatorAgent(
-        llm=llm,
+        llm=create_llm(config),
         system_template=template,
         tools=[code_interpreter],
         function_schemas=[code_interpreter.to_function_schema()],

@@ -4,7 +4,6 @@ from .constants import help_commands, prompt_prefix, interpreter_prefix
 
 from creator.agents import create_creator_agent, create_code_interpreter_agent
 from creator.config.library import config
-from creator.llm import create_llm
 from creator.utils import truncate_output, is_valid_code
 from rich.console import Console
 from rich.markdown import Markdown
@@ -22,8 +21,8 @@ class RequestHandler:
         self.output = []
         self.console = Console()
         self.interpreter = False
-        self.interpreter_agent = create_code_interpreter_agent(create_llm(config))
-        self.open_creator_agent = create_creator_agent(create_llm(config))
+        self.interpreter_agent = create_code_interpreter_agent(config)
+        self.open_creator_agent = create_creator_agent(config)
 
     async def handle(self, request, interpreter):
         """

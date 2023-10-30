@@ -5,7 +5,6 @@ from langchain.schema.runnable import RunnableConfig
 from creator.utils import runnable, print, print_run_url
 from creator.utils import generate_install_command
 from creator.config.library import config as creator_config
-from creator.llm import create_llm
 from creator.agents import (
     create_skill_extractor_agent,
     create_code_interpreter_agent,
@@ -30,17 +29,17 @@ def construct_create_skill_messages(request):
 
 @print_run_url
 def create_skill_from_messages(messages):
-    skill_extractor_agent = create_skill_extractor_agent(create_llm(creator_config))
+    skill_extractor_agent = create_skill_extractor_agent(creator_config)
     return skill_extractor_agent.with_config({"run_name": "CreateSkillFromMessages"}).invoke(input={"messages": messages})["extracted_skill"]
 
 
 @print_run_url
 def create_skill_from_request(request):
     creator_config.use_rich = False
-    prompt_enhancer_agent = create_prompt_enhancer_agent(create_llm(creator_config))
+    prompt_enhancer_agent = create_prompt_enhancer_agent(creator_config)
     creator_config.use_rich = True
-    code_interpreter_agent = create_code_interpreter_agent(create_llm(creator_config))
-    skill_extractor_agent = create_skill_extractor_agent(create_llm(creator_config))
+    code_interpreter_agent = create_code_interpreter_agent(creator_config)
+    skill_extractor_agent = create_skill_extractor_agent(creator_config)
     chain = construct_create_skill_messages | prompt_enhancer_agent | construct_create_skill_messages | code_interpreter_agent | skill_extractor_agent
     skill_json = chain.with_config({"run_name": "CreateSkillFromRequest"}).invoke(input=request)["extracted_skill"]
     return skill_json
@@ -48,7 +47,7 @@ def create_skill_from_request(request):
 
 @print_run_url
 def create_skill_from_file_content(file_content):
-    skill_extractor_agent = create_skill_extractor_agent(create_llm(creator_config))
+    skill_extractor_agent = create_skill_extractor_agent(creator_config)
     chain = construct_create_skill_messages | skill_extractor_agent
     skill_json = chain.with_config({"run_name": "CreateSkillFromFileContent"}).invoke(input=file_content)["extracted_skill"]
     return skill_json
@@ -101,7 +100,7 @@ def setup_skill(inputs, config: RunnableConfig):
 
 @runnable(run_name="RunSkill")
 def run_skill(inputs, config: RunnableConfig):
-    code_interpreter_agent = create_code_interpreter_agent(create_llm(config=creator_config))
+    code_interpreter_agent = create_code_interpreter_agent(creator_config)
     code_interpreter_agent.tools[0] = creator_config.code_interpreter
     tool_inputs = {"language": inputs["skill_program_language"], "code": inputs["skill_code"]}
     inputs.update(tool_inputs)
@@ -125,7 +124,7 @@ def construct_test_skill_messages(inputs):
 @print_run_url
 @runnable(run_name="TestSkill")
 def test_skill(inputs, config: RunnableConfig):
-    code_tester_agent = create_code_tester_agent(create_llm(creator_config))
+    code_tester_agent = create_code_tester_agent(creator_config)
     code_tester_agent.tools[0] = creator_config.code_interpreter
     code = f"""\n\n
 import io
@@ -160,7 +159,7 @@ def construct_refactor_skill_messages(inputs):
 @print_run_url
 @runnable(run_name="RefactorSkill")
 def refactor_skill(inputs, config: RunnableConfig):
-    code_refactor_agent = create_code_refactor_agent(create_llm(creator_config))
+    code_refactor_agent = create_code_refactor_agent(creator_config)
     chain = construct_refactor_skill_messages | code_refactor_agent
     refactored_skill_jsons = chain.invoke(inputs, config)["refacted_skills"]
     return refactored_skill_jsons

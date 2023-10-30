@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from creator.agents.creator_agent import create_creator_agent
-from creator.llm import create_llm
 from creator import config
 from creator.__version__ import __version__ as version
 from pydantic import BaseModel
@@ -21,7 +20,7 @@ app = FastAPI(
 )
 
 config.use_rich = False
-open_creator_agent = create_creator_agent(create_llm(config))
+open_creator_agent = create_creator_agent(config)
 
 
 @app.post("/agents/creator")

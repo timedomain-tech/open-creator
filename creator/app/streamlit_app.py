@@ -5,7 +5,6 @@ sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 import streamlit as st
 from creator.agents import create_creator_agent, create_code_interpreter_agent
-from creator.llm import create_llm
 from creator import config
 from langchain.callbacks.streamlit.streamlit_callback_handler import _convert_newlines
 from langchain.output_parsers.json import parse_partial_json
@@ -22,8 +21,8 @@ container = st.container()
 agent_name = "interpreter_agent"
 
 agent_mapping = {
-    "interpreter_agent": create_code_interpreter_agent(create_llm(config)),
-    "creator_agent": create_creator_agent(create_llm(config))
+    "interpreter_agent": create_code_interpreter_agent(config),
+    "creator_agent": create_creator_agent(config)
 }
 
 

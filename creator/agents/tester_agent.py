@@ -5,6 +5,7 @@ from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter, language_map
 from creator.config.library import config
+from creator.llm import create_llm
 from creator.utils import load_system_prompt, remove_tips
 
 from .base import BaseAgent
@@ -65,7 +66,7 @@ class CodeTesterAgent(BaseAgent):
         }
 
 
-def create_code_tester_agent(llm):
+def create_code_tester_agent(config):
     template = load_system_prompt(config.tester_agent_prompt_path)
     tool = CodeInterpreter()
 
@@ -74,7 +75,7 @@ def create_code_tester_agent(llm):
         test_summary_function_schema = json.load(f)
 
     chain = CodeTesterAgent(
-        llm=llm,
+        llm=create_llm(config),
         system_template=template,
         function_schemas=[code_interpreter_function_schema, test_summary_function_schema],
         tools=[tool],

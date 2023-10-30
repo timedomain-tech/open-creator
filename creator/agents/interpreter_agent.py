@@ -6,6 +6,7 @@ from langchain.output_parsers.json import parse_partial_json
 from creator.code_interpreter import CodeInterpreter, language_map
 from creator.config.library import config
 from creator.utils import load_system_prompt, remove_tips
+from creator.llm import create_llm
 
 from .base import BaseAgent
 
@@ -48,12 +49,12 @@ class CodeInterpreterAgent(BaseAgent):
         return langchain_messages
 
 
-def create_code_interpreter_agent(llm):
+def create_code_interpreter_agent(config):
     tool = CodeInterpreter()
     function_schema = tool.to_function_schema()
     template = load_system_prompt(config.interpreter_agent_prompt_path)
     chain = CodeInterpreterAgent(
-        llm=llm,
+        llm=create_llm(config),
         system_template=template,
         function_schemas=[function_schema],
         tools=[tool],

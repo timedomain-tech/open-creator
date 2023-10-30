@@ -5,7 +5,7 @@ import os
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers.json import parse_partial_json
 
-from creator.config.library import config
+from creator.llm import create_llm
 from creator.utils import convert_to_values_list, load_system_prompt, get_user_info
 
 from .base import BaseAgent
@@ -38,7 +38,7 @@ class CodeRefactorAgent(BaseAgent):
         return {"refacted_skills": None}
 
 
-def create_code_refactor_agent(llm):
+def create_code_refactor_agent(config):
     template = load_system_prompt(config.refactor_agent_prompt_path)
     path = os.path.join(config.codeskill_function_schema_path)
     with open(path, encoding="utf-8") as f:
@@ -61,7 +61,7 @@ def create_code_refactor_agent(llm):
     }
 
     chain = CodeRefactorAgent(
-        llm=llm,
+        llm=create_llm(config),
         system_template=template,
         function_schemas=[function_schema],
         verbose=False
