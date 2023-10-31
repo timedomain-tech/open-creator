@@ -73,7 +73,7 @@ def create_code_tester_agent(config):
     code_interpreter_function_schema = tool.to_function_schema()
     test_summary_function_schema = load_json_schema(config.testsummary_function_schema_path)
     chain = CodeTesterAgent(
-        llm=create_llm(config),
+        llm=create_llm(config, config.agent_model_config.TESTER_AGENT),
         system_template=template,
         function_schemas=[code_interpreter_function_schema, test_summary_function_schema],
         tools=[tool],

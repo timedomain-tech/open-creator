@@ -51,7 +51,7 @@ def create_skill_extractor_agent(config):
     }
 
     chain = SkillExtractorAgent(
-        llm=create_llm(config),
+        llm=create_llm(config, config.agent_model_config.EXTRACTOR_AGENT),
         system_template=template,
         function_schemas=[function_schema],
         verbose=False

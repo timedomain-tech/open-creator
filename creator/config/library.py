@@ -34,6 +34,8 @@ yaml_config.MEMGPT_CONFIG.MEMORY_PATH = resolve_path(yaml_config.MEMGPT_CONFIG.M
 
 memgpt_config = yaml_config.MEMGPT_CONFIG
 
+angent_model_config = yaml_config.AGENT_MODEL_CONFIG
+
 _official_skill_library_path = resolve_path(yaml_config.OFFICIAL_SKILL_LIBRARY_PATH)
 _official_skill_library_template_path = resolve_path(yaml_config.OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH)
 
@@ -92,6 +94,7 @@ class LibraryConfig(BaseModel):
     memgpt_function_schema_path: str = os.path.join(project_dir, "prompts", "memgpt_function_schema.json")
 
     memgpt_config: dict = None
+    agent_model_config: dict = None
 
     use_rich: bool = True
     use_file_logger: bool = False
@@ -99,5 +102,6 @@ class LibraryConfig(BaseModel):
 
 config = LibraryConfig()
 config.memgpt_config = memgpt_config
+config.agent_model_config = angent_model_config
 
 set_llm_cache(SQLiteCache(database_path=f"{config.llm_cache_path}/.langchain.db"))

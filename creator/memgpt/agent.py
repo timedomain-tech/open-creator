@@ -214,7 +214,7 @@ def create_memgpt(config, subagent=None):
     template = load_system_prompt(config.memgpt_system_prompt_path)
     function_schemas = load_json_schema(config.memgpt_function_schema_path)
     memory_manager = MemoryManager(config.memgpt_config)
-    llm = create_llm(config)
+    llm = create_llm(config, config.agent_model_config.MEMGPT)
     if subagent is None:
         subagent = create_creator_agent(config)
     chain = MemGPT(

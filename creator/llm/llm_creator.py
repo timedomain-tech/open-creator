@@ -4,10 +4,13 @@ from langchain.callbacks.manager import CallbackManager
 from .chatllm_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
 
 
-def create_llm(config):
+def create_llm(config, model=None):
     use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
 
-    model_name = config.model
+    if model is None or model == "":
+        model_name = config.model
+    else:
+        model_name = model
     temperature = config.temperature
     streaming = config.use_stream_callback
     callbacks = [OutputBufferStreamingHandler()]

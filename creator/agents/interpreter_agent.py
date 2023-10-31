@@ -54,7 +54,7 @@ def create_code_interpreter_agent(config):
     function_schema = tool.to_function_schema()
     template = load_system_prompt(config.interpreter_agent_prompt_path)
     chain = CodeInterpreterAgent(
-        llm=create_llm(config),
+        llm=create_llm(config, config.agent_model_config.INTERPRETER_AGENT),
         system_template=template,
         function_schemas=[function_schema],
         tools=[tool],

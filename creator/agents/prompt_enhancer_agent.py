@@ -40,7 +40,7 @@ def create_prompt_enhancer_agent(config):
     template = load_system_prompt(config.prompt_enhancer_agent_prompt_path)
     function_schema = load_json_schema(config.prompt_enhancer_schema_path)
     chain = PromptEnhancerAgent(
-        llm=create_llm(config),
+        llm=create_llm(config, config.agent_model_config.PROMPT_ENHANCER_AGENT),
         system_template=template,
         function_schemas=[function_schema],
         verbose=False

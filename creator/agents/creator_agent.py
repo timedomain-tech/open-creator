@@ -72,7 +72,7 @@ def create_creator_agent(config):
     code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS, redirect_output=True)
     code_interpreter.setup(IMPORT_CODE)
     chain = CreatorAgent(
-        llm=create_llm(config),
+        llm=create_llm(config, config.agent_model_config.CREATOR_AGENT),
         system_template=template,
         tools=[code_interpreter],
         function_schemas=[code_interpreter.to_function_schema()],

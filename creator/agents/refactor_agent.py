@@ -58,7 +58,7 @@ def create_code_refactor_agent(config):
     }
 
     chain = CodeRefactorAgent(
-        llm=create_llm(config),
+        llm=create_llm(config, config.agent_model_config.REFACTOR_AGENT),
         system_template=template,
         function_schemas=[function_schema],
         verbose=False
