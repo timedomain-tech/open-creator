@@ -1,7 +1,7 @@
 import os
 from langsmith import Client
 from langsmith.utils import LangSmithConnectionError
-from printer import print
+from .printer import print
 
 
 def check_langsmith_ok():
