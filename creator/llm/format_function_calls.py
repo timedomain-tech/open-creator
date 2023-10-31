@@ -19,8 +19,10 @@ namespace functions {
 
 def resolve_ref(schema, json_schema):
     if schema.get("$ref") is not None:
-        ref = schema["$ref"][14:]
-        schema = json_schema["definitions"][ref]
+        # #/$defs/CodeSkillParameter
+        ref = schema["$ref"][8:]
+        if "$defs" in json_schema and ref in json_schema["$defs"]:
+            return json_schema["$defs"][ref]
     return schema
 
 
@@ -63,6 +65,8 @@ def format_object(schema, indent, json_schema):
 
 def format_schema(schema, indent, json_schema):
     schema = resolve_ref(schema, json_schema)
+    if "type" not in schema:
+        return "any"
     if "enum" in schema:
         return format_enum(schema)
     elif schema["type"] == "object":

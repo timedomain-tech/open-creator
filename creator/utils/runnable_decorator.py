@@ -17,7 +17,7 @@ def print_run_url(func):
                 result = func(*args, **kwargs)
                 run_url = cb.get_run_url()
                 if run_url is not None:
-                    print(f"Langsmith Run URL: [{run_url}]{run_url}", print_type="markdown")
+                    print(f"Langsmith Run URL: [{run_url}]({run_url})", print_type="markdown")
         else:
             result = func(*args, **kwargs)
         return result

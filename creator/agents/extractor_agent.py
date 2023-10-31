@@ -22,16 +22,21 @@ class SkillExtractorAgent(BaseAgent):
             ("system", self.system_template + get_user_info())
         ])
         return prompt
-    
+
     def parse_output(self, messages):
         function_call = messages[-1].get("function_call", None)
-
-        if function_call is not None:
-            extracted_skill = parse_partial_json(function_call.get("arguments", "{}"))
+        try:
+            if function_call is not None:
+                content = function_call.get("arguments", "{}")
+            else:
+                content = messages[-1].get("content", "{}")
+            extracted_skill = parse_partial_json(content)
             extracted_skill["conversation_history"] = messages[:-1]
             extracted_skill["skill_parameters"] = convert_to_values_list(extracted_skill["skill_parameters"]) if "skill_parameters" in extracted_skill else None
             extracted_skill["skill_return"] = convert_to_values_list(extracted_skill["skill_return"]) if "skill_return" in extracted_skill else None
             return {"extracted_skill": extracted_skill}
+        except Exception:
+            pass
         return {"extracted_skill": None}
 
 

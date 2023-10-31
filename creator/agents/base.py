@@ -85,9 +85,6 @@ class BaseAgent(LLMChain):
                     tool_result = FunctionMessage(name=function_name, content=tool_result)
                     self.update_tool_result_in_callbacks(tool_result)
                 break
-        if tool_result is None:
-            tool_names = list(map(lambda x: x.name, self.tools))
-            tool_result = FunctionMessage(name="system_alert", content=f"Unknown function name: {function_name}. Available functions: {tool_names}")
         return tool_result
 
     def human_confirm(self):

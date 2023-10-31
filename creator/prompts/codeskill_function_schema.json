@@ -33,57 +33,26 @@
             "type": "string"
         },
         "skill_parameters": {
-            "anyOf": [
-                {
-                    "$ref": "#/$defs/CodeSkillParameter"
-                },
-                {
-                    "items": {
-                        "$ref": "#/$defs/CodeSkillParameter"
-                    },
-                    "type": "array"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "items": {
+                "$ref": "#/$defs/CodeSkillParameter"
+            },
+            "type": "array",
             "default": null,
             "description": "List of parameters the skill requires, defined using json schema"
         },
         "skill_return": {
-            "anyOf": [
-                {
+            "items": {
                     "$ref": "#/$defs/CodeSkillParameter"
                 },
-                {
-                    "items": {
-                        "$ref": "#/$defs/CodeSkillParameter"
-                    },
-                    "type": "array"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "type": "array",
             "default": null,
             "description": "Return value(s) of the skill"
         },
         "skill_dependencies": {
-            "anyOf": [
-                {
+            "items": {
                     "$ref": "#/$defs/CodeSkillDependency"
                 },
-                {
-                    "items": {
-                        "$ref": "#/$defs/CodeSkillDependency"
-                    },
-                    "type": "array"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": null,
+            "type": "array",
             "description": "List of dependencies the skill requires to run, typically packages but can also be other skill functions"
         },
         "skill_usage_example": {
@@ -94,7 +63,6 @@
     "required": [
         "skill_name",
         "skill_tags",
-        "skill_usage_example",
         "skill_program_language",
         "skill_code"
     ],
@@ -103,30 +71,14 @@
         "CodeSkillDependency": {
             "properties": {
                 "dependency_name": {
-                    "default": "",
                     "type": "string"
                 },
                 "dependency_version": {
-                    "anyOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": "",
+                    "type": "string",
                     "description": "the version of the dependency only filled if context provided"
                 },
                 "dependency_type": {
-                    "anyOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "type": "string",
                     "default": "built-in",
                     "description": "when the dependency is an another code skill, please set it as function",
                     "enum": [
@@ -136,17 +88,16 @@
                     ]
                 }
             },
-            "type": "object"
+            "type": "object",
+            "required": ["dependency_name", "dependency_type"]
         },
         "CodeSkillParameter": {
             "properties": {
                 "param_name": {
-                    "default": "query",
                     "description": "the name of the parameter",
                     "type": "string"
                 },
                 "param_type": {
-                    "default": "string",
                     "description": "the type, only support string, integer, float, boolean, array, object",
                     "enum": [
                         "string",
@@ -159,7 +110,6 @@
                     "type": "string"
                 },
                 "param_description": {
-                    "default": "the input query",
                     "description": "the description of the parameter. If it is enum, describe the enum values. If it is format, describe the format",
                     "type": "string"
                 },
@@ -169,17 +119,11 @@
                     "type": "boolean"
                 },
                 "param_default": {
-                    "anyOf": [
-                        {},
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null,
                     "description": "the default value, it depends on the type"
                 }
             },
-            "type": "object"
+            "type": "object",
+            "required": ["param_name", "param_type", "param_required"]
         }
     }
 }
