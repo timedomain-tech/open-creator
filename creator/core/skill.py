@@ -148,7 +148,6 @@ When writing code, it's imperative to follow industry standards and best practic
         skills_to_combine = []
         user_request = "please help me refine the skill object"
         refactor_type = "Refine"
-        runnable_config = None
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -282,7 +281,7 @@ When writing code, it's imperative to follow industry standards and best practic
             "skill_program_language": self.skill_program_language,
             "skill_code": self.skill_code,
             "user_request": self.Config.user_request,
-        }, self.Config.runnable_config)
+        })
         refactored_skills = []
         for refactored_skill_json in refactored_skill_jsons:
             refactored_skill = CodeSkill(**refactored_skill_json)
@@ -299,7 +298,7 @@ When writing code, it's imperative to follow industry standards and best practic
         optimized_result = auto_optimize_skill.invoke({"old_skill": self, "retry_times": retry_times})
         test_summary = optimized_result["test_summary"]
         skill = optimized_result["skill"]
-        if isinstance(test_summary, None):
+        if test_summary is None:
             return skill
         elif isinstance(test_summary, TestSummary):
             skill.test_summary = test_summary

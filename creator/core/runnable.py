@@ -121,7 +121,6 @@ def construct_test_skill_messages(inputs):
     return {"messages": messages}
 
 
-@print_run_url
 @runnable(run_name="TestSkill")
 def test_skill(inputs, config: RunnableConfig):
     code_tester_agent = create_code_tester_agent(creator_config)
@@ -156,7 +155,6 @@ def construct_refactor_skill_messages(inputs):
     return {"messages": messages}
 
 
-@print_run_url
 @runnable(run_name="RefactorSkill")
 def refactor_skill(inputs, config: RunnableConfig):
     code_refactor_agent = create_code_refactor_agent(creator_config)
@@ -182,6 +180,10 @@ def auto_optimize_skill(inputs, config: RunnableConfig):
             conversation_history = conversation_history + test_result["messages"]
             if "test_summary" in test_result:
                 test_summary = test_result["test_summary"]
+                if isinstance(test_summary, dict) and "test_cases" in test_summary:
+                    pass
+                else:
+                    test_summary = {"test_cases": test_summary}
                 all_passed = all(test_case["is_passed"] for test_case in test_summary["test_cases"])
                 if all_passed and refined:
                     skill.conversation_history = conversation_history
@@ -190,7 +192,6 @@ def auto_optimize_skill(inputs, config: RunnableConfig):
                         "test_summary": test_summary,
                     }
             print(f"> Auto Refine Skill {i+1}/{retry_times}", print_type="markdown")
-            skill.Config.runnable_config = config
             skill = skill > "I have tested the skill, but it failed, please refine it."
             skill.conversation_history = conversation_history
             if all_passed:

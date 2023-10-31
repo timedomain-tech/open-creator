@@ -32,7 +32,7 @@ class BaseVectorStore:
             metadatas = documents
         texts = [self._preprocess(doc) for doc in documents]
         if ids is None:
-            ids = [generate_uuid_like_string() for _ in range(len(texts))]
+            ids = [generate_uuid_like_string(text) for text in texts]
         if self.db is None:
             self.db = Qdrant.from_texts(texts=texts, embedding=self.embedding, metadatas=metadatas, ids=ids, path=self.vectordb_path, collection_name=self.collection_name)
         else:
