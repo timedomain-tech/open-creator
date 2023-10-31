@@ -27,6 +27,7 @@ from .tools_handler import available_functions
 
 
 class MemGPT(BaseAgent):
+    total_tries: 5
     subagent: Optional[BaseAgent] = None
     pause_heartbeats_start: Optional[datetime.datetime] = None
     function_failed: bool = False
@@ -143,7 +144,7 @@ class MemGPT(BaseAgent):
         user_message = package_message(message_type="user_message", extra_info={"message": user_request})
 
         counter = 0
-        while True:
+        while True or counter < self.total_tries:
             self.start_callbacks()
             skil_next_user_input = False
 

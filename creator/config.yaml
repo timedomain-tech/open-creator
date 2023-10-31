@@ -37,7 +37,7 @@ HUGGINGFACE_API_BASE: ""
 # for langsmith trace
 LANGCHAIN_ENDPOINT: 
 LANGCHAIN_API_KEY: 
-LANGCHAIN_TRACING_V2: true
+LANGCHAIN_TRACING_V2: false
 LANGCHAIN_PROJECT: "open-creator"
 
 # for memgpt

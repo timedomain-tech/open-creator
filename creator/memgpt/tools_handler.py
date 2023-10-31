@@ -30,7 +30,7 @@ async def send_message(memgpt, message: str, receiver: str = "human"):
             langchain_message.additional_kwargs["subagent"] = memgpt.subagent._chain_type
             memgpt.memory_manager.add_message(message)
         last_m = messages[-1]
-        return last_m.content
+        return last_m.get("content", "No Output")
 
 
 async def pause_heartbeats(memgpt, minutes: int, max_pause: int = 360):

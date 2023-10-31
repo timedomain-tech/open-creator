@@ -1,3 +1,6 @@
+import os
+
+
 class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,6 +18,10 @@ class AttrDict(dict):
         if isinstance(value, dict):
             value = AttrDict(value)
         self[key] = value
+        if isinstance(value, (str, int, float)):
+            os.environ[key] = value
+        elif isinstance(value, bool):
+            os.environ[key] = str(value).lower()
 
     def __delattr__(self, key):
         if key in self:

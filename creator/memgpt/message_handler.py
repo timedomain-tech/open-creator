@@ -25,7 +25,7 @@ def package_message(message_type=None, extra_info=None, include_location=False, 
     if extra_info:
         packaged_message.update(extra_info)
 
-    return json.dumps(packaged_message)
+    return json.dumps(packaged_message, ensure_ascii=False)
 
 
 def get_initial_boot_messages():
