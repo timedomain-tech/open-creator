@@ -27,7 +27,7 @@ from .tools_handler import available_functions
 
 
 class MemGPT(BaseAgent):
-    total_tries: 5
+    total_tries: int = 5
     subagent: Optional[BaseAgent] = None
     pause_heartbeats_start: Optional[datetime.datetime] = None
     function_failed: bool = False
