@@ -1483,6 +1483,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/b898dfdb-c596-4538-b4c9-d88136c3fb4f?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/b898dfdb-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/b898dfdb-c596-4538-b4c9-d88136c3fb4f?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">c596-4538-b4c9-d88136c3fb4f?poll=true</span></a>                                                                              
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1522,20 +1531,24 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
                                                   <span style="font-weight: bold; text-decoration: underline">Skill Details:</span>                                                   
 
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: create_api                                                                                                
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: Generates a <span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">CodeSkill</span> instance using different input sources.                                      
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: create                                                                                                    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This function generates a <span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">CodeSkill</span> instance using different input sources. It can take in a       
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>request string detailing the skill functionality, messages or a path to a JSON file containing messages, a      
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>string of file content or path to a code/API doc file, a directory path with skill name as stem or file path    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>with <span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">skill.json</span> as stem, an identifier for a Huggingface repository, or a path to the skill within the          
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>Huggingface repository.                                                                                         
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Version</span>: 1.0.0                                                                                                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Usage</span>:                                                                                                          
 
 <span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">create_api(request, messages</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">messages, messages_json_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">messages_json_path, file_content</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">file_content, </span><span style="background-color: #272822">         </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">file_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">file_path, skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill_path, skill_json_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill_json_path, </span><span style="background-color: #272822">                                     </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">huggingface_repo_id</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">huggingface_repo_id, huggingface_skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">huggingface_skill_path)</span><span style="background-color: #272822">                           </span>
+<span style="background-color: #272822"> </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">from</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> creator </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">import</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> create</span><span style="background-color: #272822">                                                                                        </span>
+<span style="background-color: #272822">                                                                                                                   </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> create(request</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, messages</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">[</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">...</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">], file_content</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, file_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, </span><span style="background-color: #272822">             </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill_json_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, huggingface_repo_id</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, huggingface_skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                   </span>
 <span style="background-color: #272822">                                                                                                                   </span>
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Parameters</span>:                                                                                                     
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">request</span> (string): String detailing the skill functionality.                                                  
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">messages</span> (array): Messages as a list of dictionaries.                                                        
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">messages_json_path</span> (string): Path to a JSON file containing messages.                                        
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">file_content</span> (string): String of file content.                                                               
@@ -1586,7 +1599,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
-<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create_api                                        </span>
+<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create                                            </span>
 </pre>
 </div>
 </div>
@@ -1626,7 +1639,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>/Users/gongjunmin/.cache/open_creator/remote/ChuxiJ/skill_library/create_api
+<pre>/Users/gongjunmin/.cache/open_creator/remote/ChuxiJ/skill_library/create
 </pre>
 </div>
 </div>
@@ -1634,7 +1647,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
-<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create_api                                        </span>
+<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create                                            </span>
 </pre>
 </div>
 </div>
@@ -1674,11 +1687,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre><span class="ansi-cyan-intense-fg ansi-bold">ask_run_code_confirm</span>     <span class="ansi-cyan-intense-fg ansi-bold">extract_pdf_section</span>      <span class="ansi-cyan-intense-fg ansi-bold">list_python_functions</span>
-<span class="ansi-cyan-intense-fg ansi-bold">count_prime_numbers</span>      <span class="ansi-cyan-intense-fg ansi-bold">extract_section_from_pdf</span> <span class="ansi-cyan-intense-fg ansi-bold">solve_24</span>
-<span class="ansi-cyan-intense-fg ansi-bold">create</span>                   <span class="ansi-cyan-intense-fg ansi-bold">filter_prime_numbers</span>     <span class="ansi-cyan-intense-fg ansi-bold">solve_game_of_24</span>
-<span class="ansi-cyan-intense-fg ansi-bold">create_api</span>               <span class="ansi-cyan-intense-fg ansi-bold">game_of_24</span>
-<span class="ansi-cyan-intense-fg ansi-bold">display_markdown_message</span> <span class="ansi-cyan-intense-fg ansi-bold">game_of_24_solver</span>
+<pre><span class="ansi-cyan-intense-fg ansi-bold">ask_run_code_confirm</span>     <span class="ansi-cyan-intense-fg ansi-bold">extract_pdf_section</span>      <span class="ansi-cyan-intense-fg ansi-bold">solve_24</span>
+<span class="ansi-cyan-intense-fg ansi-bold">count_prime_numbers</span>      <span class="ansi-cyan-intense-fg ansi-bold">extract_section_from_pdf</span> <span class="ansi-cyan-intense-fg ansi-bold">solve_game_of_24</span>
+<span class="ansi-cyan-intense-fg ansi-bold">create</span>                   <span class="ansi-cyan-intense-fg ansi-bold">filter_prime_numbers</span>     <span class="ansi-cyan-intense-fg ansi-bold">solve_quadratic_equation</span>
+<span class="ansi-cyan-intense-fg ansi-bold">create_api</span>               <span class="ansi-cyan-intense-fg ansi-bold">game_of_24</span>               <span class="ansi-cyan-intense-fg ansi-bold">solve_random_maze</span>
+<span class="ansi-cyan-intense-fg ansi-bold">create_scatter_plot</span>      <span class="ansi-cyan-intense-fg ansi-bold">game_of_24_solver</span>
+<span class="ansi-cyan-intense-fg ansi-bold">display_markdown_message</span> <span class="ansi-cyan-intense-fg ansi-bold">list_python_functions</span>
 </pre>
 </div>
 </div>
@@ -1732,7 +1746,7 @@ skill.show()</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
-<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/remote/ChuxiJ/skill_library/create_api/create_api               </span>
+<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create_api                                        </span>
 </pre>
 </div>
 </div>
@@ -1839,8 +1853,7 @@ If a skill is hosted in a Huggingface repository, you can create it by specifyin
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
-<span style="color: #800080; text-decoration-color: #800080">▌ saved to                                                                                                       </span>
-<span style="color: #800080; text-decoration-color: #800080">▌ /Users/gongjunmin/.cache/open_creator/remote/Sayoyo/skill-library/extract_pdf_section/extract_pdf_section      </span>
+<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/extract_pdf_section                               </span>
 </pre>
 </div>
 </div>
@@ -1950,7 +1963,7 @@ If a skill is hosted in a Huggingface repository, you can create it by specifyin
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 19, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 31, 2023</span>
       
         <br>
         Created:

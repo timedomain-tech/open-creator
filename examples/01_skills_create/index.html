@@ -1444,6 +1444,7 @@ create<span class="ansi-blue-fg">(</span>
     file_path<span class="ansi-blue-fg">:</span> Optional<span class="ansi-blue-fg">[</span>str<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
     huggingface_repo_id<span class="ansi-blue-fg">:</span> Optional<span class="ansi-blue-fg">[</span>str<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
     huggingface_skill_path<span class="ansi-blue-fg">:</span> Optional<span class="ansi-blue-fg">[</span>str<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
+    save<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
 <span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">-&gt;</span> creator<span class="ansi-blue-fg">.</span>core<span class="ansi-blue-fg">.</span>skill<span class="ansi-blue-fg">.</span>CodeSkill
 <span class="ansi-red-fg">Docstring:</span> Main method to create a new skill.
 <span class="ansi-red-fg">File:</span>      ~/miniconda3/envs/open_creator_online/lib/python3.10/site-packages/creator/core/core.py
@@ -1531,6 +1532,12 @@ create<span class="ansi-blue-fg">(</span>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
@@ -1557,6 +1564,33 @@ create<span class="ansi-blue-fg">(</span>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/c2491d5f-20de-4067-af80-134cafb3a449?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/c2491d5f-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/c2491d5f-20de-4067-af80-134cafb3a449?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">20de-4067-af80-134cafb3a449?poll=true</span></a>                                                                              
+</pre>
 </div>
 </div>
 </div>
@@ -1599,21 +1633,20 @@ create<span class="ansi-blue-fg">(</span>
                                                   <span style="font-weight: bold; text-decoration: underline">Skill Details:</span>                                                   
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: count_prime_numbers                                                                                       
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill counts the number of prime numbers in a given range.                                    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill counts the number of prime numbers within a given range. A prime number is a natural    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>number greater than 1 that has no positive divisors other than 1 and itself.                                    
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Version</span>: 1.0.0                                                                                                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Usage</span>:                                                                                                          
 
 <span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">count_prime_numbers(</span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">2</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, </span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">201</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                                                                       </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">count_prime_numbers(</span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">201</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)  </span><span style="color: #959077; text-decoration-color: #959077; background-color: #272822"># returns 46</span><span style="background-color: #272822">                                                                            </span>
 <span style="background-color: #272822">                                                                                                                   </span>
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Parameters</span>:                                                                                                     
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">start</span> (integer): The starting number of the range.                                                           
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">end</span> (integer): The ending number of the range.                                                               
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">n</span> (integer): The upper limit of the range within which to count prime numbers.                               
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Returns</span>:                                                                                                        
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">count</span> (integer): The number of prime numbers in the given range.                                             
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">prime_count</span> (integer): The number of prime numbers within the given range.                                   
 </pre>
 </div>
 </div>
@@ -1732,6 +1765,15 @@ create<span class="ansi-blue-fg">(</span>
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/1e9ecd99-be29-4eee-8b21-449f279b7f4b?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/1e9ecd99-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/1e9ecd99-be29-4eee-8b21-449f279b7f4b?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">be29-4eee-8b21-449f279b7f4b?poll=true</span></a>                                                                              
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1771,17 +1813,19 @@ create<span class="ansi-blue-fg">(</span>
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
                                                   <span style="font-weight: bold; text-decoration: underline">Skill Details:</span>                                                   
 
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: list_python_functions                                                                                     
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill lists all the Python functions and their docstrings in a specified directory.           
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: list_python_functions_and_docstrings                                                                      
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill lists all the Python functions and their docstrings in a specified directory. It first  
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>gets a list of all Python files in the directory, then parses each file to find all function definitions. For   
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>each function definition, it extracts the function's name and its docstring.                                    
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Version</span>: 1.0.0                                                                                                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Usage</span>:                                                                                                          
 
 <span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">list_python_functions(</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'/path/to/directory'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                                                       </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">list_python_functions_and_docstrings(</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'/path/to/directory'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                                        </span>
 <span style="background-color: #272822">                                                                                                                   </span>
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Parameters</span>:                                                                                                     
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">directory</span> (string): The directory path where the Python files are located.                                   
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">directory</span> (string): The directory to search for Python files.                                                
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Returns</span>:                                                                                                        
 </pre>
@@ -1849,6 +1893,15 @@ create<span class="ansi-blue-fg">(</span>
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/c94c0ec7-ce23-44f5-91d5-6bd5ec1f1e39?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/c94c0ec7-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/c94c0ec7-ce23-44f5-91d5-6bd5ec1f1e39?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">ce23-44f5-91d5-6bd5ec1f1e39?poll=true</span></a>                                                                              
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1888,31 +1941,28 @@ create<span class="ansi-blue-fg">(</span>
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
                                                   <span style="font-weight: bold; text-decoration: underline">Skill Details:</span>                                                   
 
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: extract_pdf_pages                                                                                         
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill extracts a specified section from a PDF file and saves it as a new PDF.                 
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: extract_pages_from_pdf                                                                                    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill extracts a specified range of pages from a PDF file and saves them as a new PDF file.   
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>The user needs to provide the path to the original PDF file and the range of pages to be extracted. The         
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>extracted pages are saved in a new PDF file in the current working directory.                                   
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Version</span>: 1.0.0                                                                                                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Usage</span>:                                                                                                          
 
 <span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">pdf_path </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'~/Downloads/voyager.pdf'</span><span style="background-color: #272822">                                                                              </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">start_page </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> </span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">2</span><span style="background-color: #272822">                                                                                                    </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">end_page </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> </span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">5</span><span style="background-color: #272822">                                                                                                      </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">output_path </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'extracted_pages.pdf'</span><span style="background-color: #272822">                                                                               </span>
-<span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">extract_pdf_pages(pdf_path, start_page, end_page, output_path)</span><span style="background-color: #272822">                                                    </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">extract_pages_from_pdf(</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'~/Downloads/voyager.pdf'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, </span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">2</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, </span><span style="color: #ae81ff; text-decoration-color: #ae81ff; background-color: #272822">5</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'voyager_extracted.pdf'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                  </span>
 <span style="background-color: #272822">                                                                                                                   </span>
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Parameters</span>:                                                                                                     
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">pdf_path</span> (string): The path to the PDF file.                                                                 
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">pdf_path</span> (string): Path to the original PDF file.                                                            
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">start_page</span> (integer): The starting page number to extract.                                                   
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">start_page</span> (integer): The first page to be extracted. Page numbers start from 1.                             
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">end_page</span> (integer): The ending page number to extract.                                                       
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">end_page</span> (integer): The last page to be extracted. This page is included in the extraction.                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">output_path</span> (string): The path to save the extracted pages as a new PDF file.                                
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">output_file</span> (string): Name of the output file where the extracted pages will be saved.                       
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Default: 'extracted_pages.pdf'                                                                            
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Returns</span>:                                                                                                        
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">output_path</span> (string): The path to the extracted pages PDF file.                                              
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">output_file</span> (string): Name of the output file where the extracted pages were saved.                          
 </pre>
 </div>
 </div>
@@ -2007,7 +2057,7 @@ if "\n" not in message and message.startswith("&gt;"):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-11">
@@ -2049,6 +2099,15 @@ if "\n" not in message and message.startswith("&gt;"):
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/e71ac5c0-685f-4f2b-9690-b77fb264eaec?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/e71ac5c0-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/e71ac5c0-685f-4f2b-9690-b77fb264eaec?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">685f-4f2b-9690-b77fb264eaec?poll=true</span></a>                                                                              
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2058,7 +2117,7 @@ if "\n" not in message and message.startswith("&gt;"):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-12">
@@ -2089,25 +2148,13 @@ if "\n" not in message and message.startswith("&gt;"):
                                                   <span style="font-weight: bold; text-decoration: underline">Skill Details:</span>                                                   
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: display_markdown_message                                                                                  
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill is used to display a markdown message in a formatted way. It takes a multiline string as
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>input and prints the message with proper formatting. It supports markdown syntax and can handle indentation and 
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>multiline strings.                                                                                              
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This skill is used to display a markdown message. It works with multiline strings with lots of     
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>indentation and will automatically make single line &gt; tags beautiful.                                           
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Version</span>: 1.0.0                                                                                                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Usage</span>:                                                                                                          
 
 <span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">message </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">"""</span><span style="background-color: #272822">                                                                                                     </span>
-<span style="background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822"># Heading</span><span style="background-color: #272822">                                                                                                         </span>
-<span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">- List item 1</span><span style="background-color: #272822">                                                                                                     </span>
-<span style="background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">- List item 2</span><span style="background-color: #272822">                                                                                                     </span>
-<span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">---</span><span style="background-color: #272822">                                                                                                               </span>
-<span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">&gt; Blockquote</span><span style="background-color: #272822">                                                                                                      </span>
-<span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">"""</span><span style="background-color: #272822">                                                                                                               </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">display_markdown_message(message)</span><span style="background-color: #272822">                                                                                 </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">display_markdown_message(</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'&gt; This is a markdown message.'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                                         </span>
 <span style="background-color: #272822">                                                                                                                   </span>
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Parameters</span>:                                                                                                     
@@ -2137,7 +2184,7 @@ if "\n" not in message and message.startswith("&gt;"):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-13">
@@ -2179,6 +2226,15 @@ if "\n" not in message and message.startswith("&gt;"):
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/f3a428b6-e8ef-4d61-b9a1-503afe355eaa?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/f3a428b6-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/f3a428b6-e8ef-4d61-b9a1-503afe355eaa?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">e8ef-4d61-b9a1-503afe355eaa?poll=true</span></a>                                                                              
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2188,7 +2244,7 @@ if "\n" not in message and message.startswith("&gt;"):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-14">
@@ -2218,20 +2274,24 @@ if "\n" not in message and message.startswith("&gt;"):
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
                                                   <span style="font-weight: bold; text-decoration: underline">Skill Details:</span>                                                   
 
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: create_api                                                                                                
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: Generates a <span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">CodeSkill</span> instance using different input sources.                                      
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Name</span>: create                                                                                                    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Description</span>: This function generates a <span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">CodeSkill</span> instance using different input sources. It can take in a       
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>request string detailing the skill functionality, messages or a path to a JSON file containing messages, a      
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>string of file content or path to a code/API doc file, a directory path with skill name as stem or file path    
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>with <span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">skill.json</span> as stem, an identifier for a Huggingface repository, or a path to the skill within the          
+<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">   </span>Huggingface repository.                                                                                         
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Version</span>: 1.0.0                                                                                                  
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Usage</span>:                                                                                                          
 
 <span style="background-color: #272822">                                                                                                                   </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">create_api(request, messages</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">messages, messages_json_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">messages_json_path, file_content</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">file_content, </span><span style="background-color: #272822">         </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">file_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">file_path, skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill_path, skill_json_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill_json_path, </span><span style="background-color: #272822">                                     </span>
-<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">huggingface_repo_id</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">huggingface_repo_id, huggingface_skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">huggingface_skill_path)</span><span style="background-color: #272822">                           </span>
+<span style="background-color: #272822"> </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">from</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> creator </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">import</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> create</span><span style="background-color: #272822">                                                                                        </span>
+<span style="background-color: #272822">                                                                                                                   </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill </span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822"> create(request</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, messages</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">[</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">...</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">], file_content</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, file_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, </span><span style="background-color: #272822">             </span>
+<span style="background-color: #272822"> </span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">skill_json_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, huggingface_repo_id</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">, huggingface_skill_path</span><span style="color: #ff4689; text-decoration-color: #ff4689; background-color: #272822">=</span><span style="color: #e6db74; text-decoration-color: #e6db74; background-color: #272822">'...'</span><span style="color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822">)</span><span style="background-color: #272822">                                   </span>
 <span style="background-color: #272822">                                                                                                                   </span>
 
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold"> • </span><span style="font-weight: bold">Parameters</span>:                                                                                                     
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">request</span> (string): String detailing the skill functionality.                                                  
-<span style="color: #808000; text-decoration-color: #808000; font-weight: bold">       • </span>Required: True                                                                                            
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">messages</span> (array): Messages as a list of dictionaries.                                                        
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">messages_json_path</span> (string): Path to a JSON file containing messages.                                        
 <span style="color: #808000; text-decoration-color: #808000; font-weight: bold">    • </span><span style="font-weight: bold">file_content</span> (string): String of file content.                                                               
@@ -2266,7 +2326,7 @@ if "\n" not in message and message.startswith("&gt;"):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-15">
@@ -2302,7 +2362,7 @@ skill.save()</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
-<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create_api                                        </span>
+<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/create                                            </span>
 </pre>
 </div>
 </div>
@@ -2315,7 +2375,7 @@ skill.save()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-16">
@@ -2424,7 +2484,7 @@ skill.show()</div>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 19, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 31, 2023</span>
       
         <br>
         Created:

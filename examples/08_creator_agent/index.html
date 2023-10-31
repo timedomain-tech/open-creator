@@ -1257,9 +1257,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">creator.agents.creator_agent</span> <span class="kn">import</span> <span class="n">open_creator_agent</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">creator.agents</span> <span class="kn">import</span> <span class="n">create_creator_agent</span>
+<span class="kn">from</span> <span class="nn">creator</span> <span class="kn">import</span> <span class="n">config</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from creator.agents.creator_agent import open_creator_agent</div>
+<div class="clipboard-copy-txt" id="cell-1">from creator.agents import create_creator_agent
+from creator import config</div>
 </div>
 </div>
 </div>
@@ -1284,26 +1286,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"what can you do for me? output in markdown table"</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">open_creator_agent</span> <span class="o">=</span> <span class="n">create_creator_agent</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">messages = [
-    {
-        "role": "user",
-        "content": "what can you do for me? output in markdown table",
-    }
-]</div>
+<div class="clipboard-copy-txt" id="cell-2">open_creator_agent = create_creator_agent(config)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1321,40 +1313,26 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="n">open_creator_agent</span><span class="o">.</span><span class="n">run</span><span class="p">({</span><span class="s2">"messages"</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"what can you do for me? output in markdown table"</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">messages = open_creator_agent.run({"messages": messages})</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Output()</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<div class="clipboard-copy-txt" id="cell-3">messages = [
+    {
+        "role": "user",
+        "content": "what can you do for me? output in markdown table",
+    }
+]</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1372,26 +1350,40 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"create a skill that request is to solve 8 * 8 matrix random maze, and save it"</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="n">open_creator_agent</span><span class="o">.</span><span class="n">run</span><span class="p">({</span><span class="s2">"messages"</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">messages.append(
-    {
-        "role": "user",
-        "content": "create a skill that request is to solve 8 * 8 matrix random maze, and save it"
-    }
-)</div>
+<div class="clipboard-copy-txt" id="cell-4">messages = open_creator_agent.run({"messages": messages})</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1409,9 +1401,46 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"create a skill that request is to solve 8 * 8 matrix random maze, and save it"</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-5">messages.append(
+    {
+        "role": "user",
+        "content": "create a skill that request is to solve 8 * 8 matrix random maze, and save it"
+    }
+)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-6">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="n">open_creator_agent</span><span class="o">.</span><span class="n">run</span><span class="p">({</span><span class="s2">"messages"</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">messages = open_creator_agent.run({"messages": messages})</div>
+<div class="clipboard-copy-txt" id="cell-6">messages = open_creator_agent.run({"messages": messages})</div>
 </div>
 </div>
 </div>
@@ -1434,24 +1463,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Output()</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Output()</pre>
 </div>
@@ -1500,6 +1511,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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"/>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
@@ -1526,6 +1549,39 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Langsmith Run URL:                                                                                                 
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/a790ec8f-71ad-4de2-b81c-74f1575ebb0b?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/a790ec8f-</span></a>
+<a href="http://localhost/o/00000000-0000-0000-0000-000000000000/projects/p/856d5024-48fe-4a9c-b1f9-5236f8d3aebd/r/a790ec8f-71ad-4de2-b81c-74f1575ebb0b?poll=true" target="_blank"><span style="color: #000080; text-decoration-color: #000080; text-decoration: underline">71ad-4de2-b81c-74f1575ebb0b?poll=true</span></a>                                                                              
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -1538,14 +1594,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
-<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/solve_random_maze                                 </span>
+<span style="color: #800080; text-decoration-color: #800080">▌ saved to /Users/gongjunmin/.cache/open_creator/skill_library/solve_maze                                        </span>
 </pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Output()</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -1587,10 +1637,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-6">
+<clipboard-copy for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1607,7 +1657,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     <span class="p">}</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">messages.append(
+<div class="clipboard-copy-txt" id="cell-7">messages.append(
     {
         "role": "user",
         "content": "try to search this skill and show skill and skill code"
@@ -1624,10 +1674,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-7">
+<clipboard-copy for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1639,7 +1689,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="n">open_creator_agent</span><span class="o">.</span><span class="n">run</span><span class="p">({</span><span class="s2">"messages"</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">messages = open_creator_agent.run({"messages": messages})</div>
+<div class="clipboard-copy-txt" id="cell-8">messages = open_creator_agent.run({"messages": messages})</div>
 </div>
 </div>
 </div>
@@ -1648,6 +1698,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Output()</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
@@ -1716,18 +1778,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Output()</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Output()</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div>
@@ -1773,7 +1823,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 19, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 31, 2023</span>
       
         <br>
         Created:
