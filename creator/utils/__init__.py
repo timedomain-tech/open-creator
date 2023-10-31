@@ -6,7 +6,7 @@ from .output_truncate import truncate_output
 from .ask_human import ask_run_code_confirm
 from .dict2list import convert_to_values_list
 from .user_info import get_user_info
-from .load_prompt import load_system_prompt
+from .load_prompt import load_system_prompt, load_json_schema
 from .printer import print
 from .code_split import split_code_blocks
 from .valid_code import is_valid_code, is_expression
@@ -26,6 +26,7 @@ __all__ = [
     "convert_to_values_list",
     "get_user_info",
     "load_system_prompt",
+    "load_json_schema",
     "print",
     "split_code_blocks",
     "is_valid_code",

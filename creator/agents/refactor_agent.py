@@ -1,12 +1,11 @@
 from typing import Any, Dict
-import json
 import os
 
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers.json import parse_partial_json
 
 from creator.llm import create_llm
-from creator.utils import convert_to_values_list, load_system_prompt, get_user_info
+from creator.utils import convert_to_values_list, load_system_prompt, get_user_info, load_json_schema
 
 from .base import BaseAgent
 
@@ -41,9 +40,7 @@ class CodeRefactorAgent(BaseAgent):
 def create_code_refactor_agent(config):
     template = load_system_prompt(config.refactor_agent_prompt_path)
     path = os.path.join(config.codeskill_function_schema_path)
-    with open(path, encoding="utf-8") as f:
-        code_skill_json_schema = json.load(f)
-
+    code_skill_json_schema = load_json_schema(os.path.join(config.codeskill_function_schema_path))
     function_schema = {
         "name": "create_refactored_codeskills",
         "description": "a function that constructs a list of refactored skill objects. return only one item when your action is to combine or refine skill object(s), otherwise return more than one items",

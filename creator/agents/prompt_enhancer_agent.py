@@ -3,12 +3,11 @@ from typing import Any, Dict
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers.json import parse_partial_json
 
-from creator.utils import load_system_prompt
+from creator.utils import load_system_prompt, load_json_schema
 from creator.llm import create_llm
 from creator.utils import print
 
 from creator.agents.base import BaseAgent
-import json
 
 
 class PromptEnhancerAgent(BaseAgent):
@@ -39,10 +38,7 @@ class PromptEnhancerAgent(BaseAgent):
 
 def create_prompt_enhancer_agent(config):
     template = load_system_prompt(config.prompt_enhancer_agent_prompt_path)
-
-    with open(config.prompt_enhancer_schema_path, encoding="utf-8") as f:
-        function_schema = json.load(f)
-
+    function_schema = load_json_schema(config.prompt_enhancer_schema_path)
     chain = PromptEnhancerAgent(
         llm=create_llm(config),
         system_template=template,

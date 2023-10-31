@@ -8,17 +8,17 @@ from ..time_utils import get_local_time
 class MemoryManager:
 
     def __init__(self, memory_config):
-        self.chat_message_history = build_memory(memory_path=memory_config.memory_path, session_id=memory_config.session_id)
+        self.chat_message_history = build_memory(memory_path=memory_config.MEMORY_PATH, session_id=memory_config.session_id)
         self.session_id = self.chat_message_history.session_id
         self.core_memory = CoreMemory(
-            persona=memory_config.persona,
-            human=memory_config.human,
-            persona_char_limit=memory_config.persona_char_limit,
-            human_char_limit=memory_config.human_char_limit,
+            persona=memory_config.PERSONA,
+            human=memory_config.HUMAN,
+            persona_char_limit=memory_config.CORE_MEMORY_PERSONA_CHAR_LIMIT,
+            human_char_limit=memory_config.CORE_MEMORY_HUMAN_CHAR_LIMIT,
         )
-        self.recall_memory = RecallMemory(message_database=self.chat_message_history, use_vector_search=memory_config.use_vector_search)
-        self.archival_memory = ArchivalMemory(message_database=self.chat_message_history, use_vector_search=memory_config.use_vector_search)
-        self.page_size = self.recall_memory.page_size = self.archival_memory.page_size = memory_config.page_size
+        self.recall_memory = RecallMemory(message_database=self.chat_message_history, use_vector_search=memory_config.USE_VECTOR_SEARCH)
+        self.archival_memory = ArchivalMemory(message_database=self.chat_message_history, use_vector_search=memory_config.USE_VECTOR_SEARCH)
+        self.page_size = self.recall_memory.page_size = self.archival_memory.page_size = memory_config.PAGE_SIZE
 
     @property
     def human(self):

@@ -1,10 +1,9 @@
 from typing import Dict, Any
-import json
 
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers.json import parse_partial_json
 
-from creator.utils import convert_to_values_list, get_user_info, load_system_prompt
+from creator.utils import convert_to_values_list, get_user_info, load_system_prompt, load_json_schema
 from creator.llm import create_llm
 
 from .base import BaseAgent
@@ -39,8 +38,7 @@ class SkillExtractorAgent(BaseAgent):
 def create_skill_extractor_agent(config):
     template = load_system_prompt(config.extractor_agent_prompt_path)
     # current file's parent as dir
-    with open(config.codeskill_function_schema_path, encoding="utf-8") as f:
-        code_skill_json_schema = json.load(f)
+    code_skill_json_schema = load_json_schema(config.codeskill_function_schema_path)
     function_schema = {
         "name": "extract_formmated_skill",
         "description": "a function that extracts a skill from a conversation history",

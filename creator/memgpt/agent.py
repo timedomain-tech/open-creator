@@ -1,6 +1,5 @@
 from typing import List, Dict, Any, Optional
 import datetime
-import json
 
 from langchain.schema.messages import FunctionMessage
 from langchain.output_parsers.json import parse_partial_json
@@ -8,16 +7,16 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.prompts import ChatPromptTemplate
 from langchain.adapters.openai import convert_openai_messages
 
-from creator.utils import load_system_prompt
+from creator.utils import load_system_prompt, load_json_schema
 from creator.agents.base import BaseAgent
+from creator.agents import create_creator_agent
+from creator.llm import create_llm
 
 from .memory import MemoryManager
 from .constants import (
-    DEFAULT_AGENT_SUBTASKS,
     MESSAGE_SUMMARY_WARNING_STR,
     FUNC_FAILED_HEARTBEAT_MESSAGE,
-    REQ_HEARTBEAT_MESSAGE,
-    MESSAGE_CHATGPT_FUNCTION_SYSTEM_MESSAGE
+    REQ_HEARTBEAT_MESSAGE
 )
 from .message_handler import (
     get_initial_boot_messages,
@@ -59,8 +58,7 @@ class MemGPT(BaseAgent):
 
         inputs["persona"] = self.memory_manager.persona
         inputs["human"] = self.memory_manager.human
-        if "subagent_tasks" not in inputs:
-            inputs["subagent_tasks"] = DEFAULT_AGENT_SUBTASKS
+        inputs["subagent_tasks"] = self.memgpt_config.AGENT_SUBTASKS
 
         return inputs
 
@@ -210,20 +208,20 @@ class MemGPT(BaseAgent):
         return output
 
 
-def create_memgpt(llm, memgpt_config, subagent=None):
-    template = load_system_prompt(memgpt_config.system_prompt_path)
-    with open(memgpt_config.function_schema_path) as f:
-        function_schemas = json.load(f)
-    memory_manager = MemoryManager(memgpt_config)
+def create_memgpt(config, subagent=None):
+    template = load_system_prompt(config.memgpt_system_prompt_path)
+    function_schemas = load_json_schema(config.memgpt__function_schema_path)
+    memory_manager = MemoryManager(config.memgpt_config)
+    llm = create_llm(config)
     if subagent is None:
-        subagent = BaseAgent(llm=llm, system_template=MESSAGE_CHATGPT_FUNCTION_SYSTEM_MESSAGE)
+        subagent = create_creator_agent(config)
     chain = MemGPT(
         llm=llm,
         subagent=subagent,
         system_template=template,
         function_schemas=function_schemas,
         memory_manager=memory_manager,
-        memgpt_config=memgpt_config,
+        memgpt_config=config.memgpt_config,
         output_key="session_id",
         verbose=False,
     )

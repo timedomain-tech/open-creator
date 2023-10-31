@@ -69,10 +69,8 @@ class CreatorAgent(BaseAgent):
 
 def create_creator_agent(config):
     template = load_system_prompt(config.creator_agent_prompt_path)
-
     code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS, redirect_output=True)
     code_interpreter.setup(IMPORT_CODE)
-
     chain = CreatorAgent(
         llm=create_llm(config),
         system_template=template,
