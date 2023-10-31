@@ -48,7 +48,10 @@ class MemoryManager:
 
     @property
     def is_new_session(self):
-        return len(self.chat_message_history.messages) == 0
+        return len(self.chat_message_history.messages) == 1 and self.chat_message_history.messages[0].type == "human"
+
+    def clear(self):
+        self.chat_message_history.clear()
 
     @property
     def messages(self):

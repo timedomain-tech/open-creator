@@ -52,7 +52,8 @@ class MemGPT(BaseAgent):
         else:
             inputs["session_id"] = self.memory_manager.session_id
 
-        inputs["memory_edit_timestamp"] = self.memory_manager.memory_edit_timestamp
+        # inputs["memory_edit_timestamp"] = self.memory_manager.memory_edit_timestamp
+        inputs["memory_edit_timestamp"] = 0
         inputs["recall_memory_count"] = self.memory_manager.recall_memory_count
         inputs["archival_memory_count"] = self.memory_manager.archival_memory_count
 
@@ -156,7 +157,7 @@ class MemGPT(BaseAgent):
             # construct prompt and run
             prompt = self.construct_prompt(langchain_messages)
             llm_chain = (prompt | llm_with_functions).with_config({"run_name": f"Iteration {counter+1}"})
-            message = await llm_chain.ainvoke(inputs, {"callbacks": run_manager_callbacks})
+            message = llm_chain.invoke(inputs, {"callbacks": run_manager_callbacks})
             await self.memory_manager.add_message(message)
 
             # handle with ai response
@@ -210,7 +211,7 @@ class MemGPT(BaseAgent):
 
 def create_memgpt(config, subagent=None):
     template = load_system_prompt(config.memgpt_system_prompt_path)
-    function_schemas = load_json_schema(config.memgpt__function_schema_path)
+    function_schemas = load_json_schema(config.memgpt_function_schema_path)
     memory_manager = MemoryManager(config.memgpt_config)
     llm = create_llm(config)
     if subagent is None:

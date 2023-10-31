@@ -24,7 +24,7 @@ async def send_message(memgpt, message: str, receiver: str = "human"):
         return
     else:
         # request subagent first
-        messages = memgpt.subagent.run({"messages": {"role": "user", "content": message}})
+        messages = memgpt.subagent.run({"messages": [{"role": "user", "content": message}]})
         for m in messages:
             langchain_message = convert_dict_to_message(m)
             langchain_message.additional_kwargs["subagent"] = memgpt.subagent._chain_type

@@ -1,17 +1,21 @@
 
 # Configurations
 
+```shell
+creator -c
+```
+
 ```yaml
 LOCAL_SKILL_LIBRARY_PATH: .cache/open_creator/skill_library
 REMOTE_SKILL_LIBRARY_PATH: .cache/open_creator/remote
-LOCAL_SKILL_LIBRARY_VECTORD_PATH: .cache/open_creator/vectordb/
 PROMPT_CACHE_HISTORY_PATH: .cache/open_creator/prompt_cache/
+VECTORD_PATH: .cache/open_creator/vectordb/
 LOGGER_CACHE_PATH: .cache/open_creator/logs/
-SKILL_EXTRACT_AGENT_CACHE_PATH: .cache/open_creator/llm_cache
+LLM_CACHE_PATH: .cache/open_creator/llm_cache
+EMBEDDING_CACHE_PATH: .cache/open_creator/embeddings/
 OFFICIAL_SKILL_LIBRARY_PATH: timedomain/skill-library
 OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH: timedomain/skill-library-template
 
-BUILD_IN_SKILL_LIBRARY_DIR: skill_library/open-creator/
 
 # for AZURE, it is your_deployment_id
 # for ANTHROPIC, it is claude-2
@@ -19,7 +23,7 @@ BUILD_IN_SKILL_LIBRARY_DIR: skill_library/open-creator/
 # for huggingface, it is huggingface/WizardLM/WizardCoder-Python-34B-V1.0 model path
 # for ollama, it is like ollama/llama2
 # the default is openai/gpt-3.5
-MODEL_NAME: gpt-3.5-turbo-16k
+MODEL_NAME: gpt-4
 TEMPERATURE: 0 # only 0 can use llm_cache
 
 USE_AZURE: false
@@ -37,4 +41,41 @@ VERTEX_LOCATION: ""
 
 HUGGINGFACE_API_KEY: ""
 HUGGINGFACE_API_BASE: ""
+
+# for langsmith trace
+LANGCHAIN_ENDPOINT: 
+LANGCHAIN_API_KEY: 
+LANGCHAIN_TRACING_V2: true
+LANGCHAIN_PROJECT: "open-creator"
+
+# for memgpt
+MEMGPT_CONFIG: 
+  MEMORY_PATH: .cache/open_creator/memory
+  PERSONA: |
+    The following is a blank slate starter persona, I need to expand this to develop my own personality.
+
+    My name is MemGPT.
+    I am kind, thoughtful, and inquisitive.
+
+  HUMAN: |
+    This is what I know so far about the user, I should expand this as I learn more about them.
+
+    First name: Chad
+    Last name: ?
+    Gender: Male
+    Age: ?
+    Nationality: ?
+    Occupation: Computer science PhD student at UC Berkeley
+    Interests: Formula 1, Sailing, Taste of the Himalayas Restaurant in Berkeley, CSGO
+  
+  AGENT_SUBTASKS: |
+      - create/save/search skill
+      - run/test/refactor skill
+      - show skill
+  
+  SUMMARY_WARNING_TOKENS: 6000
+  CORE_MEMORY_PERSONA_CHAR_LIMIT: 2000
+  CORE_MEMORY_HUMAN_CHAR_LIMIT: 2000
+  PAGE_SIZE: 5
+  USE_VECTOR_SEARCH: true
 ```

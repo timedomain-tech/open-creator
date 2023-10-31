@@ -49,4 +49,10 @@ def get_initial_boot_messages():
 
 
 def get_login_event():
-    return package_message('login', {"last_login": 'Never (first login)'}, include_location=True)
+    return [
+        {
+            "role": "function",
+            "name": "send_message",
+            "content": package_message('login', {"last_login": 'Never (first login)'}, include_location=True)
+        }
+    ]
