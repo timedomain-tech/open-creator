@@ -17,11 +17,9 @@ class ChatOpenAIWithTrim(TrimMixin, ChatOpenAI):
     cache: bool = True
     function_calls: Optional[List[Dict]] = None
     trimed: bool = False
-    pass
 
 
 class AzureChatOpenAIWithTrim(TrimMixin, AzureChatOpenAI):
     cache: bool = True
     function_calls: Optional[List[Dict]] = None
     trimed: bool = False
-    pass
