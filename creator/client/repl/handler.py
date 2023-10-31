@@ -191,7 +191,7 @@ class RequestHandler:
         inputs = {"messages": messages, "verbose": True}
         with self.console.status("[blue]Thinking[/blue]", spinner="circleHalves"):
             if self.interpreter:
-                messages = self.code_interpreter_agent.run(inputs)
+                messages = self.interpreter_agent.run(inputs)
             else:
                 messages = self.open_creator_agent.run(inputs)
         output = "\n".join([self.convert_agent_message(message) for message in messages[len(self.messages)+1:]])
