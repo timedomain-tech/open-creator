@@ -267,11 +267,23 @@ def cmd_client():
 
     if args.command == "ui":
         import os
+        import sys
+        import atexit
         import subprocess
         streamlit_app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../app", "streamlit_app.py")
         env = os.environ.copy()
-        subprocess.Popen(["streamlit", "run", streamlit_app_path], env=env)
-        return
+        process = subprocess.Popen(["streamlit", "run", streamlit_app_path], env=env)
+        
+        def terminate_process(process):
+            if process:
+                process.terminate()
+
+        atexit.register(terminate_process, process)
+        try:
+            process.wait()
+        except KeyboardInterrupt:
+            pass
+        sys.exit(process.returncode)
 
 
 if __name__ == "__main__":

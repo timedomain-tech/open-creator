@@ -37,11 +37,14 @@ def setup_slidebar():
             os.environ["OPENAI_API_KEY"] = openai_api_key
         model_list = ["gpt-3.5-turbo-16k", "gpt-3.5-turbo", "gpt-4"]
         model = st.selectbox("Model", model_list, key="model")
-        config.model = model
         temperature = st.slider("Temperature", 0.0, 1.0, 0.0, 0.05, key="temperature")
         config.temperature = temperature
         agent_list = ["creator_agent", "interpreter_agent"]
         selected_agent = st.selectbox("Agent", agent_list, key="agent")
+        if selected_agent == "creator_agent":
+            config.agent_model_config.CREATOR_AGENT = model
+        else:
+            config.agent_model_config.INTERPRETER_AGENT = model
         if agent_name != selected_agent:
             agent_name = selected_agent
             add_session()
