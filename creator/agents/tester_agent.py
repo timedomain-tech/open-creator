@@ -19,10 +19,7 @@ class CodeTesterAgent(BaseAgent):
     total_tries: int = 10
     output_key: str = "output"
     allow_user_confirm: bool = config.run_human_confirm
-
-    @property
-    def _chain_type(self):
-        return "CodeTesterAgent"
+    agent_name: str = "CodeTesterAgent"
 
     def postprocess_mesasge(self, message):
         function_call = message.additional_kwargs.get("function_call", None)

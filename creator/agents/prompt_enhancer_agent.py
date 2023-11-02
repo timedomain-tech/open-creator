@@ -12,10 +12,7 @@ from creator.agents.base import BaseAgent
 
 class PromptEnhancerAgent(BaseAgent):
     output_key: str = "request"
-
-    @property
-    def _chain_type(self):
-        return "PromptEnhancerAgent"
+    agent_name: str = "PromptEnhancerAgent"
 
     def construct_prompt(self, langchain_messages: Dict[str, Any]):
         prompt = ChatPromptTemplate.from_messages(messages=[

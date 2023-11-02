@@ -12,10 +12,7 @@ from .base import BaseAgent
 
 class CodeRefactorAgent(BaseAgent):
     output_key: str = "refacted_skills"
-
-    @property
-    def _chain_type(self):
-        return "CodeRefactorAgent"
+    agent_name: str = "CodeRefactorAgent"
 
     def construct_prompt(self, langchain_messages: Dict[str, Any]):
         prompt = ChatPromptTemplate.from_messages(messages=[

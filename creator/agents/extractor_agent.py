@@ -11,10 +11,7 @@ from .base import BaseAgent
 
 class SkillExtractorAgent(BaseAgent):
     output_key: str = "extracted_skill"
-
-    @property
-    def _chain_type(self):
-        return "SkillExtractorAgent"
+    agent_name: str = "SkillExtractorAgent"
 
     def construct_prompt(self, langchain_messages: Dict[str, Any]):
         prompt = ChatPromptTemplate.from_messages(messages=[

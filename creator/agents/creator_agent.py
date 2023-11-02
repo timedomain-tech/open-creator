@@ -28,10 +28,7 @@ IMPORT_CODE = (
 class CreatorAgent(BaseAgent):
     total_tries: int = 5
     allow_user_confirm: bool = config.run_human_confirm
-
-    @property
-    def _chain_type(self):
-        return "CreatorAgent"
+    agent_name: str = "CreatorAgent"
 
     def prep_inputs(self, inputs: Dict[str, Any] | Any) -> Dict[str, str]:
         inputs["OPEN_CREATOR_API_DOC"] = OPEN_CREATOR_API_DOC

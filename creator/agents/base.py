@@ -23,13 +23,18 @@ class BaseAgent(LLMChain):
     system_template: str = ""
     allow_user_confirm: bool = False
     prompt: ChatPromptTemplate = ChatPromptTemplate.from_messages(messages=["system", ""])
+    agent_name: str = "BaseAgent"
+    share_memory: bool = False
 
     @property
     def _chain_type(self):
-        return "BaseAgent"
+        return self.agent_name
 
     def __repr__(self) -> str:
-        return self._chain_type + "()"
+        return self.agent_name + "()"
+    
+    def __hash__(self):
+        return hash(self.agent_name)
 
     @property
     def input_keys(self) -> List[str]:

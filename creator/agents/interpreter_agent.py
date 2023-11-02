@@ -18,11 +18,8 @@ VERIFY_TIPS = load_system_prompt(config.tips_for_veryfy_prompt_path)
 class CodeInterpreterAgent(BaseAgent):
     total_tries: int = 10
     allow_user_confirm: bool = config.run_human_confirm
+    agent_name: str = "CodeInterpreterAgent"
 
-    @property
-    def _chain_type(self):
-        return "CodeInterpreterAgent"
-    
     def postprocess_mesasge(self, message):
         function_call = message.additional_kwargs.get("function_call", None)
         if function_call is not None:

@@ -36,10 +36,7 @@ class MemGPT(BaseAgent):
     memgpt_config: dict = None
     pause_heartbeats_start: datetime.datetime = None
     pause_heartbeats_minutes: int = 0
-
-    @property
-    def _chain_type(self):
-        return "MemGPT"
+    agent_name: str = "MemGPT"
 
     @property
     def input_keys(self) -> List[str]:
