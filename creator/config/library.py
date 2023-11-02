@@ -1,9 +1,11 @@
-from langchain.cache import SQLiteCache
-import langchain
+import os
 from pydantic import BaseModel
+
+from langchain.cache import SQLiteCache
+from langchain.globals import set_llm_cache
+
 from creator.code_interpreter import CodeInterpreter
 from creator.config.load_config import load_yaml_config
-import os
 
 
 # Load configuration from YAML
@@ -21,23 +23,29 @@ project_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 
 # Fetch values from the loaded YAML config or set default values
-_local_skill_library_path = resolve_path(yaml_config.get("LOCAL_SKILL_LIBRARY_PATH", ".cache/open_creator/skill_library"))
-_remote_skill_library_path = resolve_path(yaml_config.get("REMOTE_SKILL_LIBRARY_PATH", ".cache/open_creator/remote"))
-_local_skill_library_vectordb_path = resolve_path(yaml_config.get("LOCAL_SKILL_LIBRARY_VECTORD_PATH", ".cache/open_creator/vectordb/"))
-_prompt_cache_history_path = resolve_path(yaml_config.get("PROMPT_CACHE_HISTORY_PATH", ".cache/open_creator/prompt_cache/"))
-_logger_cache_path = resolve_path(yaml_config.get("LOGGER_CACHE_PATH", ".cache/open_creator/logs/"))
-_skill_extract_agent_cache_path = resolve_path(yaml_config.get("SKILL_EXTRACT_AGENT_CACHE_PATH", ".cache/open_creator/llm_cache"))
-_official_skill_library_path = resolve_path(yaml_config.get("OFFICIAL_SKILL_LIBRARY_PATH", "timedomain/skill-library"))
-_official_skill_library_template_path = resolve_path(yaml_config.get("OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH", "timedomain/skill-library-template"))
-_model = yaml_config.get("MODEL_NAME", "gpt-3.5-turbo-16k-0613")
-_temperature = yaml_config.get("TEMPERATURE", 0)
-_run_human_confirm = yaml_config.get("RUN_HUMAN_CONFIRM", False)
-_use_stream_callback = yaml_config.get("USE_STREAM_CALLBACK", True)
-_build_in_skill_library_dir = yaml_config.get("BUILD_IN_SKILL_LIBRARY_DIR", "skill_library/open-creator/")
-_build_in_skill_library_dir = os.path.join(project_dir, _build_in_skill_library_dir)
+_local_skill_library_path = resolve_path(yaml_config.LOCAL_SKILL_LIBRARY_PATH)
+_remote_skill_library_path = resolve_path(yaml_config.REMOTE_SKILL_LIBRARY_PATH)
+_vectordb_path = resolve_path(yaml_config.VECTORD_PATH)
+_prompt_cache_history_path = resolve_path(yaml_config.PROMPT_CACHE_HISTORY_PATH)
+_logger_cache_path = resolve_path(yaml_config.LOGGER_CACHE_PATH)
+_llm_cache_path = resolve_path(yaml_config.LLM_CACHE_PATH)
+_embedding_cache_path = resolve_path(yaml_config.EMBEDDING_CACHE_PATH)
+yaml_config.MEMGPT_CONFIG.MEMORY_PATH = resolve_path(yaml_config.MEMGPT_CONFIG.MEMORY_PATH)
+
+memgpt_config = yaml_config.MEMGPT_CONFIG
+
+angent_model_config = yaml_config.AGENT_MODEL_CONFIG
+
+_official_skill_library_path = resolve_path(yaml_config.OFFICIAL_SKILL_LIBRARY_PATH)
+_official_skill_library_template_path = resolve_path(yaml_config.OFFICIAL_SKILL_LIBRARY_TEMPLATE_PATH)
+
+_model = yaml_config.MODEL_NAME
+_temperature = yaml_config.TEMPERATURE
+_run_human_confirm = yaml_config.RUN_HUMAN_CONFIRM
+_use_stream_callback = yaml_config.USE_STREAM_CALLBACK
 
 # Ensure directories exist
-for path in [_skill_extract_agent_cache_path, _local_skill_library_path, _local_skill_library_vectordb_path, _prompt_cache_history_path, _logger_cache_path]:
+for path in [_llm_cache_path, _local_skill_library_path, _vectordb_path, _prompt_cache_history_path, _logger_cache_path, memgpt_config.MEMORY_PATH, _embedding_cache_path]:
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -48,30 +56,24 @@ if not os.path.exists(_logger_cache_path):
 if not os.path.exists(_prompt_cache_history_path):
     open(os.path.join(_prompt_cache_history_path, "history.txt"), 'a').close()
 
-build_in_skill_library_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-
-build_in_skill_config = {
-    "create": os.path.join(_build_in_skill_library_dir, "create"),
-    "save": os.path.join(_build_in_skill_library_dir, "save"),
-    "search": os.path.join(_build_in_skill_library_dir, "search"),
-
-}  # Placeholder for any built-in skill configurations
-
 
 class LibraryConfig(BaseModel):
     local_skill_library_path: str = _local_skill_library_path
     remote_skill_library_path: str = _remote_skill_library_path
-    local_skill_library_vectordb_path: str = _local_skill_library_vectordb_path
+    vectordb_path: str = _vectordb_path
     prompt_cache_history_path: str = _prompt_cache_history_path
     logger_cache_path: str = _logger_cache_path
-    skill_extract_agent_cache_path: str = _skill_extract_agent_cache_path
+    llm_cache_path: str = _llm_cache_path
+    embedding_cache_path: str = _embedding_cache_path
+
     model: str = _model
     temperature: float = _temperature
-    official_skill_library_path: str = _official_skill_library_path
-    official_skill_library_template_path: str = _official_skill_library_template_path
-    build_in_skill_config: dict = build_in_skill_config
     run_human_confirm: bool = _run_human_confirm
     use_stream_callback: bool = _use_stream_callback
+
+    official_skill_library_path: str = _official_skill_library_path
+    official_skill_library_template_path: str = _official_skill_library_template_path
+
     code_interpreter: CodeInterpreter = CodeInterpreter()
 
     # prompt paths
@@ -86,11 +88,20 @@ class LibraryConfig(BaseModel):
     tips_for_debugging_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_debugging_prompt.md")
     tips_for_testing_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_testing_prompt.md")
     tips_for_veryfy_prompt_path: str = os.path.join(project_dir, "prompts", "tips_for_veryfy_prompt.md")
+    prompt_enhancer_agent_prompt_path: str = os.path.join(project_dir, "prompts", "prompt_enhancer_agent_prompt.md")
+    prompt_enhancer_schema_path: str = os.path.join(project_dir, "prompts", "prompt_enhancer_schema.json")
+    memgpt_system_prompt_path: str = os.path.join(project_dir, "prompts", "memgpt_system_prompt.md")
+    memgpt_function_schema_path: str = os.path.join(project_dir, "prompts", "memgpt_function_schema.json")
+
+    memgpt_config: dict = None
+    agent_model_config: dict = None
 
     use_rich: bool = True
     use_file_logger: bool = False
 
 
 config = LibraryConfig()
+config.memgpt_config = memgpt_config
+config.agent_model_config = angent_model_config
 
-langchain.llm_cache = SQLiteCache(database_path=f"{config.skill_extract_agent_cache_path}/.langchain.db")
+set_llm_cache(SQLiteCache(database_path=f"{config.llm_cache_path}/.langchain.db"))

@@ -23,10 +23,18 @@ class BaseAgent(LLMChain):
     system_template: str = ""
     allow_user_confirm: bool = False
     prompt: ChatPromptTemplate = ChatPromptTemplate.from_messages(messages=["system", ""])
+    agent_name: str = "BaseAgent"
+    share_memory: bool = False
 
     @property
     def _chain_type(self):
-        return "BaseAgent"
+        return self.agent_name
+
+    def __repr__(self) -> str:
+        return self.agent_name + "()"
+    
+    def __hash__(self):
+        return hash(self.agent_name)
 
     @property
     def input_keys(self) -> List[str]:
@@ -70,14 +78,14 @@ class BaseAgent(LLMChain):
             return json.dumps(tool_result, ensure_ascii=False)
         return str(tool_result)
 
-    def run_tool(self, function_call: Dict[str, Any]):
+    def run_tool(self, function_call: Dict[str, Any], run_manager: Optional[CallbackManager] = None):
         function_name = function_call.get("name", "")
         arguments = parse_partial_json(function_call.get("arguments", "{}"))
         tool_result = None
         for tool in self.tools:
             if tool.name == function_name:
                 if self.human_confirm():
-                    tool_result = tool.run(arguments)
+                    tool_result = tool.run(arguments, callbacks=run_manager)
                     tool_result = self.tool_result_to_str(tool_result)
                     tool_result = FunctionMessage(name=function_name, content=tool_result)
                     self.update_tool_result_in_callbacks(tool_result)
@@ -96,31 +104,37 @@ class BaseAgent(LLMChain):
     def preprocess_inputs(self, inputs: Dict[str, Any]):
         return inputs
 
+    def add_to_memory(self, messages):
+        """Add message to long-term memory"""
+        pass
+
     def run_workflow(self, inputs: Dict[str, Any], run_manager: Optional[CallbackManager] = None) -> Dict[str, Any]:
+        run_manager_callbacks = run_manager.get_child() if run_manager else None
         inputs = self.preprocess_inputs(inputs)
         messages = inputs.pop("messages")
         langchain_messages = convert_openai_messages(messages)
+        self.llm.function_calls = self.function_schemas
         llm_with_functions = self.llm.bind(functions=self.function_schemas)
         current_try = 0
         while current_try < self.total_tries:
             self.start_callbacks()
             prompt = self.construct_prompt(langchain_messages)
-            llm_chain = prompt | llm_with_functions | self.postprocess_mesasge
-            message = llm_chain.invoke(inputs)
+            llm_chain = (prompt | llm_with_functions | self.postprocess_mesasge).with_config({"run_name": f"Iteration {current_try+1}"})
+            message = llm_chain.invoke(inputs, {"callbacks": run_manager_callbacks})
             langchain_messages.append(message)
             function_call = message.additional_kwargs.get("function_call", None)
             if function_call is None:
                 self.end_callbacks(message)
                 break
 
-            tool_result = self.run_tool(function_call)
+            tool_result = self.run_tool(function_call, run_manager_callbacks)
             if tool_result is None:
                 self.end_callbacks(message)
                 break
             langchain_messages.append(tool_result)
             langchain_messages = self.messages_hot_fix(langchain_messages)
             current_try += 1
-            self.end_callbacks(message)
+            self.end_callbacks(message=message)
         langchain_messages = remove_tips(langchain_messages)
         openai_messages = list(map(convert_message_to_dict, langchain_messages))
         return openai_messages
@@ -159,4 +173,3 @@ class BaseAgent(LLMChain):
                 result = output_queue.pop()
                 yield True, result
                 return
-

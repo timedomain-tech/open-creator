@@ -10,7 +10,7 @@ from langchain.schema.runnable import RunnableConfig
 from creator.code_interpreter.safe_python import SafePythonInterpreter
 from creator.config.library import config
 from creator.utils import load_system_prompt, get_user_info, remove_tips
-from creator.llm.llm_creator import create_llm
+from creator.llm import create_llm
 
 from .base import BaseAgent
 
@@ -20,19 +20,15 @@ VERIFY_TIPS = load_system_prompt(config.tips_for_veryfy_prompt_path)
 ALLOWED_FUNCTIONS = {"create", "save", "search", "CodeSkill"}
 ALLOW_METHODS = {".show", ".show_code", ".test", ".run", ".save", "__add__", "__gt__", "__lt__", "__annotations__"}
 IMPORT_CODE = (
-    "from creator.core import creator\n"
+    "from creator import create, save, search\n"
     "from creator.core.skill import CodeSkill\n"
-    "create, save, search = creator.create, creator.save, creator.search\n\n"
 )
 
 
 class CreatorAgent(BaseAgent):
     total_tries: int = 5
     allow_user_confirm: bool = config.run_human_confirm
-
-    @property
-    def _chain_type(self):
-        return "CreatorAgent"
+    agent_name: str = "CreatorAgent"
 
     def prep_inputs(self, inputs: Dict[str, Any] | Any) -> Dict[str, str]:
         inputs["OPEN_CREATOR_API_DOC"] = OPEN_CREATOR_API_DOC
@@ -68,21 +64,15 @@ class CreatorAgent(BaseAgent):
         return {"messages": self.run(inputs)}
 
 
-def create_creator_agent(llm):
+def create_creator_agent(config):
     template = load_system_prompt(config.creator_agent_prompt_path)
-
     code_interpreter = SafePythonInterpreter(allowed_functions=ALLOWED_FUNCTIONS, allowed_methods=ALLOW_METHODS, redirect_output=True)
     code_interpreter.setup(IMPORT_CODE)
-
     chain = CreatorAgent(
-        llm=llm,
+        llm=create_llm(config, config.agent_model_config.CREATOR_AGENT),
         system_template=template,
         tools=[code_interpreter],
         function_schemas=[code_interpreter.to_function_schema()],
         verbose=False,
     )
     return chain
-
-
-llm = create_llm(config)
-open_creator_agent = create_creator_agent(llm=llm)

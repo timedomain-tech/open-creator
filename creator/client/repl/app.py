@@ -1,108 +1,82 @@
-from prompt_toolkit.application import Application
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.keys import Keys
-from prompt_toolkit.layout import HSplit, Layout
-from prompt_toolkit.widgets import TextArea
-from prompt_toolkit.layout.dimension import Dimension
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.lexers import PygmentsLexer
+from prompt_toolkit.shortcuts import PromptSession
+from prompt_toolkit.document import Document
 from pygments.lexers.markup import MarkdownLexer
-from prompt_toolkit.filters import to_filter
-
+from prompt_toolkit.lexers import PygmentsLexer
 import traceback
 
-from .constants import prompt_message, help_text
+from .constants import help_text, prompt_message, interpreter_message
 from .completer import completer, file_history
 from .style import style
-from .lexer import CustomLexer
+from .handler import RequestHandler
+from questionary import Question
+import sys
 
 
 class OpenCreatorREPL:
+    interpreter = False
 
-    def __init__(self, accept_callback=None):
-        self.accept_callback = accept_callback
-
-    def run(self, quiet=False):
-        output_text = "" if quiet else help_text
-        self.output_field = TextArea(text=output_text, height=Dimension(min=0, weight=1), focusable=True, read_only=True, focus_on_click=True, lexer=CustomLexer(), scrollbar=True)
-        self.input_field = TextArea(
-            height=Dimension(min=1, weight=100),
-            prompt=prompt_message,
-            multiline=True,
-            wrap_lines=False,
-            focus_on_click=True,
-            dont_extend_height=False,
-            completer=completer,
-            auto_suggest=AutoSuggestFromHistory(),
-            history=file_history,
-            lexer=PygmentsLexer(MarkdownLexer),
-            complete_while_typing=True,
-        )
-        self.input_field.buffer.enable_history_search = to_filter(True)
-        self.input_field.accept_handler = self.accept
-
+    async def setup(self, quiet=False):
+        self.handler = RequestHandler()
         # The key bindings.
         kb = KeyBindings()
-
-        @kb.add(Keys.ControlD)
-        @kb.add(Keys.ControlQ)
-        def _(event):
-            " Pressing Ctrl-Q will exit the user interface. "
-            self.accept_callback.handle_exit(event.app, self.output_field.text)
 
         # emacs control + j new line keybindings
         @kb.add(Keys.ControlJ)
         def _(event):
             event.current_buffer.insert_text('\n')
 
-        @kb.add(Keys.ControlC)
-        def _(event):
-            buffer = event.app.current_buffer
-            self.input_field.accept_handler(buffer, keyboard_interrupt=True)
-            event.app.current_buffer.reset()
-
-        @kb.add(Keys.Enter)
-        def _(event):
-            " When enter is pressed, we insert a newline. "
-            buffer = event.app.current_buffer
-            if self.input_field.text.startswith("%exit"):
-                self.accept_callback.handle_exit(event.app, self.output_field.text)
-                return
-
-            self.input_field.accept_handler(buffer)
-            event.app.current_buffer.reset()
-
-        container = HSplit(
-            [
-                self.output_field,
-                self.input_field,
-            ]
-        )
-        # Run application.
-        self.application = Application(
-            layout=Layout(container, focused_element=self.input_field),
-            key_bindings=kb,
+        self.prompt_session = PromptSession(
+            prompt_message if not self.interpreter else interpreter_message,
             style=style,
+            multiline=False,
+            lexer=PygmentsLexer(MarkdownLexer),
+            history=file_history,
+            completer=completer,
+            auto_suggest=AutoSuggestFromHistory(),
+            complete_while_typing=True,
             mouse_support=True,
-            full_screen=True,
+            key_bindings=kb
         )
-        self.application.run()
+        if not quiet:
+            await self.handler.show_output("", help_text, add_prompt_prefix=False)
 
-    def accept(self, buff, keyboard_interrupt=False):
+    async def ask(self, interpreter=True):
+        if self.interpreter != interpreter:
+            self.interpreter = interpreter
+            self.handler.interpreter = interpreter
+            await self.setup()
+        self.prompt_session.default_buffer.reset(Document())
+        question = Question(self.prompt_session.app)
+        output = await question.unsafe_ask_async(patch_stdout=True)
+        return output
 
-        self.output_field.buffer.read_only = to_filter(False)
-
-        show_stderr = True
-        if keyboard_interrupt:
-            output = "<stderr>KeyboardInterrupt</stderr>"
-        else:
+    async def run(self, quiet=False, interpreter=False):
+        await self.setup(quiet)
+        while 1:
             try:
-                self.accept_callback.handle(self.input_field.text, self.output_field)
-                show_stderr = False
+                user_request = await self.ask(interpreter)
+                user_request = user_request.strip()
+                await self.handler.show_output(user_request, "", add_newline=user_request != "")
+                if user_request == "%exit":
+                    sys.exit()
+                if user_request.startswith("%interpreter"):
+                    interpreter = not interpreter
+                    mode = "on" if interpreter else "off"
+                    await self.handler.show_output("", f"[red]Toggled Interpreter mode {mode}![/red]", add_prompt_prefix=False, add_newline=False, add_request=False)
+                    continue
+                if user_request:
+                    await self.handler.handle(user_request, interpreter)
+            except KeyboardInterrupt:
+                user_request = self.prompt_session.default_buffer.text
+                await self.handler.show_output(user_request, "", grey=True)
+                await self.handler.show_output("", "[red]KeyboardInterrupt[/red]", add_prompt_prefix=False, add_newline=False, add_request=False)
+            except EOFError:
+                sys.exit()
             except Exception:
-                output = f"<stderr>{traceback.format_exc()}</stderr>"
-        if self.input_field.text.strip() != "":
-            self.input_field.buffer.history.store_string(self.input_field.text)
-        if show_stderr:
-            self.accept_callback.show_output(self.input_field.text, self.output_field, output)
-        self.output_field.buffer.read_only = to_filter(True)
+                err = traceback.format_exc()
+                user_request = self.prompt_session.default_buffer.text
+                await self.handler.show_output(user_request, "", grey=True)
+                await self.handler.show_output("", f"[red]{err}[/red]", add_prompt_prefix=False, add_newline=False, add_request=False)

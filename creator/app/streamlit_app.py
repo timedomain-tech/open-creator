@@ -4,8 +4,7 @@ script_path = os.path.abspath(__file__)
 sys.path.append(os.path.join(os.path.dirname(script_path), "../.."))
 
 import streamlit as st
-from creator.agents.creator_agent import open_creator_agent
-from creator.agents import code_interpreter_agent
+from creator.agents import create_creator_agent, create_code_interpreter_agent
 from creator import config
 from langchain.callbacks.streamlit.streamlit_callback_handler import _convert_newlines
 from langchain.output_parsers.json import parse_partial_json
@@ -21,6 +20,11 @@ container = st.container()
 
 agent_name = "interpreter_agent"
 
+agent_mapping = {
+    "interpreter_agent": create_code_interpreter_agent(config),
+    "creator_agent": create_creator_agent(config)
+}
+
 
 def setup_slidebar():
     global agent_name
@@ -28,14 +32,19 @@ def setup_slidebar():
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
         "[View the source code](https://github.com/timedomain-tech/open-creator/tree/main/creator/app/streamlit_app.py)"
-        os.environ["OPENAI_API_KEY"] = openai_api_key
+        curr_api_key = os.environ.get("OPENAI_API_KEY", "")
+        if not curr_api_key:
+            os.environ["OPENAI_API_KEY"] = openai_api_key
         model_list = ["gpt-3.5-turbo-16k", "gpt-3.5-turbo", "gpt-4"]
         model = st.selectbox("Model", model_list, key="model")
-        config.model = model
         temperature = st.slider("Temperature", 0.0, 1.0, 0.0, 0.05, key="temperature")
         config.temperature = temperature
         agent_list = ["creator_agent", "interpreter_agent"]
         selected_agent = st.selectbox("Agent", agent_list, key="agent")
+        if selected_agent == "creator_agent":
+            config.agent_model_config.CREATOR_AGENT = model
+        else:
+            config.agent_model_config.INTERPRETER_AGENT = model
         if agent_name != selected_agent:
             agent_name = selected_agent
             add_session()
@@ -60,8 +69,6 @@ def setup_state():
     if "langugae" not in st.session_state:
         st.session_state["language"] = "English"
 
-    if "agent" not in st.session_state:
-        st.session_state["agent"] = "interpreter_agent"
 
 def disable():
     st.session_state["disabled"] = True
@@ -171,7 +178,7 @@ def handle_input():
         messages.append({"role": "user", "content": prompt})
         print("current input messages", messages)
         render_conversation_history(container, messages)
-        agent = open_creator_agent if agent_name == "creator_agent" else code_interpreter_agent
+        agent = agent_mapping[agent_name]
 
         return_messages = stream_render(agent, messages, container)
         current_session["messages"] = return_messages

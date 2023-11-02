@@ -1,14 +1,16 @@
 import os
 from creator.callbacks import OutputBufferStreamingHandler, RichTerminalStreamingHandler, FileLoggerStreamingHandler
 from langchain.callbacks.manager import CallbackManager
-from langchain.embeddings import OpenAIEmbeddings
-from .chatopenai_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
+from .chatllm_with_trim import ChatOpenAIWithTrim, AzureChatOpenAIWithTrim
 
 
-def create_llm(config):
+def create_llm(config, model=None):
     use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
 
-    model_name = config.model
+    if model is None or model == "":
+        model_name = config.model
+    else:
+        model_name = model
     temperature = config.temperature
     streaming = config.use_stream_callback
     callbacks = [OutputBufferStreamingHandler()]
@@ -31,17 +33,3 @@ def create_llm(config):
             streaming=streaming
         )
     return llm
-
-
-def create_embedding(**kwargs):
-
-    use_azure = True if os.getenv("OPENAI_API_TYPE", None) == "azure" else False
-
-    if use_azure:
-        azure_model = os.getenv("EMBEDDING_DEPLOYMENT_NAME", None)
-        print(azure_model)
-        embedding = OpenAIEmbeddings(deployment=azure_model, model=azure_model)
-    else:
-        embedding = OpenAIEmbeddings()
-
-    return embedding

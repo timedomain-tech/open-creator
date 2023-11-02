@@ -5,8 +5,8 @@ from langchain.output_parsers.json import parse_partial_json
 
 from creator.code_interpreter import CodeInterpreter, language_map
 from creator.config.library import config
-from creator.utils import load_system_prompt, remove_tips
-from creator.llm.llm_creator import create_llm
+from creator.llm import create_llm
+from creator.utils import load_system_prompt, load_json_schema, remove_tips
 
 from .base import BaseAgent
 
@@ -19,10 +19,7 @@ class CodeTesterAgent(BaseAgent):
     total_tries: int = 10
     output_key: str = "output"
     allow_user_confirm: bool = config.run_human_confirm
-
-    @property
-    def _chain_type(self):
-        return "CodeTesterAgent"
+    agent_name: str = "CodeTesterAgent"
 
     def postprocess_mesasge(self, message):
         function_call = message.additional_kwargs.get("function_call", None)
@@ -38,7 +35,7 @@ class CodeTesterAgent(BaseAgent):
                 }
                 message.additional_kwargs["function_call"] = function_call
         return message
-    
+
     def messages_hot_fix(self, langchain_messages):
         langchain_messages = remove_tips(langchain_messages)
         tool_result = langchain_messages[-1].content
@@ -66,23 +63,17 @@ class CodeTesterAgent(BaseAgent):
         }
 
 
-def create_code_tester_agent(llm):
+def create_code_tester_agent(config):
     template = load_system_prompt(config.tester_agent_prompt_path)
     tool = CodeInterpreter()
 
     code_interpreter_function_schema = tool.to_function_schema()
-    with open(config.testsummary_function_schema_path, encoding="utf-8") as f:
-        test_summary_function_schema = json.load(f)
-
+    test_summary_function_schema = load_json_schema(config.testsummary_function_schema_path)
     chain = CodeTesterAgent(
-        llm=llm,
+        llm=create_llm(config, config.agent_model_config.TESTER_AGENT),
         system_template=template,
         function_schemas=[code_interpreter_function_schema, test_summary_function_schema],
         tools=[tool],
         verbose=False,
     )
     return chain
-
-
-llm = create_llm(config)
-code_tester_agent = create_code_tester_agent(llm=llm)

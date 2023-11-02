@@ -66,6 +66,13 @@ class CodeInterpreter(StructuredTool):
         # replace tab to 4
         return code
 
+    def hot_fix(self, language, code):
+        # fix python code start with !
+        if language == "python" and code.startswith("!"):
+            language = "shell"
+            code = code[1:]
+        return language, code
+
     def _run(
         self,
         language: str,
@@ -76,10 +83,14 @@ class CodeInterpreter(StructuredTool):
         language = language.lower()
         if language not in language_map:
             return {"status": "error", "stdout": "", "stderr": f"Language {language} not supported, Only support {list(language_map.keys())}"}
+        language, code = self.hot_fix(language, code)
         if language not in self.interpreters:
             self.add_interpreter(language=language)
         code = self.clean_code(code)
-        result = self.interpreters[language].run(code)
+        if isinstance(self.interpreters[language], SafePythonInterpreter):
+            result = self.interpreters[language].run(code, callbacks=run_manager.get_child() if run_manager else None)
+        else:
+            result = self.interpreters[language].run(code)
         self.run_history[language].append({
             "code": code,
             "result": result

@@ -1,6 +1,7 @@
 import argparse
 from rich.rule import Rule
 import json
+import asyncio
 
 from creator.utils.printer import print as rich_print
 from creator.config.open_config import open_user_config
@@ -129,9 +130,9 @@ arguments = [
         ],
     },
     {
-        "name": "interactive",
+        "name": "interpreter",
         "nickname": "i",
-        "help_text": "Enter interactive mode",
+        "help_text": "Enter interpreter mode",
         "command": False,
         "type": bool,
     },
@@ -215,8 +216,9 @@ def cmd_client():
         open_user_config()
         return
     
-    if not args.command or args.interactive:
-        repl_app.run(args.quiet)
+    if not args.command or args.interpreter:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(repl_app.run(args.quiet, args.interpreter))
         return
 
     if args.command == "create":
@@ -265,11 +267,23 @@ def cmd_client():
 
     if args.command == "ui":
         import os
+        import sys
+        import atexit
         import subprocess
         streamlit_app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../app", "streamlit_app.py")
         env = os.environ.copy()
-        subprocess.Popen(["streamlit", "run", streamlit_app_path], env=env)
-        return
+        process = subprocess.Popen(["streamlit", "run", streamlit_app_path], env=env)
+        
+        def terminate_process(process):
+            if process:
+                process.terminate()
+
+        atexit.register(terminate_process, process)
+        try:
+            process.wait()
+        except KeyboardInterrupt:
+            pass
+        sys.exit(process.returncode)
 
 
 if __name__ == "__main__":

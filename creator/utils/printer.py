@@ -2,9 +2,9 @@ import json
 import sys
 from rich.markdown import Markdown
 from rich.console import Console
-from rich import print as rich_print
 from rich.json import JSON
 import io
+
 
 # Save the original print function
 original_print = print
@@ -51,7 +51,10 @@ class Printer:
             def default_print(message, end='\n', file=None, flush=False, output_option='terminal'):
                 target_file = file or self.output_capture
                 if output_option in ['terminal', 'both']:
-                    console = Console(force_jupyter=self.is_jupyter, force_terminal=self.is_terminal, force_interactive=self.is_interactive, file=target_file)
+                    if self.is_jupyter:
+                        console = Console(force_jupyter=self.is_jupyter, force_terminal=self.is_terminal, force_interactive=self.is_interactive, file=target_file)
+                    else:
+                        console = Console(force_jupyter=self.is_jupyter, force_terminal=self.is_terminal, force_interactive=self.is_interactive)
                     console.print(message, end=end)
                 # if output_option in ['stdout', 'both']:
                 #     rich_print(message, end=end, file=sys.stdout, flush=flush)

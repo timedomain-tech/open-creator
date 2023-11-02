@@ -15,7 +15,7 @@ def generate_install_command(language: str, dependencies):
         return _generate_html_install_command(dependencies)
     else:
         raise NotImplementedError
-    
+
 
 def _generate_python_install_command(dependencies):
     shell_command_str = 'pip show {package_name} || pip install "{package_name}'

@@ -1,5 +1,10 @@
 import tiktoken
 from typing import List, Dict, Any, Optional
+from .format_function_calls import get_function_calls_token_count
+
+# reference:
+# https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
+# https://github.com/KillianLucas/tokentrim/blob/main/tokentrim/tokentrim.py
 
 
 # Define model configurations in a centralized location
@@ -82,7 +87,7 @@ def tokens_for_message(message: Dict[str, Any], encoding: Any, config: Dict[str,
     Calculate the number of tokens for a single message.
     """
     num_tokens = config['tokens_per_message']
-    
+
     for key, value in message.items():
         try:
             num_tokens += len(encoding.encode(str(value)))
@@ -95,7 +100,6 @@ def tokens_for_message(message: Dict[str, Any], encoding: Any, config: Dict[str,
     return num_tokens
 
 
-# Refactored main function
 def num_tokens_from_messages(messages: List[Dict[str, Any]], model: Optional[str] = None) -> int:
     """
     Function to return the number of tokens used by a list of messages.
@@ -135,29 +139,35 @@ def trim(
     messages: List[Dict[str, Any]],
     model: Optional[str] = None,
     trim_ratio: float = 0.75,
-    max_tokens: Optional[int] = None
+    max_tokens: Optional[int] = None,
+    function_calls: List[Dict] = None,
 ) -> List[Dict[str, Any]]:
     """
     Trim a list of messages to fit within a model's token limit.
     """
+    trimed = False
+
     if not messages:
-        return messages
+        return messages, trimed
 
     # Initialize max_tokens
     if max_tokens is None:
         config = get_model_config(model)
         max_tokens = int(config['max_tokens'] * trim_ratio)
 
+    if function_calls is not None:
+        max_tokens -= get_function_calls_token_count(get_encoding_for_model(model), function_calls)
+
     total_tokens = num_tokens_from_messages(messages, model)
     if total_tokens <= max_tokens:
-        return messages
+        return messages, trimed
 
     # Deduct the system message tokens from the max_tokens if system message exists
     system_messages = [msg for msg in messages if msg["role"] == "system"]
     system_message_tokens = num_tokens_from_messages(system_messages, model)
 
     available_tokens = max_tokens - system_message_tokens
-
+    trimed = True
     if available_tokens < 0:
         print("`tokentrim`: Warning, system message exceeds token limit. Trimming...")
         curr_tokens = total_tokens
@@ -173,7 +183,7 @@ def trim(
                 trimmed_messages.append(message)
                 trimmed_messages.extend(messages[idx+1:])
                 break
-        return trimmed_messages
+        return trimmed_messages, trimed
 
     # trim except system messages
     idx = 0
@@ -193,4 +203,4 @@ def trim(
             idx += 1
             break
 
-    return [msg for i, msg in enumerate(messages) if i not in removed_idxs]
+    return [msg for i, msg in enumerate(messages) if i not in removed_idxs], trimed

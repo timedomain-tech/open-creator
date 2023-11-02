@@ -1,7 +1,6 @@
-from .llm_creator import create_llm, create_embedding
+from .llm_creator import create_llm
 
 
 __all__ = [
-    "create_llm",
-    "create_embedding"
+    "create_llm"
 ]

@@ -6,7 +6,7 @@ from langchain.output_parsers.json import parse_partial_json
 from creator.code_interpreter import CodeInterpreter, language_map
 from creator.config.library import config
 from creator.utils import load_system_prompt, remove_tips
-from creator.llm.llm_creator import create_llm
+from creator.llm import create_llm
 
 from .base import BaseAgent
 
@@ -18,11 +18,8 @@ VERIFY_TIPS = load_system_prompt(config.tips_for_veryfy_prompt_path)
 class CodeInterpreterAgent(BaseAgent):
     total_tries: int = 10
     allow_user_confirm: bool = config.run_human_confirm
+    agent_name: str = "CodeInterpreterAgent"
 
-    @property
-    def _chain_type(self):
-        return "CodeInterpreterAgent"
-    
     def postprocess_mesasge(self, message):
         function_call = message.additional_kwargs.get("function_call", None)
         if function_call is not None:
@@ -49,19 +46,15 @@ class CodeInterpreterAgent(BaseAgent):
         return langchain_messages
 
 
-def create_code_interpreter_agent(llm):
+def create_code_interpreter_agent(config):
     tool = CodeInterpreter()
     function_schema = tool.to_function_schema()
     template = load_system_prompt(config.interpreter_agent_prompt_path)
     chain = CodeInterpreterAgent(
-        llm=llm,
+        llm=create_llm(config, config.agent_model_config.INTERPRETER_AGENT),
         system_template=template,
         function_schemas=[function_schema],
         tools=[tool],
         verbose=False,
     )
     return chain
-
-
-llm = create_llm(config)
-code_interpreter_agent = create_code_interpreter_agent(llm=llm)
